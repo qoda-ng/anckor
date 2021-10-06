@@ -1,10 +1,10 @@
-# stocky
+# rush
 
 ![logo](doc/assets/logo.png)
 
 ## Resume
 
-**Stocky** aims to be a lightweight and reactive microkernel targeting MCUs. The design is focused on the efficiency of three points: **scheduling**, **threading** and **IPC**.
+**Rush** aims to be a lightweight and reactive microkernel targeting MCUs. The design is focused on the efficiency of three points: **scheduling**, **threading** and **IPC**.
 
 All other services are build on top of these fundations.
 
