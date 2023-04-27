@@ -1,7 +1,5 @@
 # rush
 
-![logo](doc/assets/logo.png)
-
 ## Resume
 
 **Rush** aims to be a lightweight and reactive microkernel targeting MCUs. The design is focused on the efficiency of three points: **scheduling**, **threading** and **IPC**.
