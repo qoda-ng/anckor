@@ -1,19 +1,32 @@
-# rush
+# Anckor
 
-## Resume
+A lightweight kernel with a focus on **determinism**, **robustness** and **simplicity**.
 
-**Rush** aims to be a lightweight and reactive microkernel targeting MCUs. The design is focused on the efficiency of three points: **scheduling**, **threading** and **IPC**.
+## Getting started
 
-All other services are build on top of these fundations.
+## Design goals
 
-## Scheduling
+The main goal is to design a small determinist kernel with robust partionning between processes.
 
-Try to design a tickless scheduler inspired by Riot with a priority inheritance system used for handling high priority interrupt handler.
+This kernel aims to be as simple as possible to lower the cost of application design and maintenance.
 
-## threading
+To achieve this, a particular attention is done on keeping as fewer system calls as possible. Kernel services limits at the following primitives:
+- process management
+- thread management
+- scheduling
+- thread synchronization
+- inter-process communication
 
-Implement a threading service inspired Riot, FreeRTOS or Threadx.
+All design choices will be done with performance in mind but when a tradeoff is needed, determinism, robustness and simplicity will always have priority.
 
-## IPC
+For more information about ankor kernel design, please read the [docs](/docs/ARCHITECTURE.md).
 
-Try to design an efficient IPC system based on kernel object handling and as few data copies as possible.
+## Tests
+
+## [Roadmap](/ROADMAP.md)
+
+## Supported platform
+
+This kernel aims to run on **Aarch64** and **risv64** architectures.
+
+See [platform](/PLATFORM.md) for a comprehensive list of supported platforms.
