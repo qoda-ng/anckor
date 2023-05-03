@@ -13,15 +13,15 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS = $(wildcard *.c)
-OBJS = $(SRCS:.c=.o)
-OBJDIR = ../build
-CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
-BUILD_DIR = $(wildcard ../build/*)
+SRCS := $(wildcard *.c)
+OBJS := $(SRCS:.c=.o)
+OBJDIR := ../build
+CFLAGS := -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+BUILD_DIR := $(wildcard ../build/*)
 
-CC = riscv64-unknown-elf-gcc
-LD = riscv64-unknown-elf-ld
-OBJCPY = riscv64-unknown-elf-objcopy
+CC := riscv64-unknown-elf-gcc
+LD := riscv64-unknown-elf-ld
+OBJCPY := riscv64-unknown-elf-objcopy
 
 .PHONY: all clean build run
 
