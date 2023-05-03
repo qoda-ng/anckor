@@ -15,29 +15,33 @@
 
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
+OBJDIR = ../build
 CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+BUILD_DIR = $(wildcard ../build/*)
 
 CC = riscv64-unknown-elf-gcc
 LD = riscv64-unknown-elf-ld
 OBJCPY = riscv64-unknown-elf-objcopy
 
-all: clean kernel.img
+.PHONY: all clean build run
 
-start.o: start.S
-	$(CC) $(CFLAGS) -c start.S -o start.o
+all: clean $(OBJDIR)/kernel.img
 
-trap.o: trap.S
-	$(CC) $(CFLAGS) -c trap.S -o trap.o
-
-%.o: %.c
+# Build all assembly files
+$(OBJDIR)/%.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
-kernel.img: start.o trap.o $(OBJS)
-	$(LD) -nostdlib start.o trap.o $(OBJS) -T virt.ld -o kernel.elf
-	$(OBJCPY) -O binary kernel.elf kernel.img
+# Build all C files
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/kernel.img: $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/$(OBJS)
+	$(LD) -nostdlib $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/$(OBJS) -T virt.ld -o $(OBJDIR)/kernel.elf
+	$(OBJCPY) -O binary $(OBJDIR)/kernel.elf $(OBJDIR)/kernel.img
 
 clean:
-	rm kernel.elf *.o >/dev/null 2>/dev/null || true
+	rm -r ../build
+	mkdir ../build
 
 run:
 	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 128M -nographic -serial mon:stdio -bios none -kernel kernel.img
