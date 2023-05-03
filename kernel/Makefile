@@ -17,7 +17,6 @@ SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
 CFLAGS := -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
-BUILD_DIR := $(wildcard ../build/*)
 
 CC := riscv64-unknown-elf-gcc
 LD := riscv64-unknown-elf-ld
