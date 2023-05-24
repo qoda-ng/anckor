@@ -32,4 +32,7 @@ build:
 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:
-	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 128M -nographic -serial mon:stdio -bios none -kernel build/kernel.img
+	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
+
+debug:
+	qemu-system-riscv64 -s -S -machine virt -cpu rv64 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
