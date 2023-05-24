@@ -32,10 +32,6 @@ _start:
 	la		gp, _global_pointer
 .option pop
 
-3:
-	wfi
-	j	3b
-
 # The BSS section is expected to be zero
 	la 		a0, _bss_start
 	la		a1, _bss_end
@@ -45,7 +41,6 @@ _start:
 	addi	a0, a0, 8
 	bltu	a0, a1, 1b
 2:
-
 # Control registers, set the stack, mstatus, mepc,
 # and mtvec to return to the main function.
     # li		t5, 0xffff;
@@ -60,10 +55,13 @@ _start:
     csrw	mepc, t1
     la		t2, asm_trap_vector
     csrw	mtvec, t2
-    li		t3, (1 << 3) | (1 << 7) | (1 << 11)
-    csrw	mie, t3
+    # li		t3, (1 << 3) | (1 << 7) | (1 << 11)
+    # csrw	mie, t3
     la		ra, 4f
-    mret
+    j       kmain  # jump to kmain
+
+3:
+
 4:
-    wfi
-    j	4b
+	wfi
+	j	3b

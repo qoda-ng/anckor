@@ -13,25 +13,26 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build
-CFLAGS := -Wall -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles
+# TOP LEVEL MAKEFILE
 
-CC := riscv64-unknown-elf-gcc
-LD := riscv64-unknown-elf-ld
+OBJCPY := riscv64-unknown-elf-objcopy
 
-.PHONY: all 
+.PHONY: all clean build run
 
-build: $(OBJDIR)/kernel.img
+all: clean build
 
-# Build all assembly files
-$(OBJDIR)/%.o: %.S
-	$(CC) $(CFLAGS) -c $< -o $@
+clean:
+	rm -r build
+	mkdir build
 
-# Build all C files
-$(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+build:
+# build all kernel components in objects files
+	cd kernel && $(MAKE) $@
+# link all components
+	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
-$(OBJDIR)/kernel.img: $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/$(OBJS)
-	$(LD) -nostdlib $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/$(OBJS) -T virt.ld -o $(OBJDIR)/kernel.elf
+run:
+	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
+
+debug:
+	qemu-system-riscv64 -s -S -machine virt -cpu rv64 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
