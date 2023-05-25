@@ -25,14 +25,14 @@
 #define UART_RCV_IT_OFFSET      0x00000001
 #define UART_RX_TX_OFFSET       0x00000000
 
-void mmio_write_64(uint64_t addr, uint64_t data) {
+inline void mmio_write64(uint64_t addr, uint64_t data) {
     // we tell the compiler to not discard this write operation
     // by optimization
     volatile uint64_t *reg_addr = (uint64_t *)addr;
     *reg_addr = data;
 }
 
-uint8_t mmio_read_64(uint64_t addr) {
+inline uint8_t mmio_read64(uint64_t addr) {
     // we tell the compiler to not discard this read operation
     // by optimization
     volatile uint64_t *reg_addr = (uint64_t *)addr;
@@ -40,14 +40,14 @@ uint8_t mmio_read_64(uint64_t addr) {
 }
 
 void uart_init() {
-    mmio_write_64(UART_BASE_ADDR, (1 << 24) | (1 << 25) | (1 << 16) | (1 << 8));
+    mmio_write64(UART_BASE_ADDR, (1 << 24) | (1 << 25) | (1 << 16) | (1 << 8));
 }
 
 void uart_send_byte(uint8_t data) {
-    uint64_t val = mmio_read_64(UART_BASE_ADDR);
+    uint64_t val = mmio_read64(UART_BASE_ADDR);
     val &= 0xFFFFFFFFFFFFFF00;
     val |= (uint64_t)data;
-    mmio_write_64(UART_BASE_ADDR, val);
+    mmio_write64(UART_BASE_ADDR, val);
 }
 
 void uart_send(uint8_t *data) {
