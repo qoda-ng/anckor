@@ -66,7 +66,7 @@ SECTIONS
   } >ram AT>ram :text
 
   /* 
-  global uninitialized data 
+  global initialized data 
   */
   .data : {
 	/*
@@ -80,7 +80,7 @@ SECTIONS
   } >ram AT>ram :data
 
   /* 
-  global initialized data 
+  global uninitialized data 
   */
   .bss : {
     PROVIDE(_bss_start = .);
