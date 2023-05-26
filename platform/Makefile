@@ -22,7 +22,7 @@ CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/kernel.o
+build:$(OBJDIR)/platform.o
 
-$(OBJDIR)/kernel.o: kernel.c
-	$(CC) $(CFLAGS) -c kernel.c -o $(OBJDIR)/kernel.o
+$(OBJDIR)/platform.o: platform.c
+	$(CC) $(CFLAGS) -c platform.c -o $(OBJDIR)/platform.o

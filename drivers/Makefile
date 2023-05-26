@@ -16,13 +16,14 @@
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
-CFLAGS := -Wall -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles -I../tools -I../drivers
+CFLAGS := -Wall -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles -I../tools
 
 CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/kernel.o
+build: $(OBJDIR)/uart.o 
 
-$(OBJDIR)/kernel.o: kernel.c
-	$(CC) $(CFLAGS) -c kernel.c -o $(OBJDIR)/kernel.o
+# Build all C files
+$(OBJDIR)/uart.o: uart.c
+	$(CC) $(CFLAGS) -c uart.c -o $(OBJDIR)/uart.o

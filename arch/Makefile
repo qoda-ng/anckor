@@ -16,13 +16,17 @@
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
-CFLAGS := -Wall -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles -I../tools -I../drivers
+CFLAGS := -Wall -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles
 
 CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/kernel.o
+build: $(OBJDIR)/start.o $(OBJDIR)/trap.o
 
-$(OBJDIR)/kernel.o: kernel.c
-	$(CC) $(CFLAGS) -c kernel.c -o $(OBJDIR)/kernel.o
+# Build all assembly files
+$(OBJDIR)/start.o: start.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/trap.o: trap.S
+	$(CC) $(CFLAGS) -c $< -o $@
