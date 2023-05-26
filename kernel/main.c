@@ -50,14 +50,16 @@ void uart_send_byte(uint8_t data) {
     mmio_write64(UART_BASE_ADDR, val);
 }
 
-void uart_send(uint8_t *data) {
+void uart_send(uint8_t *data, uint64_t size) {
 
 }
 
-void kmain()
-{
+void platform_init() {
     uart_init();
+}
 
+void kernel_init() {
+    
     uart_send_byte('h');
     uart_send_byte('e');
     uart_send_byte('l');

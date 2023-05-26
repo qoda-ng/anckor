@@ -22,7 +22,9 @@
 _start:
 	# check hart id and hang if it's not 0
 	csrr	t0, mhartid
-	bnez	t0, 3f
+	bnez	t0, _secondary_hart_init
+
+_primary_hart_init:
 	# hart #0 goes here, continue init sequence
 	# SATP should be zero, but let's make sure
 	csrw	satp, zero
@@ -31,7 +33,7 @@ _start:
 	la		gp, _global_pointer
 .option pop
 
-	# The BSS section is expected to be zero
+	# initialize bss section to zero
 	la 		a0, _bss_start
 	la		a1, _bss_end
 	bgeu	a0, a1, 2f
@@ -53,9 +55,17 @@ _start:
 	# interrupts for machine mode
     li		t3, (1 << 3) | (1 << 11)
     csrw	mie, t3
-	# jump to the first init routine
-    j       kmain
-
+	# initialize hardware and platform related stuff
+	jal 	platform_init 
+	# jump to the kernel init procedure, this should
+	# never return
+    jal     kernel_init
 3:
+	# hang if we return from the kernel
 	wfi
 	j	3b
+
+_secondary_hart_init:
+	# hart !#0 hang here
+	wfi
+	j	_secondary_hart_init
