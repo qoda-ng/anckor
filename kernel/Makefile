@@ -19,14 +19,16 @@ OBJDIR := ../build
 CFLAGS := -Wall -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles
 
 CC := riscv64-unknown-elf-gcc
-LD := riscv64-unknown-elf-ld
 
 .PHONY: all 
 
-build: $(OBJDIR)/kernel.img
+build: $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/uart.o $(OBJDIR)/kernel.o $(OBJDIR)/platform.o
 
 # Build all assembly files
-$(OBJDIR)/%.o: %.S
+$(OBJDIR)/start.o: start.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/trap.o: trap.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build all C files
@@ -38,6 +40,3 @@ $(OBJDIR)/kernel.o: kernel.c
 
 $(OBJDIR)/platform.o: platform.c
 	$(CC) $(CFLAGS) -c platform.c -o $(OBJDIR)/platform.o
-
-$(OBJDIR)/kernel.img: $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/uart.o $(OBJDIR)/kernel.o $(OBJDIR)/platform.o
-	$(LD) -nostdlib $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/uart.o $(OBJDIR)/kernel.o $(OBJDIR)/platform.o -T virt.ld -o $(OBJDIR)/kernel.elf
