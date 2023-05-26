@@ -30,8 +30,14 @@ $(OBJDIR)/%.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build all C files
-$(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJDIR)/uart.o: uart.c
+	$(CC) $(CFLAGS) -c uart.c -o $(OBJDIR)/uart.o
 
-$(OBJDIR)/kernel.img: $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/$(OBJS)
-	$(LD) -nostdlib $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/$(OBJS) -T virt.ld -o $(OBJDIR)/kernel.elf
+$(OBJDIR)/kernel.o: kernel.c
+	$(CC) $(CFLAGS) -c kernel.c -o $(OBJDIR)/kernel.o
+
+$(OBJDIR)/platform.o: platform.c
+	$(CC) $(CFLAGS) -c platform.c -o $(OBJDIR)/platform.o
+
+$(OBJDIR)/kernel.img: $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/uart.o $(OBJDIR)/kernel.o $(OBJDIR)/platform.o
+	$(LD) -nostdlib $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/uart.o $(OBJDIR)/kernel.o $(OBJDIR)/platform.o -T virt.ld -o $(OBJDIR)/kernel.elf
