@@ -28,6 +28,9 @@ clean:
 
 build:
 # build all kernel components in objects files
+	cd arch && $(MAKE) $@
+	cd platform && $(MAKE) $@
+	cd drivers && $(MAKE) $@
 	cd kernel && $(MAKE) $@
 # link all components
 	$(LD) -nostdlib build/start.o build/trap.o build/uart.o build/kernel.o build/platform.o -T tools/virt.ld -o build/kernel.elf
