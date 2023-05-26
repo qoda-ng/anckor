@@ -21,10 +21,10 @@
 #define uint8_t     unsigned char
 
 #define UART_BASE_ADDR          0x10000000
-#define UART_LCR_OFFSET         0x00000003
-#define UART_FIFO_OFFSET        0x00000002
-#define UART_RCV_IT_OFFSET      0x00000001
-#define UART_RX_TX_OFFSET       0x00000000
+#define UART_LCR_OFFSET         3
+#define UART_FIFO_OFFSET        2
+#define UART_RCV_IT_OFFSET      1
+#define UART_RX_TX_OFFSET       0
 
 inline void write64(const uint64_t addr, const uint64_t data) {
     volatile uint64_t *reg_addr = (uint64_t *)addr;
@@ -36,22 +36,24 @@ inline uint8_t read64(const uint64_t addr) {
     return (uint64_t)*reg_addr;
 }
 
-void uart_init() {
-    write64(UART_BASE_ADDR, (1 << 24) | (1 << 25) | (1 << 16) | (1 << 8));
+inline void write8(const uint64_t addr, const uint64_t offset, const uint64_t data) {
+    uint64_t val = read64(UART_BASE_ADDR);
+    val &= 0xFFFFFFFFFFFFFF00 << (8 * offset);
+    val |= (uint64_t)data << (8 * offset);
+    write64(UART_BASE_ADDR, val);
 }
 
-void uart_send_byte(const uint8_t data) {
-    uint64_t val = read64(UART_BASE_ADDR);
-    val &= 0xFFFFFFFFFFFFFF00;
-    val |= (uint64_t)data;
-    write64(UART_BASE_ADDR, val);
+void uart_init() {
+    write8(UART_BASE_ADDR, UART_RCV_IT_OFFSET, (1 << 0));
+    write8(UART_BASE_ADDR, UART_FIFO_OFFSET, (1 << 0));
+    write8(UART_BASE_ADDR, UART_LCR_OFFSET, (1 << 0) | (1 << 1));
 }
 
 void uart_send(const uint8_t *data, const uint64_t size) {
     uint32_t byte_index = 0;
 
     while(byte_index < size) {
-        uart_send_byte(data[byte_index]);
+        write8(UART_BASE_ADDR, UART_RX_TX_OFFSET, data[byte_index]);
 
         byte_index += 1;
     }
