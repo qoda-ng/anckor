@@ -19,9 +19,9 @@
 
 void kernel_init() {
 
-    unsigned char kernel_msg[] = "hello";
+    unsigned char kernel_msg[] = "hello\n";
 
-    uart_send(kernel_msg, 6);
+    uart_send(kernel_msg, 7);
 
     while(1);
 }
