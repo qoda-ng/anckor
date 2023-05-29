@@ -36,25 +36,27 @@ MEMORY
 
 /*
 we declare 3 sections in the .ELF program headers and specify 
-these sections as loadble
+these sections as loadable
 */
 PHDRS
 {
-  text PT_LOAD;
-  data PT_LOAD;
-  bss PT_LOAD;
+  text PT_LOAD FLAGS(5);   /* PF_R|PF_X */
+  rodata PT_LOAD FLAGS(4); /* PF_R */
+  data PT_LOAD FLAGS(6);   /* PF_R|PF_W */
+  bss PT_LOAD FLAGS(6);   /* PF_R|PF_W */
 }
 
 SECTIONS
 {
   .text : {
     PROVIDE(_text_start = .);
-    *(.text.init) 
-	*(.text .text.*)
+    *(.text.boot) 
+	  *(.text .text.*)
+    *(.gnu.linkonce.t.*)
     PROVIDE(_text_end = .);
   } >ram AT>ram :text
 
-  PROVIDE(_global_pointer = .);
+  . = ALIGN(4K);
 
   /* 
   global read only data
@@ -62,30 +64,42 @@ SECTIONS
   .rodata : {
     PROVIDE(_rodata_start = .);
     *(.rodata .rodata.*)
+    *(.gnu.linkonce.r.*)
     PROVIDE(_rodata_end = .);
-  } >ram AT>ram :text
+  } >ram AT>ram :rodata
+
+  . = ALIGN(4K);
 
   /* 
   global initialized data 
   */
   .data : {
-	/*
-	   align this section to 4kBytes pages
-	*/
-    . = ALIGN(4096);
     PROVIDE(_data_start = .);
-    *(.sdata .sdata.*) 
-	*(.data .data.*)
+	  *(.data .data.*)
+    *(.gnu.linkonce.d.*)
     PROVIDE(_data_end = .);
   } >ram AT>ram :data
+
+  PROVIDE(_global_pointer = .);
+
+  .sdata : {
+    __global_pointer$ = . + (4K / 2);
+    *(.sdata .sdata.*)
+    *(.gnu.linkonce.s.*)
+  } >ram AT>ram :data
+
+  .sbss : {
+    *(.sbss .sbss.*) 
+    *(.gnu.linkonce.sb.*)
+  } >ram AT>ram :bss
 
   /* 
   global uninitialized data 
   */
   .bss : {
     PROVIDE(_bss_start = .);
-    *(.sbss .sbss.*) 
-	*(.bss .bss.*)
+	  *(.bss .bss.*)
+    *(.gnu.linkonce.b.*)
     PROVIDE(_bss_end = .);
   } >ram AT>ram :bss
 
