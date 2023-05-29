@@ -12,6 +12,8 @@ Interrupt handling shares many behaviours with [QNX](https://www.qnx.com/develop
 
 ## API reference
 
-> **sched_run()**
+```C
+ax_return sched_run()
+```
 
-Run the scheduler. If the current thread has not the highest priority, it leads to a **thread_switch()**.
+Run the scheduler. If the current thread has not the highest priority, it leads to a **task_switch()**.
