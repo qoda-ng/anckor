@@ -50,13 +50,13 @@ SECTIONS
 {
   .text : {
     PROVIDE(_text_start = .);
-    *(.text.boot) 
+    *(.text.init) 
 	  *(.text .text.*)
     *(.gnu.linkonce.t.*)
     PROVIDE(_text_end = .);
   } >ram AT>ram :text
 
-  . = ALIGN(4K);
+  PROVIDE(_global_pointer = .);
 
   /* 
   global read only data
@@ -75,29 +75,20 @@ SECTIONS
   */
   .data : {
     PROVIDE(_data_start = .);
+    *(.sdata .sdata.*)
+    *(.gnu.linkonce.s.*)
 	  *(.data .data.*)
     *(.gnu.linkonce.d.*)
     PROVIDE(_data_end = .);
   } >ram AT>ram :data
-
-  PROVIDE(_global_pointer = .);
-
-  .sdata : {
-    __global_pointer$ = . + (4K / 2);
-    *(.sdata .sdata.*)
-    *(.gnu.linkonce.s.*)
-  } >ram AT>ram :data
-
-  .sbss : {
-    *(.sbss .sbss.*) 
-    *(.gnu.linkonce.sb.*)
-  } >ram AT>ram :bss
 
   /* 
   global uninitialized data 
   */
   .bss : {
     PROVIDE(_bss_start = .);
+    *(.sbss .sbss.*) 
+    *(.gnu.linkonce.sb.*)
 	  *(.bss .bss.*)
     *(.gnu.linkonce.b.*)
     PROVIDE(_bss_end = .);

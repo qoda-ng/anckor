@@ -17,7 +17,7 @@
 
 .option norvc
 
-.section .text.boot
+.section .text.init
 .global _start
 _start:
 	# check hart id and hang if it's not 0
