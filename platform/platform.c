@@ -17,6 +17,6 @@
 
 #include "uart.h"
 
-void platform_init() {
-  uart_init();
+void Platform_Init() {
+  Uart_Init();
 }

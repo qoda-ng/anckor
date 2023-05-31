@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 Qoda, engineering
  *
- * This program is free software; you can redistribute it and/or modify 
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms and conditions of the GNU General Public License,
  * version 3 or later, as published by the Free Software Foundation.
 
@@ -15,24 +15,25 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#define uint64_t    long unsigned int
-#define uint32_t    unsigned int
-#define uint16_t    unsigned short int
-#define uint8_t     unsigned char
+#define uint64_t long unsigned int
+#define uint32_t unsigned int
+#define uint16_t unsigned short int
+#define uint8_t  unsigned char
 
-inline void reg_write_double_world(const uint64_t addr, const uint64_t data) {
-    volatile uint64_t *reg_addr = (uint64_t *)addr;
-    *reg_addr = data;
+inline void Register_WriteDoubleWord(const uint64_t addr, const uint64_t data) {
+  volatile uint64_t *reg_addr = (uint64_t *)addr;
+  *reg_addr                   = data;
 }
 
-inline uint8_t reg_read_double_world(const uint64_t addr) {
-    volatile uint64_t *reg_addr = (uint64_t *)addr;
-    return (uint64_t)*reg_addr;
+inline uint8_t Register_ReadDoubleWord(const uint64_t addr) {
+  volatile uint64_t *reg_addr = (uint64_t *)addr;
+  return (uint64_t)*reg_addr;
 }
 
-inline void register_write_byte(const uint64_t addr, const uint64_t offset, const uint64_t data) {
-    uint64_t val = reg_read_double_world(addr);
-    val &= 0xFFFFFFFFFFFFFF00 << (8 * offset);
-    val |= (uint64_t)data << (8 * offset);
-    reg_write_double_world(addr, val);
+inline void Register_WriteByte(const uint64_t addr, const uint64_t offset,
+                               const uint64_t data) {
+  uint64_t val = Register_ReadDoubleWord(addr);
+  val &= 0xFFFFFFFFFFFFFF00 << (8 * offset);
+  val |= (uint64_t)data << (8 * offset);
+  Register_WriteDoubleWord(addr, val);
 }

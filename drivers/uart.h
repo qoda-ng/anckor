@@ -23,5 +23,5 @@
 #define UART_RCV_IT_OFFSET 1
 #define UART_RX_TX_OFFSET  0
 
-void uart_init();
-void uart_send(const uint8_t *data, const uint64_t size);
+void Uart_Init();
+void Uart_Send(const uint8_t *data, const uint64_t size);
