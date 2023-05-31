@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 Qoda, engineering
  *
- * This program is free software; you can redistribute it and/or modify 
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms and conditions of the GNU General Public License,
  * version 3 or later, as published by the Free Software Foundation.
 
@@ -17,11 +17,11 @@
 
 #include "uart.h"
 
-void kernel_init() {
+void Kernel_Init() {
+  const char kernel_msg[] = "hello from the kernel\r\n";
 
-    unsigned char kernel_msg[] = "hello from the kernel\r\n";
+  Uart_Send((const uint8_t *)&kernel_msg[0], 24);
 
-    uart_send(&kernel_msg[0], 24);
-
-    while(1);
+  while (1)
+    ;
 }

@@ -56,10 +56,10 @@ _primary_hart_init:
     li		t3, (1 << 3) | (1 << 11)
     csrw	mie, t3
 	# initialize hardware and platform related stuff
-	jal 	platform_init 
+	jal 	Platform_Init 
 	# jump to the kernel init procedure, this should
 	# never return
-    jal     kernel_init
+    jal     Kernel_Init
 3:
 	# hang if we return from the kernel
 	wfi
