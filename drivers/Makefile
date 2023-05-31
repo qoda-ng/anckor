@@ -16,7 +16,8 @@
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles -I../tools --save-temps
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc
+INC := -I../tools
 
 CC := riscv64-unknown-elf-gcc
 
@@ -26,4 +27,4 @@ build: $(OBJDIR)/uart.o
 
 # Build all C files
 $(OBJDIR)/uart.o: uart.c
-	$(CC) $(CFLAGS) -c uart.c -o $(OBJDIR)/uart.o
+	$(CC) $(CFLAGS) $(INC) -c uart.c -o $(OBJDIR)/uart.o

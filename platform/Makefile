@@ -16,7 +16,8 @@
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc -nostdlib -nostartfiles -I../tools -I../drivers --save-temps
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc 
+INC := -I../tools -I../drivers
 
 CC := riscv64-unknown-elf-gcc
 
@@ -25,4 +26,4 @@ CC := riscv64-unknown-elf-gcc
 build:$(OBJDIR)/platform.o
 
 $(OBJDIR)/platform.o: platform.c
-	$(CC) $(CFLAGS) -c platform.c -o $(OBJDIR)/platform.o
+	$(CC) $(CFLAGS) $(INC) -c platform.c -o $(OBJDIR)/platform.o

@@ -18,9 +18,9 @@
 #include "uart.h"
 
 void Kernel_Init() {
-  unsigned char kernel_msg[] = "hello from the kernel\r\n";
+  const char kernel_msg[] = "hello from the kernel\r\n";
 
-  Uart_Send(&kernel_msg[0], 24);
+  Uart_Send((const uint8_t *)&kernel_msg[0], 24);
 
   while (1)
     ;
