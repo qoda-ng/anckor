@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 Qoda, engineering
  *
- * This program is free software; you can redistribute it and/or modify 
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms and conditions of the GNU General Public License,
  * version 3 or later, as published by the Free Software Foundation.
 
@@ -17,11 +17,11 @@
 
 #include "common.h"
 
-#define UART_BASE_ADDR          0x10000000
-#define UART_LCR_OFFSET         3
-#define UART_FIFO_OFFSET        2
-#define UART_RCV_IT_OFFSET      1
-#define UART_RX_TX_OFFSET       0
+#define UART_BASE_ADDR     0x10000000
+#define UART_LCR_OFFSET    3
+#define UART_FIFO_OFFSET   2
+#define UART_RCV_IT_OFFSET 1
+#define UART_RX_TX_OFFSET  0
 
 void uart_init();
 void uart_send(const uint8_t *data, const uint64_t size);

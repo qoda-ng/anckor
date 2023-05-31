@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 Qoda, engineering
  *
- * This program is free software; you can redistribute it and/or modify 
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms and conditions of the GNU General Public License,
  * version 3 or later, as published by the Free Software Foundation.
 
@@ -18,5 +18,5 @@
 #include "uart.h"
 
 void platform_init() {
-    uart_init();
+  uart_init();
 }

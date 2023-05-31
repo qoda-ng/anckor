@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 Qoda, engineering
  *
- * This program is free software; you can redistribute it and/or modify 
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms and conditions of the GNU General Public License,
  * version 3 or later, as published by the Free Software Foundation.
 
@@ -18,17 +18,17 @@
 #include "uart.h"
 
 void uart_init() {
-    register_write_byte(UART_BASE_ADDR, UART_RCV_IT_OFFSET, (1 << 0));
-    register_write_byte(UART_BASE_ADDR, UART_FIFO_OFFSET, (1 << 0));
-    register_write_byte(UART_BASE_ADDR, UART_LCR_OFFSET, (1 << 0) | (1 << 1));
+  register_write_byte(UART_BASE_ADDR, UART_RCV_IT_OFFSET, (1 << 0));
+  register_write_byte(UART_BASE_ADDR, UART_FIFO_OFFSET, (1 << 0));
+  register_write_byte(UART_BASE_ADDR, UART_LCR_OFFSET, (1 << 0) | (1 << 1));
 }
 
 void uart_send(const uint8_t *data, const uint64_t size) {
-    uint32_t byte_index = 0;
+  uint32_t byte_index = 0;
 
-    while(byte_index < size) {
-        register_write_byte(UART_BASE_ADDR, UART_RX_TX_OFFSET, data[byte_index]);
+  while (byte_index < size) {
+    register_write_byte(UART_BASE_ADDR, UART_RX_TX_OFFSET, data[byte_index]);
 
-        byte_index += 1;
-    }
+    byte_index += 1;
+  }
 }
