@@ -17,10 +17,10 @@
 
 #include "uart.h"
 
-void Kernel_Init() {
+void kernel_init() {
   const char kernel_msg[] = "hello from the kernel\r\n";
 
-  Uart_Send((const uint8_t *)&kernel_msg[0], 24);
+  uart_send((const uint8_t *)&kernel_msg[0], 24);
 
   while (1)
     ;
