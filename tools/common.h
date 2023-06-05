@@ -20,6 +20,11 @@
 #define uint16_t unsigned short int
 #define uint8_t  unsigned char
 
+enum ax_return_t {
+  AX_ERROR = -1,
+  AX_OK    = 0,
+};
+
 inline void reg_write_double_word(const uint64_t addr, const uint64_t data) {
   volatile uint64_t *reg_addr = (uint64_t *)addr;
   *reg_addr                   = data;
