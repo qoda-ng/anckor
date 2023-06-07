@@ -17,6 +17,11 @@
 
 #include "uart.h"
 
+/******************************************************************************
+ * @brief initialisation of kernel structures and launch the first task
+ * @param None
+ * @return None
+ ******************************************************************************/
 void kernel_init() {
   const char kernel_msg[] = "hello from the kernel\r\n";
 

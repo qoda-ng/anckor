@@ -17,6 +17,11 @@
 
 #include "uart.h"
 
+/******************************************************************************
+ * @brief platform specific initialization
+ * @param None
+ * @return None
+ ******************************************************************************/
 void platform_init() {
   uart_init();
 }
