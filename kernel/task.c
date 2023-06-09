@@ -14,14 +14,3 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-
-#include "uart.h"
-
-/******************************************************************************
- * @brief platform specific initialization
- * @param None
- * @return None
- ******************************************************************************/
-void platform_init() {
-  uart_init();
-}

@@ -17,11 +17,17 @@
 
 #include "common.h"
 
+/******************************************************************************
+ * Definitions
+ ******************************************************************************/
 #define UART_BASE_ADDR     0x10000000
 #define UART_LCR_OFFSET    3
 #define UART_FIFO_OFFSET   2
 #define UART_RCV_IT_OFFSET 1
 #define UART_RX_TX_OFFSET  0
 
-void Uart_Init();
-void Uart_Send(const uint8_t *data, const uint64_t size);
+/******************************************************************************
+ * Functions
+ ******************************************************************************/
+void uart_init();
+void uart_send(const uint8_t *data, const uint64_t size);

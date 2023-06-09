@@ -15,13 +15,21 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#include "uart.h"
+#include "common.h"
 
 /******************************************************************************
- * @brief platform specific initialization
- * @param None
- * @return None
+ * @struct task_struct_t
+ * @brief structure to manage thread and processes informations
  ******************************************************************************/
-void platform_init() {
-  uart_init();
-}
+struct task_struct_t {
+  void (*fn)(void);
+};
+
+/*******************************************************************************
+ * Function
+ ******************************************************************************/
+ax_return_t task_create(task_struct_t *task_struct);
+ax_return_t task_destroy(task_struct_t *task_struct);
+ax_return_t task_yield(void);
+ax_return_t task_sleep(void);
+ax_return_t task_awake(void);

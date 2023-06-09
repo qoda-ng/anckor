@@ -15,25 +15,55 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+/*******************************************************************************
+ * Definitions
+ ******************************************************************************/
 #define uint64_t long unsigned int
 #define uint32_t unsigned int
 #define uint16_t unsigned short int
 #define uint8_t  unsigned char
 
-inline void Register_WriteDoubleWord(const uint64_t addr, const uint64_t data) {
+/******************************************************************************
+ * @struct ax_return_t
+ * @brief general kernel error return code
+ ******************************************************************************/
+enum ax_return_t {
+  AX_ERROR = -1,
+  AX_OK    = 0,
+};
+
+/******************************************************************************
+ * @brief write 64-bit registers
+ * @param addr of the register
+ * @param data to write
+ * @return None
+ ******************************************************************************/
+inline void reg_write_double_word(const uint64_t addr, const uint64_t data) {
   volatile uint64_t *reg_addr = (uint64_t *)addr;
   *reg_addr                   = data;
 }
 
-inline uint8_t Register_ReadDoubleWord(const uint64_t addr) {
+/******************************************************************************
+ * @brief read 64-bit registers
+ * @param addr of the register
+ * @return data in the register
+ ******************************************************************************/
+inline uint8_t reg_read_double_word(const uint64_t addr) {
   volatile uint64_t *reg_addr = (uint64_t *)addr;
   return (uint64_t)*reg_addr;
 }
 
-inline void Register_WriteByte(const uint64_t addr, const uint64_t offset,
-                               const uint64_t data) {
-  uint64_t val = Register_ReadDoubleWord(addr);
+/******************************************************************************
+ * @brief write 8-bit data in 64-bit registers
+ * @param addr of the register
+ * @param data to write
+ * @param offset inthe 64-bit register
+ * @return None
+ ******************************************************************************/
+inline void reg_write_byte(const uint64_t addr, const uint64_t offset,
+                           const uint64_t data) {
+  uint64_t val = reg_read_double_word(addr);
   val &= 0xFFFFFFFFFFFFFF00 << (8 * offset);
   val |= (uint64_t)data << (8 * offset);
-  Register_WriteDoubleWord(addr, val);
+  reg_write_double_word(addr, val);
 }
