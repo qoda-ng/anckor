@@ -24,8 +24,6 @@
  */
 .global __load_ctx
 __load_ctx:
-    # save the current stack pointer which is the cpu kernel stack pointer
-
     # load thread context
     ld ra, 0(a0)
     ld sp, 8(a0)
@@ -41,5 +39,9 @@ __load_ctx:
     ld s9, 88(a0)
     ld s10, 96(a0)
     ld s11, 104(a0)
-
+    
     ret
+
+.global __switch_to
+__switch_to:
+

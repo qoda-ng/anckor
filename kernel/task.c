@@ -16,15 +16,18 @@
  */
 #include "task.h"
 
+#include "sched.h"
+
 /******************************************************************************
  * @brief initialize a task and schedule it
  * @param task to initialize
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(task_t *task, void (*fn)(void), stack_t *stack) {
+ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
+                        stack_t *stack, uint8_t prio) {
   // find a unique task ID
   task->vm_id     = 0;
-  task->thread_id = 0;
+  task->thread_id = id;
 
   // save thread function
   task->thread.ra = (uint64_t)fn;
@@ -45,6 +48,9 @@ ax_return_t task_create(task_t *task, void (*fn)(void), stack_t *stack) {
   task->thread.s[9]  = 0;
   task->thread.s[10] = 0;
   task->thread.s[11] = 0;
+
+  // save the new task in the run queue
+  sched_add_task(task);
 
   return AX_OK;
 }

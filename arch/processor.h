@@ -24,10 +24,12 @@
  * @brief structure to save cpu specific state of a task
  ******************************************************************************/
 typedef struct thread_t {
-  // calle saved registers
+  // callee saved registers
   uint64_t ra;
   uint64_t sp;
   uint64_t s[12];
+  // the order of this fieds should not be changed as it's used to load
+  // and store contexts
 } thread_t;
 
 #endif

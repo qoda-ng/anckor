@@ -15,14 +15,17 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "common.h"
 #include "sched.h"
 #include "task.h"
 #include "uart.h"
 
-void thread_func(void) {
-  const char thread_msg[] = "hello from the thread\r\n";
+#define IDLE_PRIO 0
 
-  uart_send((const uint8_t *)&thread_msg[0], 24);
+void thread_func(void) {
+  const char thread_msg[] = "hello from the init thread\r\n";
+
+  uart_send((const uint8_t *)&thread_msg[0], 29);
 
   while (1)
     ;
@@ -41,9 +44,9 @@ void kernel_init() {
 
   uart_send((const uint8_t *)&kernel_msg[0], 24);
 
-  task_create(&idle_task, thread_func, &idle_stack);
+  task_create(0, &idle_task, thread_func, &idle_stack, IDLE_PRIO);
 
-  sched_run(&idle_task);
+  sched_run();
 
   while (1)
     ;

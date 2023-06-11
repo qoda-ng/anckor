@@ -30,12 +30,14 @@ typedef struct task_t {
   uint32_t vm_id;
   uint32_t thread_id;
   thread_t thread;
+  uint8_t  prio;
 } task_t;
 
 /*******************************************************************************
  * Function
  ******************************************************************************/
-ax_return_t task_create(task_t *, void (*fn)(void), stack_t *);
+ax_return_t task_create(uint32_t, task_t *, void (*fn)(void), stack_t *,
+                        uint8_t);
 ax_return_t task_destroy(task_t *);
 ax_return_t task_yield(void);
 ax_return_t task_sleep(void);

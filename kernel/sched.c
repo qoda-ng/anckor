@@ -19,13 +19,49 @@
 
 #include "processor.h"
 
+#define MAX_PRIO 3
+
 extern void __load_ctx(thread_t *next_thread);
+
+static task_t *run_queue[MAX_PRIO];
+static task_t *current_task;
 
 /******************************************************************************
  * @brief main function to run the scheduler
  * @param none
- * @return ax_return -1 if the scheduler fails to run the next task
+ * @return none
  ******************************************************************************/
-void sched_run(task_t *next_task) {
-  __load_ctx(&(next_task->thread));
+void sched_run() {
+  task_t *new_task;
+  task_t *prev_task;
+
+  // save the current task
+  prev_task = current_task;
+
+  // get the new task to run
+  // look over the run queue for a task to schedule
+  uint8_t prio_idx = MAX_PRIO;
+  while (prio_idx >= 0) {
+    if (run_queue[prio_idx]) {
+      // there is a task to run
+      new_task = run_queue[prio_idx];
+      // update the current task
+      current_task = new_task;
+
+      break;
+    }
+
+    prio_idx -= 1;
+  }
+
+  __load_ctx(&(new_task->thread));
+}
+
+/******************************************************************************
+ * @brief add a new task to the run queue
+ * @param task to add in run queue
+ * @return none
+ ******************************************************************************/
+void sched_add_task(task_t *new_task) {
+  run_queue[new_task->prio] = new_task;
 }
