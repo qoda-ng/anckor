@@ -14,32 +14,18 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef TASK_H
-#define TASK_H
 
-#include "common.h"
+#include "sched.h"
+
 #include "processor.h"
 
-typedef uint64_t stack_t[STACK_SIZE];
+extern void __load_ctx(thread_t *next_thread);
 
 /******************************************************************************
- * @struct task_t
- * @brief structure to manage common thread and processes informations
+ * @brief main function to run the scheduler
+ * @param none
+ * @return ax_return -1 if the scheduler fails to run the next task
  ******************************************************************************/
-typedef struct task_t {
-  uint32_t vm_id;
-  uint32_t thread_id;
-  thread_t thread;
-} task_t;
-
-/*******************************************************************************
- * Function
- ******************************************************************************/
-ax_return_t task_create(task_t *, void (*fn)(void), stack_t *);
-ax_return_t task_destroy(task_t *);
-ax_return_t task_yield(void);
-ax_return_t task_sleep(void);
-ax_return_t task_wake_up(void);
-ax_return_t task_switch(task_t *, task_t *);
-
-#endif
+void sched_run(task_t *next_task) {
+  __load_ctx(&(next_task->thread));
+}

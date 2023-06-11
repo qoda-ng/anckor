@@ -33,7 +33,7 @@ build:
 	cd drivers && $(MAKE) $@
 	cd kernel && $(MAKE) $@
 # link all components
-	$(LD) -nostdlib build/start.o build/trap.o build/uart.o build/kernel.o build/platform.o -T tools/virt.ld -o build/kernel.elf
+	$(LD) -nostdlib build/context.o build/start.o build/trap.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -T tools/virt.ld -o build/kernel.elf
 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:

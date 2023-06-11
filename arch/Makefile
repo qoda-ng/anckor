@@ -22,9 +22,12 @@ CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/start.o $(OBJDIR)/trap.o
+build: $(OBJDIR)/context.o $(OBJDIR)/start.o $(OBJDIR)/trap.o
 
 # Build all assembly files
+$(OBJDIR)/context.o: context.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(OBJDIR)/start.o: start.S
 	$(CC) $(CFLAGS) -c $< -o $@
 

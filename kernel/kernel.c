@@ -15,7 +15,18 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "sched.h"
+#include "task.h"
 #include "uart.h"
+
+void thread_func(void) {
+  const char thread_msg[] = "hello from the thread\r\n";
+
+  uart_send((const uint8_t *)&thread_msg[0], 24);
+
+  while (1)
+    ;
+}
 
 /******************************************************************************
  * @brief initialisation of kernel structures and launch the first task
@@ -25,7 +36,14 @@
 void kernel_init() {
   const char kernel_msg[] = "hello from the kernel\r\n";
 
+  task_t  idle_task;
+  stack_t idle_stack;
+
   uart_send((const uint8_t *)&kernel_msg[0], 24);
+
+  task_create(&idle_task, thread_func, &idle_stack);
+
+  sched_run(&idle_task);
 
   while (1)
     ;
