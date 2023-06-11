@@ -14,11 +14,13 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#ifndef COMMON_H
+#define COMMON_H
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define uint64_t long unsigned int
+#define uint64_t unsigned long int
 #define uint32_t unsigned int
 #define uint16_t unsigned short int
 #define uint8_t  unsigned char
@@ -27,10 +29,10 @@
  * @struct ax_return_t
  * @brief general kernel error return code
  ******************************************************************************/
-enum ax_return_t {
+typedef enum ax_return_t {
   AX_ERROR = -1,
   AX_OK    = 0,
-};
+} ax_return_t;
 
 /******************************************************************************
  * @brief write 64-bit registers
@@ -67,3 +69,5 @@ inline void reg_write_byte(const uint64_t addr, const uint64_t offset,
   val |= (uint64_t)data << (8 * offset);
   reg_write_double_word(addr, val);
 }
+
+#endif

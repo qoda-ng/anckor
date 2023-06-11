@@ -14,32 +14,15 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef TASK_H
-#define TASK_H
+#ifndef SCHED_H
+#define SCHED_H
 
 #include "common.h"
-#include "processor.h"
-
-typedef uint64_t stack_t[STACK_SIZE];
-
-/******************************************************************************
- * @struct task_t
- * @brief structure to manage common thread and processes informations
- ******************************************************************************/
-typedef struct task_t {
-  uint32_t vm_id;
-  uint32_t thread_id;
-  thread_t thread;
-} task_t;
+#include "task.h"
 
 /*******************************************************************************
  * Function
  ******************************************************************************/
-ax_return_t task_create(task_t *, void (*fn)(void), stack_t *);
-ax_return_t task_destroy(task_t *);
-ax_return_t task_yield(void);
-ax_return_t task_sleep(void);
-ax_return_t task_wake_up(void);
-ax_return_t task_switch(task_t *, task_t *);
+void sched_run(task_t *);
 
 #endif
