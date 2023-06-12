@@ -75,6 +75,17 @@ SECTIONS
   */
   .data : {
     PROVIDE(_data_start = .);
+
+    /* 
+    idle stack section
+    */
+    . = ALIGN(4K);
+    __idle_task_start = .;
+    idle_stack = .;
+    . = __idle_task_start + 4K;
+    __idle_task_end = .;
+
+
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)
 	  *(.data .data.*)
@@ -93,11 +104,4 @@ SECTIONS
     *(.gnu.linkonce.b.*)
     PROVIDE(_bss_end = .);
   } >ram AT>ram :bss
-
-  PROVIDE(_memory_start = ORIGIN(ram));
-  PROVIDE(_stack_start = _bss_end);
-  PROVIDE(_stack_end = _stack_start + 0x80000);
-  PROVIDE(_memory_end = ORIGIN(ram) + LENGTH(ram));
-  PROVIDE(_heap_start = _stack_end);
-  PROVIDE(_heap_size = _memory_end - _heap_start);
 }

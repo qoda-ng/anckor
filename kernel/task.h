@@ -42,6 +42,5 @@ ax_return_t task_destroy(task_t *);
 ax_return_t task_yield(void);
 ax_return_t task_sleep(void);
 ax_return_t task_wake_up(void);
-ax_return_t task_switch(task_t *, task_t *);
 
 #endif
