@@ -42,7 +42,7 @@ _primary_hart_init:
 	addi	a0, a0, 8
 	bltu	a0, a1, 1b
 2:
-    la		sp, _stack_end
+    la		sp, __idle_task_end
 	# set MPP = 0b11, MPIE = 0b1, MIE = 0b1
 	# hart will switch to MACHINE mode after the next 
 	# exception handling
