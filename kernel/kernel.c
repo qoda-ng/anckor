@@ -23,6 +23,7 @@
 #define IDLE_PRIO 0
 
 extern stack_t idle_stack;
+task_t         idle_task;
 
 void thread_func(void) {
   const char thread_msg[] = "hello from the init thread\r\n";
@@ -40,8 +41,6 @@ void thread_func(void) {
  ******************************************************************************/
 void kernel_init() {
   const char kernel_msg[] = "hello from the kernel\r\n";
-
-  task_t idle_task;
 
   uart_send((const uint8_t *)&kernel_msg[0], 24);
 

@@ -29,8 +29,8 @@ typedef uint64_t stack_t[STACK_SIZE];
 typedef struct task_t {
   uint32_t vm_id;
   uint32_t thread_id;
-  thread_t thread;
   uint8_t  prio;
+  thread_t thread;
 } task_t;
 
 /*******************************************************************************
