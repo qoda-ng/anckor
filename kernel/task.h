@@ -27,7 +27,7 @@ typedef uint64_t stack_t[STACK_SIZE];
  * @brief structure to manage common thread and processes informations
  ******************************************************************************/
 typedef struct task_t {
-  uint32_t vm_id;
+  uint32_t vms_id;
   uint32_t thread_id;
   uint8_t  prio;
   thread_t thread;

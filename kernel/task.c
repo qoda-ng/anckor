@@ -26,7 +26,7 @@
 ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
                         stack_t *stack, uint8_t prio) {
   // find a unique task ID
-  task->vm_id     = 0;
+  task->vms_id    = 0;
   task->thread_id = id;
 
   // save thread function
