@@ -81,8 +81,8 @@ void sched_run() {
  * @param task to add in run queue
  * @return none
  ******************************************************************************/
-void sched_add_task(task_t *new_task) {
-  run_queue[new_task->prio] = new_task;
+void sched_add_task(task_t *task) {
+  run_queue[task->prio] = task;
 }
 
 /******************************************************************************
