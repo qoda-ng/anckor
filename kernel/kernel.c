@@ -20,9 +20,16 @@
 #include "task.h"
 #include "uart.h"
 
-#define IDLE_PRIO 0
 #define INIT_PRIO 1
 
+stack_t init_stack;
+task_t  init_task;
+
+/******************************************************************************
+ * @brief Idle routine runned when no other tasks are ready
+ * @param None
+ * @return None
+ ******************************************************************************/
 void idle_run(void) {
   const char thread_msg[] = "hello from the idle task\r\n";
 
@@ -34,12 +41,11 @@ void idle_run(void) {
     ;
 }
 
-extern stack_t idle_stack;
-task_t         idle_task = {
-            .vms_id    = 0,
-            .thread_id = 0,
-};
-
+/******************************************************************************
+ * @brief Init task will launch all registered tasks in the system
+ * @param None
+ * @return None
+ ******************************************************************************/
 void init_run(void) {
   const char thread_msg[] = "hello from the init task\r\n";
 
@@ -48,9 +54,6 @@ void init_run(void) {
   while (1)
     ;
 }
-
-stack_t init_stack;
-task_t  init_task;
 
 /******************************************************************************
  * @brief initialisation of kernel structures and launch the first task
@@ -62,9 +65,9 @@ void kernel_init() {
 
   uart_send((const uint8_t *)&kernel_msg[0], 24);
 
-  sched_init(&idle_task);
+  sched_init();
 
-  task_create(0, &init_task, init_run, &init_stack, INIT_PRIO);
+  task_create(1, &init_task, init_run, &init_stack, INIT_PRIO);
 
   idle_run();
 }
