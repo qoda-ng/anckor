@@ -83,8 +83,9 @@ SECTIONS
     __idle_task_start = .;
     idle_stack = .;
     KEEP(*(.data.idle_task))
-    __idle_task_end = __idle_task_start + 4K -1;
+    __idle_stack_end = __idle_task_start + 4K -1;
     . = __idle_task_start + 4K;
+    __idle_task_end = .;
 
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)
