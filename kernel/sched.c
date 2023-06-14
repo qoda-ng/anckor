@@ -28,10 +28,10 @@
 extern void __switch_to(thread_t *prev_thread, thread_t *next_thread);
 
 /******************************************************************************
- * idle stask / task are defined statically
+ * idle stack / task are statically defined
  ******************************************************************************/
 extern stack_t idle_stack;
-task_t         idle_task = {
+task_t         idle_task __attribute__((section(".data.idle_task"))) = {
             .vms_id    = 0,
             .thread_id = 0,
             .prio      = IDLE_PRIO,
