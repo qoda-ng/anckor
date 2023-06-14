@@ -19,10 +19,27 @@
 
 #include "processor.h"
 
-#define MAX_PRIO 3
+#define MAX_PRIO  3
+#define IDLE_PRIO 0
 
-extern void __load_ctx(thread_t *next_thread);
+/******************************************************************************
+ * context switch procedure
+ ******************************************************************************/
+extern void __switch_to(thread_t *prev_thread, thread_t *next_thread);
 
+/******************************************************************************
+ * idle stack / task are statically defined
+ ******************************************************************************/
+extern stack_t idle_stack;
+task_t         idle_task __attribute__((section(".data.idle_task"))) = {
+            .vms_id    = 0,
+            .thread_id = 0,
+            .prio      = IDLE_PRIO,
+};
+
+/******************************************************************************
+ * main run_queue used by the scheduler
+ ******************************************************************************/
 static task_t *run_queue[MAX_PRIO];
 static task_t *current_task;
 
@@ -54,7 +71,7 @@ void sched_run() {
     prio_idx -= 1;
   }
 
-  __load_ctx(&(new_task->thread));
+  __switch_to(&prev_task->thread, &new_task->thread);
 }
 
 /******************************************************************************
@@ -64,4 +81,15 @@ void sched_run() {
  ******************************************************************************/
 void sched_add_task(task_t *new_task) {
   run_queue[new_task->prio] = new_task;
+}
+
+/******************************************************************************
+ * @brief initiliaze scheduler parameters
+ * @param none
+ * @return none
+ ******************************************************************************/
+void sched_init() {
+  current_task = &idle_task;
+
+  sched_add_task(&idle_task);
 }
