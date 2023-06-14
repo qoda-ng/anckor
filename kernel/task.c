@@ -54,3 +54,14 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
 
   return AX_OK;
 }
+
+/******************************************************************************
+ * @brief yield the cpu to an another task
+ * @param
+ * @return ax_return -1 if error
+ ******************************************************************************/
+ax_return_t task_yield() {
+  sched_run();
+
+  return AX_OK;
+}

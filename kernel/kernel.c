@@ -35,10 +35,9 @@ void idle_run(void) {
 
   uart_send((const uint8_t *)&thread_msg[0], 27);
 
-  sched_run();
-
-  while (1)
-    ;
+  while (1) {
+    task_yield();
+  }
 }
 
 /******************************************************************************
