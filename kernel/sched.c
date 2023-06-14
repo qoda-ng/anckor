@@ -22,6 +22,8 @@
 #define MAX_PRIO  3
 #define IDLE_PRIO 0
 
+#define __idle_task_data __attribute__((section(".data.idle_task")))
+
 /******************************************************************************
  * context switch procedure
  ******************************************************************************/
@@ -30,11 +32,11 @@ extern void __switch_to(thread_t *prev_thread, thread_t *next_thread);
 /******************************************************************************
  * idle stack / task are statically defined
  ******************************************************************************/
-extern stack_t idle_stack;
-task_t         idle_task __attribute__((section(".data.idle_task"))) = {
-            .vms_id    = 0,
-            .thread_id = 0,
-            .prio      = IDLE_PRIO,
+extern stack_t   idle_stack;
+task_t idle_task __idle_task_data = {
+    .vms_id    = 0,
+    .thread_id = 0,
+    .prio      = IDLE_PRIO,
 };
 
 /******************************************************************************
