@@ -28,6 +28,8 @@ void idle_run(void) {
 
   uart_send((const uint8_t *)&thread_msg[0], 27);
 
+  sched_run();
+
   while (1)
     ;
 }
@@ -74,12 +76,9 @@ void kernel_init() {
 
   uart_send((const uint8_t *)&kernel_msg[0], 24);
 
-  sched_add_task(&idle_task);
+  sched_init(&idle_task);
 
   task_create(0, &init_task, init_run, &init_stack, INIT_PRIO);
 
-  sched_run();
-
-  while (1)
-    ;
+  idle_run();
 }
