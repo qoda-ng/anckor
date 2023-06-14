@@ -36,22 +36,8 @@ void idle_run(void) {
 
 extern stack_t idle_stack;
 task_t         idle_task = {
-            .vms_id       = 0,
-            .thread_id    = 0,
-            .thread.ra    = (uint64_t)idle_run,
-            .thread.sp    = (uint64_t)idle_stack + STACK_SIZE - 1,
-            .thread.s[0]  = 0,
-            .thread.s[1]  = 0,
-            .thread.s[2]  = 0,
-            .thread.s[3]  = 0,
-            .thread.s[4]  = 0,
-            .thread.s[5]  = 0,
-            .thread.s[6]  = 0,
-            .thread.s[7]  = 0,
-            .thread.s[8]  = 0,
-            .thread.s[9]  = 0,
-            .thread.s[10] = 0,
-            .thread.s[11] = 0,
+            .vms_id    = 0,
+            .thread_id = 0,
 };
 
 void init_run(void) {
