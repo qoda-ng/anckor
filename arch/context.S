@@ -16,8 +16,8 @@
  */
 
  /*
- * Switch from a previous thread thread context to the next thread context
- * Only callee saved registers are store and loaded.
+ * Switch from a previous thread context to the next thread context
+ * Only callee saved registers are stored and loaded.
  *
  * a0: thread_t to store
  * a1: thread_t to load
