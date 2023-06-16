@@ -29,6 +29,12 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
   task->vms_id    = 0;
   task->thread_id = id;
 
+  // save task priority
+  task->prio = prio;
+
+  // all created tasks are placed in READY state
+  task->state = READY;
+
   // save thread function
   task->thread.ra = (uint64_t)fn;
 

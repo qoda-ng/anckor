@@ -55,7 +55,8 @@ void sched_run() {
   task_t *prev_task;
 
   // save the current task
-  prev_task = current_task;
+  prev_task        = current_task;
+  prev_task->state = READY;
 
   // get the new task to run
   // look over the run queue for a task to schedule
@@ -63,7 +64,8 @@ void sched_run() {
   while (prio_idx >= 0) {
     if (run_queue[prio_idx]) {
       // there is a task to run
-      new_task = run_queue[prio_idx];
+      new_task        = run_queue[prio_idx];
+      new_task->state = RUNNING;
       // update the current task
       current_task = new_task;
 

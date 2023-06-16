@@ -22,15 +22,22 @@
 
 typedef uint64_t stack_t[STACK_SIZE];
 
+typedef enum task_state_t {
+  READY,
+  RUNNING,
+  BLOCKED,
+} task_state_t;
+
 /******************************************************************************
  * @struct task_t
  * @brief structure to manage common thread and processes informations
  ******************************************************************************/
 typedef struct task_t {
-  uint32_t vms_id;
-  uint32_t thread_id;
-  uint8_t  prio;
-  thread_t thread;
+  uint32_t     vms_id;
+  uint32_t     thread_id;
+  uint8_t      prio;
+  task_state_t state;
+  thread_t     thread;
 } task_t;
 
 /*******************************************************************************
@@ -41,6 +48,6 @@ ax_return_t task_create(uint32_t, task_t *, void (*fn)(void), stack_t *,
 ax_return_t task_destroy(task_t *);
 ax_return_t task_yield(void);
 ax_return_t task_sleep(void);
-ax_return_t task_wake_up(void);
+ax_return_t task_wakeup(task_t *);
 
 #endif
