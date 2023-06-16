@@ -23,7 +23,7 @@
  * @param task to initialize
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
+ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
                         stack_t *stack, uint8_t prio) {
   // find a unique task ID
   task->vms_id    = 0;
@@ -36,7 +36,7 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
   task->state = READY;
 
   // save thread function
-  task->thread.ra = (uint64_t)fn;
+  task->thread.ra = (uint64_t)task_entry;
 
   // save the last address of the allocated task stack
   task->thread.sp = (uint64_t)stack + STACK_SIZE - 1;
