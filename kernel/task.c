@@ -26,8 +26,8 @@
 ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
                         stack_t *stack, uint8_t prio) {
   // find a unique task ID
-  task->vms_id    = 0;
-  task->thread_id = id;
+  task->task_id.vms_id    = 0;
+  task->task_id.thread_id = id;
 
   // save task priority
   task->prio = prio;

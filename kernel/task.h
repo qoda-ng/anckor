@@ -22,6 +22,10 @@
 
 typedef uint64_t stack_t[STACK_SIZE];
 
+/******************************************************************************
+ * @enum task_state_t
+ * @brief used to store task current state
+ ******************************************************************************/
 typedef enum task_state_t {
   READY,
   RUNNING,
@@ -29,12 +33,20 @@ typedef enum task_state_t {
 } task_state_t;
 
 /******************************************************************************
+ * @struct task_id_t
+ * @brief unique task id is composed of a VMS and thread ID
+ ******************************************************************************/
+typedef struct task_id_t {
+  uint32_t vms_id;
+  uint32_t thread_id;
+} task_id_t;
+
+/******************************************************************************
  * @struct task_t
  * @brief structure to manage common thread and processes informations
  ******************************************************************************/
 typedef struct task_t {
-  uint32_t     vms_id;
-  uint32_t     thread_id;
+  task_id_t    task_id;
   uint8_t      prio;
   task_state_t state;
   thread_t     thread;
