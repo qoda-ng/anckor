@@ -18,13 +18,13 @@
 .option norvc
 
 .section .text.init
-.global _start
-_start:
+.global __start
+__start:
 	# check hart id and hang if it's not 0
 	csrr	t0, mhartid
-	bnez	t0, _secondary_hart_init
+	bnez	t0, __secondary_hart_init
 
-_primary_hart_init:
+__primary_hart_init:
 	# hart #0 goes here, continue init sequence
 	# SATP should be zero, but let's make sure
 	csrw	satp, zero
@@ -49,7 +49,7 @@ _primary_hart_init:
     li		t0, (0b11 << 11) | (1 << 7) | (1 << 3)
     csrw	mstatus, t0
 	# set the trap vector register with our trap handler
-    la		t1, asm_trap_vector
+    la		t1, __asm_trap_vector
     csrw	mtvec, t1
 	# enable software level interrupt and external
 	# interrupts for machine mode
@@ -65,7 +65,7 @@ _primary_hart_init:
 	wfi
 	j	3b
 
-_secondary_hart_init:
+__secondary_hart_init:
 	# hart !#0 hang here
 	wfi
-	j	_secondary_hart_init
+	j	__secondary_hart_init
