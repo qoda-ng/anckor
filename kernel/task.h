@@ -20,7 +20,7 @@
 #include "common.h"
 #include "processor.h"
 
-typedef uint64_t stack_t[STACK_SIZE];
+typedef uint8_t stack_t[STACK_SIZE];
 
 /******************************************************************************
  * @enum task_state_t

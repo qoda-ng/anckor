@@ -36,10 +36,14 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
   task->state = READY;
 
   // save thread function
-  task->thread.ra = (uint64_t)task_entry;
+  task->thread.ra = 0;
 
-  // save the last address of the allocated task stack
-  task->thread.sp = (uint64_t)stack + STACK_SIZE - 1;
+  // move SP (128 bits aligned) to save return address
+  task->thread.sp = (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
+
+  // save the return address at the first address of the stack
+  uint64_t stack_return_addr       = (uint64_t)stack + STACK_SIZE - DWORD_SIZE;
+  *(uint64_t *)(stack_return_addr) = (uint64_t)task_entry;
 
   // zeroied callee-saved registers
   task->thread.s[0]  = 0;
