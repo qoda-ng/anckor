@@ -18,6 +18,8 @@
 #define PROCESSOR_H
 
 #define STACK_SIZE 4096
+#define DWORD_SIZE 8
+#define LWORD_SIZE 16
 
 /******************************************************************************
  * @struct thread_t

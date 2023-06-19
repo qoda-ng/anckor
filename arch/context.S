@@ -26,7 +26,7 @@
 .global __switch_to
 __switch_to:
     # save previous thread context
-    sd ra, 0(a0)
+    # sd ra, 0(a0)
     sd sp, 8(a0)
     sd s0, 16(a0)
     sd s1, 24(a0)
@@ -41,8 +41,8 @@ __switch_to:
     sd s10, 96(a0)
     sd s11, 104(a0)
 
-    # load thread context
-    ld ra, 0(a1)
+    # load next thread context
+    # ld ra, 0(a1)
     ld sp, 8(a1)
     ld s0, 16(a1)
     ld s1, 24(a1)

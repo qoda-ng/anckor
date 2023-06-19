@@ -23,17 +23,27 @@
  * @param task to initialize
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
+ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
                         stack_t *stack, uint8_t prio) {
   // find a unique task ID
-  task->vms_id    = 0;
-  task->thread_id = id;
+  task->task_id.vms_id    = 0;
+  task->task_id.thread_id = id;
+
+  // save task priority
+  task->prio = prio;
+
+  // all created tasks are placed in READY state
+  task->state = READY;
 
   // save thread function
-  task->thread.ra = (uint64_t)fn;
+  task->thread.ra = 0;
 
-  // save the last address of the allocated task stack
-  task->thread.sp = (uint64_t)stack + STACK_SIZE - 1;
+  // move SP (128 bits aligned) to save return address
+  task->thread.sp = (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
+
+  // save the return address at the first address of the stack
+  uint64_t stack_return_addr       = (uint64_t)stack + STACK_SIZE - DWORD_SIZE;
+  *(uint64_t *)(stack_return_addr) = (uint64_t)task_entry;
 
   // zeroied callee-saved registers
   task->thread.s[0]  = 0;
@@ -51,6 +61,17 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*fn)(void),
 
   // save the new task in the run queue
   sched_add_task(task);
+
+  return AX_OK;
+}
+
+/******************************************************************************
+ * @brief yield the cpu to an another task
+ * @param
+ * @return ax_return -1 if error
+ ******************************************************************************/
+ax_return_t task_yield() {
+  sched_run();
 
   return AX_OK;
 }

@@ -22,6 +22,8 @@
 #define MAX_PRIO  3
 #define IDLE_PRIO 0
 
+#define __idle_task_data __attribute__((section(".data.idle_task")))
+
 /******************************************************************************
  * context switch procedure
  ******************************************************************************/
@@ -30,11 +32,11 @@ extern void __switch_to(thread_t *prev_thread, thread_t *next_thread);
 /******************************************************************************
  * idle stack / task are statically defined
  ******************************************************************************/
-extern stack_t idle_stack;
-task_t         idle_task __attribute__((section(".data.idle_task"))) = {
-            .vms_id    = 0,
-            .thread_id = 0,
-            .prio      = IDLE_PRIO,
+extern stack_t   idle_stack;
+task_t idle_task __idle_task_data = {
+    .task_id.vms_id    = 0,
+    .task_id.thread_id = 0,
+    .prio              = IDLE_PRIO,
 };
 
 /******************************************************************************
@@ -53,7 +55,8 @@ void sched_run() {
   task_t *prev_task;
 
   // save the current task
-  prev_task = current_task;
+  prev_task        = current_task;
+  prev_task->state = READY;
 
   // get the new task to run
   // look over the run queue for a task to schedule
@@ -61,7 +64,8 @@ void sched_run() {
   while (prio_idx >= 0) {
     if (run_queue[prio_idx]) {
       // there is a task to run
-      new_task = run_queue[prio_idx];
+      new_task        = run_queue[prio_idx];
+      new_task->state = RUNNING;
       // update the current task
       current_task = new_task;
 
@@ -79,8 +83,8 @@ void sched_run() {
  * @param task to add in run queue
  * @return none
  ******************************************************************************/
-void sched_add_task(task_t *new_task) {
-  run_queue[new_task->prio] = new_task;
+void sched_add_task(task_t *task) {
+  run_queue[task->prio] = task;
 }
 
 /******************************************************************************

@@ -25,6 +25,8 @@
 #define uint16_t unsigned short int
 #define uint8_t  unsigned char
 
+#define NULL 0
+
 /******************************************************************************
  * @struct ax_return_t
  * @brief general kernel error return code
