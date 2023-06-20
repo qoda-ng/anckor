@@ -22,7 +22,7 @@ OUTPUT_ARCH( "riscv" )
 /*
 we tell the link which procedure is the program entry point
 */
-ENTRY( __start )
+ENTRY( _start )
 
 /*
 we declare one memory region of 8MBytes to store our program.

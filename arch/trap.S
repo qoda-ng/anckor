@@ -16,8 +16,8 @@
  */
 
 .section .text
-.global __asm_trap_vector
-__asm_trap_vector:
+.global _trap_handler
+_trap_handler:
     # We get here when the CPU is interrupted
 	# for any reason.
     mret
