@@ -23,8 +23,8 @@
  * a1: thread_t to load
  *
  */
-.global __switch_to
-__switch_to:
+.global _switch_to
+_switch_to:
     # save previous thread context
     # sd ra, 0(a0)
     sd sp, 8(a0)

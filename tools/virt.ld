@@ -22,7 +22,7 @@ OUTPUT_ARCH( "riscv" )
 /*
 we tell the link which procedure is the program entry point
 */
-ENTRY( __start )
+ENTRY( _start )
 
 /*
 we declare one memory region of 8MBytes to store our program.
@@ -80,12 +80,10 @@ SECTIONS
     idle stack section
     */
     . = ALIGN(4K);
-    __idle_task_start = .;
-    idle_stack = .;
+    _idle_stack_start = .;
     KEEP(*(.data.idle_task))
-    __idle_stack_end = __idle_task_start + 4K -1;
-    . = __idle_task_start + 4K;
-    __idle_task_end = .;
+    . = _idle_stack_start + 4K;
+    _idle_stack_end = .;
 
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)

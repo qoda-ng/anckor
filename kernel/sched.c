@@ -27,7 +27,7 @@
 /******************************************************************************
  * context switch procedure
  ******************************************************************************/
-extern void __switch_to(thread_t *prev_thread, thread_t *next_thread);
+extern void _switch_to(thread_t *prev_thread, thread_t *next_thread);
 
 /******************************************************************************
  * idle stack / task are statically defined
@@ -75,7 +75,7 @@ void sched_run() {
     prio_idx -= 1;
   }
 
-  __switch_to(&prev_task->thread, &new_task->thread);
+  _switch_to(&prev_task->thread, &new_task->thread);
 }
 
 /******************************************************************************
