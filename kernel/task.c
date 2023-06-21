@@ -35,16 +35,6 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
   // all created tasks are placed in READY state
   task->state = READY;
 
-  // save thread function
-  task->thread.ra = 0;
-
-  // move SP (128 bits aligned) to save return address
-  task->thread.sp = (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
-
-  // save the return address at the first address of the stack
-  uint64_t stack_return_addr       = (uint64_t)stack + STACK_SIZE - DWORD_SIZE;
-  *(uint64_t *)(stack_return_addr) = (uint64_t)task_entry;
-
   // zeroied callee-saved registers
   task->thread.s[0]  = 0;
   task->thread.s[1]  = 0;
@@ -58,6 +48,9 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
   task->thread.s[9]  = 0;
   task->thread.s[10] = 0;
   task->thread.s[11] = 0;
+
+  // move SP (128 bits aligned) to save return address
+  task->thread.sp = task_stack_init(stack, STACK_SIZE, task_entry);
 
   // save the new task in the run queue
   sched_add_task(task);
