@@ -20,7 +20,10 @@
 
 /******************************************************************************
  * @brief initialize a task and schedule it
- * @param task to initialize
+ * @param id of the task
+ * @param function to run in the task
+ * @param stack start address of the task
+ * @param priority for the new task
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
 ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
@@ -63,7 +66,7 @@ ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
 
 /******************************************************************************
  * @brief yield the cpu to an another task
- * @param
+ * @param none
  * @return ax_return -1 if error
  ******************************************************************************/
 ax_return_t task_yield() {
