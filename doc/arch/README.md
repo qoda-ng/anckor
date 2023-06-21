@@ -2,7 +2,7 @@
 
 This repository contains all design decisions in form of small [architecture design records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).
 
-As a remainder, these **records** contains the following fields:
+As a remainder, these **records** contain the following fields:
 - a **title** section which describes briefly the subject of the note
 - a **status** section which can be **proposed**, **accepted** or **deprecated**
 - a **context** section which describes **constraints** guiding the decision: these could be technological, political or project local.
