@@ -25,12 +25,33 @@
  * @param function to run in the task context
  * @return top address of the initialized stack
  ******************************************************************************/
-uint64_t task_stack_init(
-    stack_t *stack, uint64_t stack_size,
-    __attribute__((noreturn)) void (*task_rt)(void (*)(void))) {
+void task_stack_init(stack_t *stack, uint64_t stack_size,
+                     void (*task_entry)(void)) {
+  // get task pointer from the stack
+  task_t *task = (task_t *)stack;
+
+  // zeroied callee-saved registers
+  task->thread.s[0]  = 0;
+  task->thread.s[1]  = 0;
+  task->thread.s[2]  = 0;
+  task->thread.s[3]  = 0;
+  task->thread.s[4]  = 0;
+  task->thread.s[5]  = 0;
+  task->thread.s[6]  = 0;
+  task->thread.s[7]  = 0;
+  task->thread.s[8]  = 0;
+  task->thread.s[9]  = 0;
+  task->thread.s[10] = 0;
+  task->thread.s[11] = 0;
+
+  // save task entry in the a0 register which is the first function parameter in
+  // the riscv ABI
+  task->thread.a[0] = (uint64_t)task_entry;
+
   // save the return address at the first address of the stack
   uint64_t stack_return_addr       = (uint64_t)stack + stack_size - DWORD_SIZE;
   *(uint64_t *)(stack_return_addr) = (uint64_t)task_rt;
 
-  return (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
+  // move SP (128 bits aligned) to save return address
+  task->thread.sp = (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
 }

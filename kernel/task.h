@@ -56,8 +56,8 @@ typedef struct task_t {
  * Function
  ******************************************************************************/
 ax_return_t task_create(uint32_t, void (*fn)(void), stack_t *, uint8_t);
-uint64_t    task_stack_init(stack_t *, uint64_t,
-                            __attribute__((noreturn)) void (*)(void (*)(void)));
+void        task_rt(void (*)(void));
+void        task_stack_init(stack_t *, uint64_t, void (*)(void));
 ax_return_t task_yield(void);
 void        task_destroy();
 
