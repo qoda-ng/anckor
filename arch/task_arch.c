@@ -25,11 +25,12 @@
  * @param function to run in the task context
  * @return top address of the initialized stack
  ******************************************************************************/
-uint64_t task_stack_init(stack_t *stack, uint64_t stack_size,
-                         void (*task_entry)(void)) {
+uint64_t task_stack_init(
+    stack_t *stack, uint64_t stack_size,
+    __attribute__((noreturn)) void (*task_rt)(void (*)(void))) {
   // save the return address at the first address of the stack
   uint64_t stack_return_addr       = (uint64_t)stack + stack_size - DWORD_SIZE;
-  *(uint64_t *)(stack_return_addr) = (uint64_t)task_entry;
+  *(uint64_t *)(stack_return_addr) = (uint64_t)task_rt;
 
   return (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
 }

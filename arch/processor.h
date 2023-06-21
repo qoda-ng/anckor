@@ -30,6 +30,8 @@ typedef struct thread_t {
   uint64_t ra;
   uint64_t sp;
   uint64_t s[12];
+  // caller saved registers
+  uint64_t a[8];
   // the order of this fieds should not be changed as it's used to load
   // and store contexts
 } thread_t;

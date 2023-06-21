@@ -19,6 +19,27 @@
 #include "sched.h"
 
 /******************************************************************************
+ * @brief task runtinme
+ *
+ * This function is used to run task_entry in a controlled environment. It cans
+ * run an exit() procedure to properly clean the task if ever its main procedure
+ * returns.
+ *
+ * @param function to run in the task
+ * @return none
+ ******************************************************************************/
+static __attribute__((noreturn)) void task_rt(void (*task_entry)(void)) {
+  // start the main task routine
+  task_entry();
+
+  // clean the task if ever it returns
+  task_destroy();
+
+  // tell the compiler we will never reach this point
+  __builtin_unreachable();
+}
+
+/******************************************************************************
  * @brief initialize a task and schedule it
  * @param id of the task
  * @param function to run in the task
@@ -55,8 +76,12 @@ ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
   task->thread.s[10] = 0;
   task->thread.s[11] = 0;
 
+  // save task entry in the a0 register which is the first function parameter in
+  // the riscv ABI
+  task->thread.a[0] = (uint64_t)task_entry;
+
   // move SP (128 bits aligned) to save return address
-  task->thread.sp = task_stack_init(stack, STACK_SIZE, task_entry);
+  task->thread.sp = task_stack_init(stack, STACK_SIZE, task_rt);
 
   // save the new task in the run queue
   sched_add_task(task);
@@ -73,4 +98,17 @@ ax_return_t task_yield() {
   sched_run();
 
   return AX_OK;
+}
+
+/******************************************************************************
+ * @brief task destroy
+ *
+ * This function cleans all memory used to save task informations, this
+ * comprises all stacks and associated structures. It also delete the task from
+ * the scheduler runqueue.
+ *
+ * @param none
+ * @return none
+ ******************************************************************************/
+void task_destroy() {
 }
