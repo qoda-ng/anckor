@@ -42,7 +42,7 @@ _switch_to:
     sd s9, 88(a3)
     sd s10, 96(a3)
     sd s11, 104(a3)
-    // save 1st arg register
+    // save first argument register
     sd a0, 112(a3)
 
     # load next thread context
