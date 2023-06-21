@@ -14,26 +14,23 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef PROCESSOR_H
-#define PROCESSOR_H
-
-#define STACK_SIZE 4096
-#define DWORD_SIZE 8
-#define LWORD_SIZE 16
+#include "common.h"
+#include "processor.h"
+#include "task.h"
 
 /******************************************************************************
- * @struct thread_t
- * @brief structure to save cpu specific state of a task
+ * @brief initialize task stack
+ * @param stack start address pointer
+ * @param size of the stack
+ * @param function to run in the task context
+ * @return top address of the initialized stack
  ******************************************************************************/
-typedef struct thread_t {
-  // callee saved registers
-  uint64_t ra;
-  uint64_t sp;
-  uint64_t s[12];
-  // caller saved registers
-  uint64_t a[8];
-  // the order of this fieds should not be changed as it's used to load
-  // and store contexts
-} thread_t;
+uint64_t task_stack_init(
+    stack_t *stack, uint64_t stack_size,
+    __attribute__((noreturn)) void (*task_rt)(void (*)(void))) {
+  // save the return address at the first address of the stack
+  uint64_t stack_return_addr       = (uint64_t)stack + stack_size - DWORD_SIZE;
+  *(uint64_t *)(stack_return_addr) = (uint64_t)task_rt;
 
-#endif
+  return (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
+}

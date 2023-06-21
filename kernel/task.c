@@ -19,12 +19,39 @@
 #include "sched.h"
 
 /******************************************************************************
+ * @brief task runtinme
+ *
+ * This function is used to run task_entry in a controlled environment. It cans
+ * run an exit() procedure to properly clean the task if ever its main procedure
+ * returns.
+ *
+ * @param function to run in the task
+ * @return none
+ ******************************************************************************/
+static __attribute__((noreturn)) void task_rt(void (*task_entry)(void)) {
+  // start the main task routine
+  task_entry();
+
+  // clean the task if ever it returns
+  task_destroy();
+
+  // tell the compiler we will never reach this point
+  __builtin_unreachable();
+}
+
+/******************************************************************************
  * @brief initialize a task and schedule it
- * @param task to initialize
+ * @param id of the task
+ * @param function to run in the task
+ * @param stack start address of the task
+ * @param priority for the new task
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
-                        stack_t *stack, uint8_t prio) {
+ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
+                        uint8_t prio) {
+  // save task infos at the beginning of the task
+  task_t *task = (task_t *)stack;
+
   // find a unique task ID
   task->task_id.vms_id    = 0;
   task->task_id.thread_id = id;
@@ -34,16 +61,6 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
 
   // all created tasks are placed in READY state
   task->state = READY;
-
-  // save thread function
-  task->thread.ra = 0;
-
-  // move SP (128 bits aligned) to save return address
-  task->thread.sp = (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
-
-  // save the return address at the first address of the stack
-  uint64_t stack_return_addr       = (uint64_t)stack + STACK_SIZE - DWORD_SIZE;
-  *(uint64_t *)(stack_return_addr) = (uint64_t)task_entry;
 
   // zeroied callee-saved registers
   task->thread.s[0]  = 0;
@@ -59,6 +76,13 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
   task->thread.s[10] = 0;
   task->thread.s[11] = 0;
 
+  // save task entry in the a0 register which is the first function parameter in
+  // the riscv ABI
+  task->thread.a[0] = (uint64_t)task_entry;
+
+  // move SP (128 bits aligned) to save return address
+  task->thread.sp = task_stack_init(stack, STACK_SIZE, task_rt);
+
   // save the new task in the run queue
   sched_add_task(task);
 
@@ -67,11 +91,24 @@ ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
 
 /******************************************************************************
  * @brief yield the cpu to an another task
- * @param
+ * @param none
  * @return ax_return -1 if error
  ******************************************************************************/
 ax_return_t task_yield() {
   sched_run();
 
   return AX_OK;
+}
+
+/******************************************************************************
+ * @brief task destroy
+ *
+ * This function cleans all memory used to save task informations, this
+ * comprises all stacks and associated structures. It also delete the task from
+ * the scheduler runqueue.
+ *
+ * @param none
+ * @return none
+ ******************************************************************************/
+void task_destroy() {
 }
