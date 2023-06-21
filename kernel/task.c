@@ -47,8 +47,8 @@ ATTR_NORETURN void task_rt(void (*task_entry)(void)) {
  * @param priority for the new task
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
-                        uint8_t prio) {
+void task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
+                 uint8_t prio) {
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
 
@@ -67,8 +67,6 @@ ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
 
   // save the new task in the run queue
   sched_add_task(task);
-
-  return AX_OK;
 }
 
 /******************************************************************************
@@ -76,10 +74,8 @@ ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
  * @param none
  * @return ax_return -1 if error
  ******************************************************************************/
-ax_return_t task_yield() {
+void task_yield() {
   sched_run();
-
-  return AX_OK;
 }
 
 /******************************************************************************
