@@ -23,8 +23,11 @@
  * @param task to initialize
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(uint32_t id, task_t *task, void (*task_entry)(void),
-                        stack_t *stack, uint8_t prio) {
+ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
+                        uint8_t prio) {
+  // save task infos at the beginning of the task
+  task_t *task = (task_t *)stack;
+
   // find a unique task ID
   task->task_id.vms_id    = 0;
   task->task_id.thread_id = id;

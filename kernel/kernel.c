@@ -23,7 +23,6 @@
 #define INIT_PRIO 1
 
 stack_t init_stack;
-task_t  init_task;
 
 /******************************************************************************
  * @brief Idle routine runned when no other tasks are ready
@@ -66,7 +65,7 @@ void kernel_init() {
 
   sched_init();
 
-  task_create(1, &init_task, init_run, &init_stack, INIT_PRIO);
+  task_create(1, init_run, &init_stack, INIT_PRIO);
 
   idle_run();
 }
