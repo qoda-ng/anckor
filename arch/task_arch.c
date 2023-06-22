@@ -20,6 +20,35 @@
 
 /******************************************************************************
  * @brief initialize task stack
+ *
+ * The stack follows the riscv ABI i.e task_rt() argument is stored in a0 and sp
+ * is 128 bits aligned:
+ *
+ * ra
+ * sp -> stack_start + stack_size - 128
+ * s0
+ * s1
+ * s2
+ * s3
+ * s4
+ * s5
+ * s6
+ * s7
+ * s8
+ * s9
+ * s10
+ * s11
+ * a0 -> task_entry
+ * a1
+ * a2
+ * a3
+ * a4
+ * a5
+ * a6
+ * a7
+ * ...
+ * task_rt
+ *
  * @param stack start address pointer
  * @param size of the stack
  * @param function to run in the task context
