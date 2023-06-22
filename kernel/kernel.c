@@ -68,7 +68,7 @@ void kernel_init() {
 
   sched_init();
 
-  task_create(1, init_run, &init_stack, INIT_PRIO);
+  task_create(init_run, &init_stack, INIT_PRIO);
 
   idle_run();
 }
