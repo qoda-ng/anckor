@@ -49,16 +49,17 @@ typedef struct task_t {
   task_id_t    task_id;
   uint8_t      prio;
   task_state_t state;
+  stack_t     *stack;
   thread_t     thread;
 } task_t;
 
 /*******************************************************************************
  * Function
  ******************************************************************************/
-ax_return_t task_create(uint32_t, void (*fn)(void), stack_t *, uint8_t);
-uint64_t    task_stack_init(stack_t *, uint64_t,
-                            __attribute__((noreturn)) void (*)(void (*)(void)));
-ax_return_t task_yield(void);
-void        task_destroy();
+void task_create(uint32_t, void (*fn)(void), stack_t *, uint8_t);
+void task_rt(void (*)(void));
+void task_stack_init(stack_t *, uint64_t, void (*)(void));
+void task_yield(void);
+void task_destroy();
 
 #endif

@@ -27,14 +27,16 @@
 
 #define NULL 0
 
+#define ATTR_NORETURN __attribute__((noreturn))
+
 /******************************************************************************
- * @struct ax_return_t
+ * @struct k_return_t
  * @brief general kernel error return code
  ******************************************************************************/
-typedef enum ax_return_t {
-  AX_ERROR = -1,
-  AX_OK    = 0,
-} ax_return_t;
+typedef enum k_return_t {
+  K_ERROR = -1,
+  K_OK    = 0,
+} k_return_t;
 
 /******************************************************************************
  * @brief write 64-bit registers

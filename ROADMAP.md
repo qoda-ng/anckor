@@ -6,17 +6,18 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 
 ### r-0.1.0 / Minimal runtime
 
-- [ ] thread creation
-- [ ] cooperative scheduling
+- [x] thread creation
+- [x] cooperative scheduling
 - [ ] mutex support
 - [ ] SMP support
 - [ ] Qemu aarch64 support
-- [ ] Qemu riscv 64 bits support
+- [x] Qemu riscv 64 bits support
+- [ ] buddy page memory allocator
 
 ### r-0.2.0 / Process management
 
-- [ ] process creation
-- [ ] memory management
+- [ ] virtual memory management
+- [ ] slab memory allocator
 
 ### r-0.3.0 / Inter-Process Communication
 

@@ -28,7 +28,7 @@
  * @param function to run in the task
  * @return none
  ******************************************************************************/
-static __attribute__((noreturn)) void task_rt(void (*task_entry)(void)) {
+ATTR_NORETURN void task_rt(void (*task_entry)(void)) {
   // start the main task routine
   task_entry();
 
@@ -47,8 +47,8 @@ static __attribute__((noreturn)) void task_rt(void (*task_entry)(void)) {
  * @param priority for the new task
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
-                        uint8_t prio) {
+void task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
+                 uint8_t prio) {
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
 
@@ -62,31 +62,14 @@ ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
   // all created tasks are placed in READY state
   task->state = READY;
 
-  // zeroied callee-saved registers
-  task->thread.s[0]  = 0;
-  task->thread.s[1]  = 0;
-  task->thread.s[2]  = 0;
-  task->thread.s[3]  = 0;
-  task->thread.s[4]  = 0;
-  task->thread.s[5]  = 0;
-  task->thread.s[6]  = 0;
-  task->thread.s[7]  = 0;
-  task->thread.s[8]  = 0;
-  task->thread.s[9]  = 0;
-  task->thread.s[10] = 0;
-  task->thread.s[11] = 0;
+  // save the stack base address
+  task->stack = stack;
 
-  // save task entry in the a0 register which is the first function parameter in
-  // the riscv ABI
-  task->thread.a[0] = (uint64_t)task_entry;
-
-  // move SP (128 bits aligned) to save return address
-  task->thread.sp = task_stack_init(stack, STACK_SIZE, task_rt);
+  // initialize task stack
+  task_stack_init(stack, STACK_SIZE, task_entry);
 
   // save the new task in the run queue
   sched_add_task(task);
-
-  return AX_OK;
 }
 
 /******************************************************************************
@@ -94,10 +77,8 @@ ax_return_t task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
  * @param none
  * @return ax_return -1 if error
  ******************************************************************************/
-ax_return_t task_yield() {
+void task_yield() {
   sched_run();
-
-  return AX_OK;
 }
 
 /******************************************************************************

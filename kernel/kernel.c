@@ -36,6 +36,8 @@ void idle_run(void) {
 
   while (1) {
     task_yield();
+
+    uart_send((const uint8_t *)"return in idle task\r\n", 22);
   }
 }
 
