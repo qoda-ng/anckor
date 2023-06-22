@@ -62,6 +62,9 @@ void task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
   // all created tasks are placed in READY state
   task->state = READY;
 
+  // save the stack base address
+  task->stack = stack;
+
   // initialize task stack
   task_stack_init(stack, STACK_SIZE, task_entry);
 

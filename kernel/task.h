@@ -49,6 +49,7 @@ typedef struct task_t {
   task_id_t    task_id;
   uint8_t      prio;
   task_state_t state;
+  stack_t     *stack;
   thread_t     thread;
 } task_t;
 

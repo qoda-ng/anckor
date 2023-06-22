@@ -46,6 +46,41 @@ static task_t *run_queue[MAX_PRIO];
 static task_t *current_task;
 
 /******************************************************************************
+ * @brief find the next task to run
+ * @param none
+ * @return task to run
+ ******************************************************************************/
+task_t *sched_get_next_task() {
+  // look over the run queue for a task to schedule
+  uint8_t prio_idx = MAX_PRIO - 1;
+  while (prio_idx >= 0) {
+    if (run_queue[prio_idx]) {
+      // there is a task to run
+      break;
+    }
+
+    prio_idx -= 1;
+  }
+
+  return run_queue[prio_idx];
+}
+
+/******************************************************************************
+ * @brief context switch from the scheduler
+ *
+ * This function is used to switch between two task contexts. It should not be
+ * modified without careful attention: the task stack design heavily relies on
+ * how this function saves parameters on the stack.
+ *
+ * @param previous_task address pointer
+ * @param next_task address pointer
+ * @return none
+ ******************************************************************************/
+static void sched_switch(task_t *prev_task, task_t *new_task) {
+  _switch_to(&prev_task->thread, &new_task->thread);
+}
+
+/******************************************************************************
  * @brief main function to run the scheduler
  * @param none
  * @return none
@@ -59,23 +94,13 @@ void sched_run() {
   prev_task->state = READY;
 
   // get the new task to run
-  // look over the run queue for a task to schedule
-  uint8_t prio_idx = MAX_PRIO;
-  while (prio_idx >= 0) {
-    if (run_queue[prio_idx]) {
-      // there is a task to run
-      new_task        = run_queue[prio_idx];
-      new_task->state = RUNNING;
-      // update the current task
-      current_task = new_task;
+  new_task        = sched_get_next_task();
+  new_task->state = RUNNING;
 
-      break;
-    }
+  // update the current task
+  current_task = new_task;
 
-    prio_idx -= 1;
-  }
-
-  _switch_to(&prev_task->thread, &new_task->thread);
+  sched_switch(prev_task, new_task);
 }
 
 /******************************************************************************
