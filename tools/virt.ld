@@ -81,7 +81,8 @@ SECTIONS
     */
     . = ALIGN(4K);
     _idle_stack_start = .;
-    KEEP(*(.data.idle_task))
+    PROVIDE(idle_stack = .);
+    KEEP(*(.data.idle_task));
     . = _idle_stack_start + 4K;
     _idle_stack_end = .;
 

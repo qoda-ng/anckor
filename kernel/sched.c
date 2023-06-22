@@ -37,6 +37,8 @@ task_t idle_task __idle_task_data = {
     .task_id.vms_id    = 0,
     .task_id.thread_id = 0,
     .prio              = IDLE_PRIO,
+    .state             = READY,
+    .stack             = &idle_stack,
 };
 
 /******************************************************************************
