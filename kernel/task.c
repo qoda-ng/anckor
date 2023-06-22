@@ -92,4 +92,10 @@ void task_yield() {
  * @return none
  ******************************************************************************/
 void task_destroy() {
+  // get the current task
+  task_t *current = sched_get_current_task();
+  // remove it from the run queue
+  sched_remove_task(current);
+  // call the scheduler
+  sched_run();
 }

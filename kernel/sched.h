@@ -23,8 +23,10 @@
 /*******************************************************************************
  * Function
  ******************************************************************************/
-void sched_init();
-void sched_run();
-void sched_add_task(task_t *);
+void    sched_init();
+void    sched_run();
+void    sched_add_task(task_t *);
+void    sched_remove_task(task_t *);
+task_t *sched_get_current_task();
 
 #endif
