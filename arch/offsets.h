@@ -14,19 +14,23 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef SCHED_H
-#define SCHED_H
+#ifndef OFFSETS_H
+#define OFFSETS_H
 
-#include "common.h"
-#include "task.h"
-
-/*******************************************************************************
- * Function
- ******************************************************************************/
-void    sched_init();
-void    sched_run();
-void    sched_add_task(task_t *);
-void    sched_remove_task(task_t *);
-task_t *sched_get_current_task();
+#define TASK_THREAD_RA  0
+#define TASK_THREAD_SP  8
+#define TASK_THREAD_S0  16
+#define TASK_THREAD_S1  24
+#define TASK_THREAD_S2  32
+#define TASK_THREAD_S3  40
+#define TASK_THREAD_S4  48
+#define TASK_THREAD_S5  56
+#define TASK_THREAD_S6  64
+#define TASK_THREAD_S7  72
+#define TASK_THREAD_S8  80
+#define TASK_THREAD_S9  88
+#define TASK_THREAD_S10 96
+#define TASK_THREAD_S11 104
+#define TASK_THREAD_A0  112
 
 #endif

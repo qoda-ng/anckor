@@ -18,6 +18,19 @@
 
 #include "sched.h"
 
+uint64_t last_thread_id = NULL;
+
+/******************************************************************************
+ * @brief find a new thread_id
+ * @param none
+ * @return thread_id
+ ******************************************************************************/
+static uint64_t task_get_new_thread_id() {
+  last_thread_id += 1;
+
+  return last_thread_id;
+}
+
 /******************************************************************************
  * @brief task runtinme
  *
@@ -47,14 +60,13 @@ ATTR_NORETURN void task_rt(void (*task_entry)(void)) {
  * @param priority for the new task
  * @return ax_return -1 if task initialization failed
  ******************************************************************************/
-void task_create(uint32_t id, void (*task_entry)(void), stack_t *stack,
-                 uint8_t prio) {
+void task_create(void (*task_entry)(void), stack_t *stack, uint8_t prio) {
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
 
   // find a unique task ID
   task->task_id.vms_id    = 0;
-  task->task_id.thread_id = id;
+  task->task_id.thread_id = task_get_new_thread_id();
 
   // save task priority
   task->prio = prio;
@@ -92,4 +104,10 @@ void task_yield() {
  * @return none
  ******************************************************************************/
 void task_destroy() {
+  // get the current task
+  task_t *current = sched_get_current_task();
+  // remove it from the run queue
+  sched_remove_task(current);
+  // call the scheduler
+  sched_run();
 }

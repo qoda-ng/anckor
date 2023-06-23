@@ -23,43 +23,45 @@
  * a1: thread_t to load
  *
  */
+#include "offsets.h"
+
 .global _switch_to
 _switch_to:
     mv a3, a0
     mv a4, a1 
 
     # save previous thread context
-    sd sp, 8(a3)
-    sd s0, 16(a3)
-    sd s1, 24(a3)
-    sd s2, 32(a3)
-    sd s3, 40(a3)
-    sd s4, 48(a3)
-    sd s5, 56(a3)
-    sd s6, 64(a3)
-    sd s7, 72(a3)
-    sd s8, 80(a3)
-    sd s9, 88(a3)
-    sd s10, 96(a3)
-    sd s11, 104(a3)
+    sd sp, TASK_THREAD_SP(a3)
+    sd s0, TASK_THREAD_S0(a3)
+    sd s1, TASK_THREAD_S1(a3)
+    sd s2, TASK_THREAD_S2(a3)
+    sd s3, TASK_THREAD_S3(a3)
+    sd s4, TASK_THREAD_S4(a3)
+    sd s5, TASK_THREAD_S5(a3)
+    sd s6, TASK_THREAD_S6(a3)
+    sd s7, TASK_THREAD_S7(a3)
+    sd s8, TASK_THREAD_S8(a3)
+    sd s9, TASK_THREAD_S9(a3)
+    sd s10, TASK_THREAD_S10(a3)
+    sd s11, TASK_THREAD_S11(a3)
     // save first argument register
-    sd a0, 112(a3)
+    sd a0, TASK_THREAD_A0(a3)
 
     # load next thread context
-    ld sp, 8(a4)
-    ld s0, 16(a4)
-    ld s1, 24(a4)
-    ld s2, 32(a4)
-    ld s3, 40(a4)
-    ld s4, 48(a4)
-    ld s5, 56(a4)
-    ld s6, 64(a4)
-    ld s7, 72(a4)
-    ld s8, 80(a4)
-    ld s9, 88(a4)
-    ld s10, 96(a4)
-    ld s11, 104(a4)
+    ld sp, TASK_THREAD_SP(a4)
+    ld s0, TASK_THREAD_S0(a4)
+    ld s1, TASK_THREAD_S1(a4)
+    ld s2, TASK_THREAD_S2(a4)
+    ld s3, TASK_THREAD_S3(a4)
+    ld s4, TASK_THREAD_S4(a4)
+    ld s5, TASK_THREAD_S5(a4)
+    ld s6, TASK_THREAD_S6(a4)
+    ld s7, TASK_THREAD_S7(a4)
+    ld s8, TASK_THREAD_S8(a4)
+    ld s9, TASK_THREAD_S9(a4)
+    ld s10, TASK_THREAD_S10(a4)
+    ld s11, TASK_THREAD_S11(a4)
     // we need this to load task_entry used by task_rt
-    ld a0, 112(a4)
+    ld a0, TASK_THREAD_A0(a4)
     
     ret

@@ -34,9 +34,11 @@ extern void _switch_to(thread_t *prev_thread, thread_t *next_thread);
  ******************************************************************************/
 extern stack_t   idle_stack;
 task_t idle_task __idle_task_data = {
-    .task_id.vms_id    = 0,
-    .task_id.thread_id = 0,
+    .task_id.vms_id    = NULL,
+    .task_id.thread_id = NULL,
     .prio              = IDLE_PRIO,
+    .state             = READY,
+    .stack             = &idle_stack,
 };
 
 /******************************************************************************
@@ -105,11 +107,29 @@ void sched_run() {
 
 /******************************************************************************
  * @brief add a new task to the run queue
- * @param task to add in run queue
+ * @param task to add in the run queue
  * @return none
  ******************************************************************************/
 void sched_add_task(task_t *task) {
   run_queue[task->prio] = task;
+}
+
+/******************************************************************************
+ * @brief remove a task from the run queue
+ * @param task to remove from the run queue
+ * @return none
+ ******************************************************************************/
+void sched_remove_task(task_t *task) {
+  run_queue[task->prio] = NULL;
+}
+
+/******************************************************************************
+ * @brief find the current task
+ * @param none
+ * @return current_task address pointer
+ ******************************************************************************/
+task_t *sched_get_current_task() {
+  return current_task;
 }
 
 /******************************************************************************
