@@ -36,7 +36,13 @@ void idle_run(void) {
 
   task_yield();
 
-  uart_send((const uint8_t *)"return in idle task\r\n", 22);
+  uart_send((const uint8_t *)"return in idle task, wake up init task\r\n", 22);
+
+  task_wakeup((task_t *)init_stack);
+
+  uart_send(
+      (const uint8_t *)"return in idle task, init task has been destroyed\r\n",
+      52);
 
   while (1) {
   }
@@ -48,12 +54,13 @@ void idle_run(void) {
  * @return None
  ******************************************************************************/
 void init_run(void) {
-  const char thread_msg[] = "hello from the init task\r\n";
+  const char thread_msg[] = "hello from the init task, go to sleep\r\n";
 
-  uart_send((const uint8_t *)&thread_msg[0], 27);
+  uart_send((const uint8_t *)&thread_msg[0], 40);
 
-  // while (1)
-  //   ;
+  task_sleep();
+
+  uart_send((const uint8_t *)"init task has been waked up\r\n", 30);
 }
 
 /******************************************************************************

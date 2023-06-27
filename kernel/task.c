@@ -58,7 +58,7 @@ ATTR_NORETURN void task_rt(void (*task_entry)(void)) {
  * @param function to run in the task
  * @param stack start address of the task
  * @param priority for the new task
- * @return ax_return -1 if task initialization failed
+ * @return none
  ******************************************************************************/
 void task_create(void (*task_entry)(void), stack_t *stack, uint8_t prio) {
   // save task infos at the beginning of the task
@@ -87,9 +87,35 @@ void task_create(void (*task_entry)(void), stack_t *stack, uint8_t prio) {
 /******************************************************************************
  * @brief yield the cpu to an another task
  * @param none
- * @return ax_return -1 if error
+ * @return none
  ******************************************************************************/
 void task_yield() {
+  sched_run();
+}
+
+/******************************************************************************
+ * @brief remove this thread from the run_queue but don't destroy its data
+ * @param none
+ * @return none
+ ******************************************************************************/
+void task_sleep() {
+  // get the current task
+  task_t *current = sched_get_current_task();
+  // remove it from the run queue
+  sched_remove_task(current);
+  // call the scheduler
+  sched_run();
+}
+
+/******************************************************************************
+ * @brief wake up a task put on hold with task_sleep()
+ * @param task_t address pointer
+ * @return none
+ ******************************************************************************/
+void task_wakeup(task_t *task) {
+  // add the task to the run queue
+  sched_add_task(task);
+  // call the scheduler
   sched_run();
 }
 
