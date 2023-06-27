@@ -92,12 +92,12 @@ void sched_run() {
   task_t *prev_task;
 
   // save the current task
-  prev_task        = current_task;
-  prev_task->state = READY;
+  prev_task = current_task;
+  task_set_state(prev_task, READY);
 
   // get the new task to run
-  new_task        = sched_get_next_task();
-  new_task->state = RUNNING;
+  new_task = sched_get_next_task();
+  task_set_state(new_task, RUNNING);
 
   // update the current task
   current_task = new_task;

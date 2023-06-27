@@ -72,7 +72,7 @@ void task_create(void (*task_entry)(void), stack_t *stack, uint8_t prio) {
   task->prio = prio;
 
   // all created tasks are placed in READY state
-  task->state = READY;
+  task_set_state(task, READY);
 
   // save the stack base address
   task->stack = stack;
@@ -90,6 +90,10 @@ void task_create(void (*task_entry)(void), stack_t *stack, uint8_t prio) {
  * @return none
  ******************************************************************************/
 void task_yield() {
+  task_t *current_task = sched_get_current_task();
+
+  task_set_state(current_task, BLOCKED);
+
   sched_run();
 }
 
@@ -99,10 +103,12 @@ void task_yield() {
  * @return none
  ******************************************************************************/
 void task_sleep() {
-  // get the current task
-  task_t *current = sched_get_current_task();
+  // get the current_task task
+  task_t *current_task = sched_get_current_task();
+
+  task_set_state(current_task, BLOCKED);
   // remove it from the run queue
-  sched_remove_task(current);
+  sched_remove_task(current_task);
   // call the scheduler
   sched_run();
 }
@@ -113,6 +119,7 @@ void task_sleep() {
  * @return none
  ******************************************************************************/
 void task_wakeup(task_t *task) {
+  task_set_state(task, READY);
   // add the task to the run queue
   sched_add_task(task);
   // call the scheduler
@@ -130,10 +137,19 @@ void task_wakeup(task_t *task) {
  * @return none
  ******************************************************************************/
 void task_destroy() {
-  // get the current task
-  task_t *current = sched_get_current_task();
+  // get the current_task task
+  task_t *current_task = sched_get_current_task();
   // remove it from the run queue
-  sched_remove_task(current);
+  sched_remove_task(current_task);
   // call the scheduler
   sched_run();
+}
+
+/******************************************************************************
+ * @brief modify the state of the given task
+ * @param task to modify
+ * @return none
+ ******************************************************************************/
+void task_set_state(task_t *task, task_state_t state) {
+  task->state = state;
 }

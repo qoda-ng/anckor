@@ -36,7 +36,7 @@ void idle_run(void) {
 
   task_yield();
 
-  uart_send((const uint8_t *)"return in idle task, wake up init task\r\n", 22);
+  uart_send((const uint8_t *)"return in idle task, wake up init task\r\n", 41);
 
   task_wakeup((task_t *)init_stack);
 

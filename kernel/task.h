@@ -63,5 +63,6 @@ void task_yield();
 void task_sleep();
 void task_wakeup(task_t *);
 void task_destroy();
+void task_set_state(task_t *, task_state_t);
 
 #endif
