@@ -56,10 +56,13 @@ typedef struct task_t {
 /*******************************************************************************
  * Function
  ******************************************************************************/
-void task_create(void (*fn)(void), stack_t *, uint8_t);
+void task_create(void (*)(void), stack_t *, uint8_t);
 void task_rt(void (*)(void));
 void task_stack_init(stack_t *, uint64_t, void (*)(void));
-void task_yield(void);
+void task_yield();
+void task_sleep();
+void task_wakeup(task_t *);
 void task_destroy();
+void task_set_state(task_t *, task_state_t);
 
 #endif
