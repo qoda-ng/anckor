@@ -129,8 +129,8 @@ void task_wakeup(task_t *task) {
 /******************************************************************************
  * @brief task destroy
  *
- * This function cleans all memory used to save task informations, this
- * comprises all stacks and associated structures. It also delete the task from
+ * This function cleans all memory used to save task information, this
+ * comprises all stacks and associated structures. It also deletes the task from
  * the scheduler runqueue.
  *
  * @param none

@@ -20,13 +20,39 @@
 #include "common.h"
 #include "task.h"
 
-/*******************************************************************************
- * Function
+/******************************************************************************
+ * @brief initiliaze scheduler parameters
+ * @param none
+ * @return none
  ******************************************************************************/
-void    sched_init();
-void    sched_run();
-void    sched_add_task(task_t *);
-void    sched_remove_task(task_t *);
+void sched_init();
+
+/******************************************************************************
+ * @brief main function to run the scheduler
+ * @param none
+ * @return none
+ ******************************************************************************/
+void sched_run();
+
+/******************************************************************************
+ * @brief add a new task to the run queue
+ * @param task to add in the run queue
+ * @return none
+ ******************************************************************************/
+void sched_add_task(task_t *);
+
+/******************************************************************************
+ * @brief remove a task from the run queue
+ * @param task to remove from the run queue
+ * @return none
+ ******************************************************************************/
+void sched_remove_task(task_t *);
+
+/******************************************************************************
+ * @brief find the current running task
+ * @param none
+ * @return current_task address pointer
+ ******************************************************************************/
 task_t *sched_get_current_task();
 
 #endif

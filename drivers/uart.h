@@ -27,7 +27,16 @@
 #define UART_RX_TX_OFFSET  0
 
 /******************************************************************************
- * Functions
+ * @brief Initialization of the uart peripheral
+ * @param None
+ * @return None
  ******************************************************************************/
 void uart_init();
+
+/******************************************************************************
+ * @brief send data through the uart
+ * @param pointer to data to send
+ * @param size of the data to send
+ * @return None
+ ******************************************************************************/
 void uart_send(const uint8_t *data, const uint64_t size);

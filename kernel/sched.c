@@ -124,7 +124,7 @@ void sched_remove_task(task_t *task) {
 }
 
 /******************************************************************************
- * @brief find the current task
+ * @brief find the current running task
  * @param none
  * @return current_task address pointer
  ******************************************************************************/
