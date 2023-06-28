@@ -17,6 +17,7 @@
 
 #include "common.h"
 #include "sched.h"
+#include "string.h"
 #include "task.h"
 #include "uart.h"
 
@@ -32,7 +33,7 @@ stack_t init_stack;
 void idle_run(void) {
   const char thread_msg[] = "hello from the idle task\r\n";
 
-  uart_send((const uint8_t *)&thread_msg[0], 27);
+  uart_send((const uint8_t *)&thread_msg[0], strlen(thread_msg));
 
   task_yield();
 
@@ -56,7 +57,7 @@ void idle_run(void) {
 void init_run(void) {
   const char thread_msg[] = "hello from the init task, go to sleep\r\n";
 
-  uart_send((const uint8_t *)&thread_msg[0], 40);
+  uart_send((const uint8_t *)&thread_msg[0], strlen(thread_msg));
 
   task_sleep();
 
@@ -71,7 +72,7 @@ void init_run(void) {
 void kernel_init() {
   const char kernel_msg[] = "hello from the kernel\r\n";
 
-  uart_send((const uint8_t *)&kernel_msg[0], 24);
+  uart_send((const uint8_t *)&kernel_msg[0], strlen(kernel_msg));
 
   sched_init();
 

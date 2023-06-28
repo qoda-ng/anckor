@@ -144,12 +144,3 @@ void task_destroy() {
   // call the scheduler
   sched_run();
 }
-
-/******************************************************************************
- * @brief modify the state of the given task
- * @param task to modify
- * @return none
- ******************************************************************************/
-void task_set_state(task_t *task, task_state_t state) {
-  task->state = state;
-}
