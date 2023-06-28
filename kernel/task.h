@@ -53,16 +53,78 @@ typedef struct task_t {
   thread_t     thread;
 } task_t;
 
-/*******************************************************************************
- * Function
+/******************************************************************************
+ * @brief initialize a task and schedule it
+ * @param id of the task
+ * @param function to run in the task
+ * @param stack start address of the task
+ * @param priority for the new task
+ * @return none
  ******************************************************************************/
 void task_create(void (*)(void), stack_t *, uint8_t);
+
+/******************************************************************************
+ * @brief task runtinme
+ *
+ * This function is used to run task_entry in a controlled environment. It cans
+ * run an exit() procedure to properly clean the task if ever its main procedure
+ * returns.
+ *
+ * @param function to run in the task
+ * @return none
+ ******************************************************************************/
 void task_rt(void (*)(void));
+
+/******************************************************************************
+ * @brief initialize task stack
+ *
+ * @param stack start address pointer
+ * @param size of the stack
+ * @param function to run in the task context
+ * @return top address of the initialized stack
+ ******************************************************************************/
 void task_stack_init(stack_t *, uint64_t, void (*)(void));
+
+/******************************************************************************
+ * @brief yield the cpu to an another task
+ * @param none
+ * @return none
+ ******************************************************************************/
 void task_yield();
+
+/******************************************************************************
+ * @brief remove this thread from the run_queue but don't destroy its data
+ * @param none
+ * @return none
+ ******************************************************************************/
 void task_sleep();
+
+/******************************************************************************
+ * @brief wake up a task put on hold with task_sleep()
+ * @param task_t address pointer
+ * @return none
+ ******************************************************************************/
 void task_wakeup(task_t *);
+
+/******************************************************************************
+ * @brief task destroy
+ *
+ * This function cleans all memory used to save task informations, this
+ * comprises all stacks and associated structures. It also delete the task from
+ * the scheduler runqueue.
+ *
+ * @param none
+ * @return none
+ ******************************************************************************/
 void task_destroy();
-void task_set_state(task_t *, task_state_t);
+
+/******************************************************************************
+ * @brief modify the state of the given task
+ * @param task to modify
+ * @return none
+ ******************************************************************************/
+inline void task_set_state(task_t *task, task_state_t state) {
+  task->state = state;
+}
 
 #endif
