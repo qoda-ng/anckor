@@ -16,6 +16,7 @@
  */
 
 #include "common.h"
+#include "printf.h"
 #include "sched.h"
 #include "string.h"
 #include "task.h"
@@ -31,19 +32,15 @@ stack_t init_stack;
  * @return None
  ******************************************************************************/
 void idle_run(void) {
-  const char thread_msg[] = "hello from the idle task\r\n";
-
-  uart_send((const uint8_t *)&thread_msg[0], strlen(thread_msg));
+  printf("hello from the idle task\r\n");
 
   task_yield();
 
-  uart_send((const uint8_t *)"return in idle task, wake up init task\r\n", 41);
+  printf("return in idle task, wake up init task\r\n");
 
   task_wakeup((task_t *)init_stack);
 
-  uart_send(
-      (const uint8_t *)"return in idle task, init task has been destroyed\r\n",
-      52);
+  printf("return in idle task, init task has been destroyed\r\n");
 
   while (1) {
   }
@@ -55,13 +52,11 @@ void idle_run(void) {
  * @return None
  ******************************************************************************/
 void init_run(void) {
-  const char thread_msg[] = "hello from the init task, go to sleep\r\n";
-
-  uart_send((const uint8_t *)&thread_msg[0], strlen(thread_msg));
+  printf("hello from the init task, go to sleep\r\n");
 
   task_sleep();
 
-  uart_send((const uint8_t *)"init task has been waked up\r\n", 30);
+  printf("init task has been waked up\r\n");
 }
 
 /******************************************************************************
@@ -70,9 +65,7 @@ void init_run(void) {
  * @return None
  ******************************************************************************/
 void kernel_init() {
-  const char kernel_msg[] = "hello from the kernel\r\n";
-
-  uart_send((const uint8_t *)&kernel_msg[0], strlen(kernel_msg));
+  printf("hello from the kernel\r\n");
 
   sched_init();
 

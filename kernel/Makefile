@@ -16,7 +16,7 @@
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
 INC := -I../tools -I../drivers -I../arch -I../lib
 
 CC := riscv64-unknown-elf-gcc

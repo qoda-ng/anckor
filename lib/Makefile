@@ -16,14 +16,17 @@
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
 INC := -I../tools
 
 CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/strlen.o
+build: $(OBJDIR)/strlen.o $(OBJDIR)/printf.o 
 
 $(OBJDIR)/strlen.o: strlen.c
 	$(CC) $(CFLAGS) $(INC) -c strlen.c -o $(OBJDIR)/strlen.o
+
+$(OBJDIR)/printf.o: printf.c
+	$(CC) $(CFLAGS) $(INC) -c printf.c -o $(OBJDIR)/printf.o

@@ -25,7 +25,7 @@
 #define uint16_t unsigned short int
 #define uint8_t  unsigned char
 
-#define NULL 0
+// #define NULL 0
 
 #define ATTR_NORETURN __attribute__((noreturn))
 

@@ -17,8 +17,9 @@
 #include "task.h"
 
 #include "sched.h"
+#include "stddef.h"
 
-uint64_t last_thread_id = NULL;
+uint64_t last_thread_id = (uint64_t)NULL;
 
 /******************************************************************************
  * @brief find a new thread_id
