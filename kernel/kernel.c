@@ -18,7 +18,6 @@
 #include "common.h"
 #include "printf.h"
 #include "sched.h"
-#include "string.h"
 #include "task.h"
 #include "uart.h"
 
@@ -32,15 +31,15 @@ stack_t init_stack;
  * @return None
  ******************************************************************************/
 void idle_run(void) {
-  printf("hello from the idle task\r\n");
+  printf("start task %d / prio %d\r\n", 0, 0);
 
   task_yield();
 
-  printf("return in idle task, wake up init task\r\n");
+  printf("return to task %d / prio %d\r\n", 0, 0);
 
   task_wakeup((task_t *)init_stack);
 
-  printf("return in idle task, init task has been destroyed\r\n");
+  printf("return to task %d / prio %d\r\n", 0, 0);
 
   while (1) {
   }
@@ -52,11 +51,14 @@ void idle_run(void) {
  * @return None
  ******************************************************************************/
 void init_run(void) {
-  printf("hello from the init task, go to sleep\r\n");
+  uint64_t init_task_id   = task_get_tid((task_t *)init_stack);
+  uint8_t  init_task_prio = task_get_priority((task_t *)init_stack);
+
+  printf("start task %d / prio %d\r\n", init_task_id, init_task_prio);
 
   task_sleep();
 
-  printf("init task has been waked up\r\n");
+  printf("wake up task %d / prio %d\r\n", init_task_id, init_task_prio);
 }
 
 /******************************************************************************
