@@ -127,4 +127,23 @@ inline void task_set_state(task_t *task, task_state_t state) {
   task->state = state;
 }
 
+/******************************************************************************
+ * @brief get the unique ID of a task
+ * @param task from the id is read
+ * @return task id
+ ******************************************************************************/
+inline uint64_t task_get_tid(task_t *task) {
+  uint64_t id = task->task_id.thread_id;
+  return id;
+}
+
+/******************************************************************************
+ * @brief get the unique ID of a task
+ * @param task from the priority is read
+ * @return task priority
+ ******************************************************************************/
+inline uint8_t task_get_priority(task_t *task) {
+  return task->prio;
+}
+
 #endif
