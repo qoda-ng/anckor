@@ -86,6 +86,13 @@ SECTIONS
     . = _idle_stack_start + 4K;
     _idle_stack_end = .;
 
+    /* 
+    Apps section
+    */
+    _apps_start = .;
+    KEEP(*(.data.apps));
+    _apps_end = .;
+
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)
 	  *(.data .data.*)
