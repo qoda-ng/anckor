@@ -21,6 +21,11 @@
 #include "../version.h"
 #include "printk.h"
 
+/**
+ * @brief hello banner from the kernel with the build version
+ * @param None
+ * @return None
+ */
 void banner_display(void) {
   printk("Anckor OS build " BUILD_VERSION "\r\n");
 }
