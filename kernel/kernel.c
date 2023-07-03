@@ -15,9 +15,9 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "banner.h"
 #include "common.h"
 #include "init.h"
-#include "printf.h"
 #include "sched.h"
 #include "task.h"
 #include "uart.h"
@@ -39,7 +39,7 @@ void idle_run(void) {
  * @return None
  ******************************************************************************/
 void kernel_init() {
-  printf("hello from the kernel\r\n");
+  banner_display();
 
   sched_init();
 
