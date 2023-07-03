@@ -15,14 +15,4 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#ifndef BANNER_H
-#define BANNER_H
-
-#include "../version.h"
-#include "printk.h"
-
-void banner_display(void) {
-  printk("Anckor OS build " BUILD_VERSION "\r\n");
-}
-
-#endif
+#define BUILD_VERSION "0.0.1"
