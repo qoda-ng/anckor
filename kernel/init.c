@@ -15,35 +15,36 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#include "banner.h"
-#include "common.h"
 #include "init.h"
-#include "sched.h"
+
+#include "printf.h"
 #include "task.h"
-#include "uart.h"
+
+#define INIT_PRIO 1
+
+stack_t init_stack;
 
 /******************************************************************************
- * @brief Idle routine runned when no other tasks are ready
+ * @brief Init task will launch all registered tasks in the system
  * @param None
  * @return None
  ******************************************************************************/
-void idle_run(void) {
-  while (1) {
-    task_yield();
-  }
+void init_run(void) {
+  uint64_t init_task_id   = task_get_tid((task_t *)init_stack);
+  uint8_t  init_task_prio = task_get_priority((task_t *)init_stack);
+
+  printf("start task %d / prio %d\r\n", init_task_id, init_task_prio);
+
+  task_sleep();
+
+  printf("wake up task %d / prio %d\r\n", init_task_id, init_task_prio);
 }
 
 /******************************************************************************
- * @brief initialisation of kernel structures and launch the first task
+ * @brief create the init task
  * @param None
  * @return None
  ******************************************************************************/
-void kernel_init() {
-  banner_display();
-
-  sched_init();
-
-  init_create();
-
-  idle_run();
+void init_create(void) {
+  task_create(init_run, &init_stack, INIT_PRIO);
 }

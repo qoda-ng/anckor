@@ -14,36 +14,14 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-
-#include "banner.h"
-#include "common.h"
-#include "init.h"
-#include "sched.h"
-#include "task.h"
-#include "uart.h"
+#ifndef INIT_H
+#define INIT_H
 
 /******************************************************************************
- * @brief Idle routine runned when no other tasks are ready
+ * @brief create the init task
  * @param None
  * @return None
  ******************************************************************************/
-void idle_run(void) {
-  while (1) {
-    task_yield();
-  }
-}
+void init_create(void);
 
-/******************************************************************************
- * @brief initialisation of kernel structures and launch the first task
- * @param None
- * @return None
- ******************************************************************************/
-void kernel_init() {
-  banner_display();
-
-  sched_init();
-
-  init_create();
-
-  idle_run();
-}
+#endif
