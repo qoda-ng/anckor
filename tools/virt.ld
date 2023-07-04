@@ -89,9 +89,9 @@ SECTIONS
     /* 
     Apps section
     */
-    _apps_start = .;
+    PROVIDE(_apps_start = .);
     KEEP(*(.data.apps));
-    _apps_end = .;
+    PROVIDE(_apps_end = .);
 
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)
