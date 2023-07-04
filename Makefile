@@ -36,7 +36,7 @@ build:
 	cd kernel && $(MAKE) $@
 	cd lib && $(MAKE) $@
 # link all components
-	$(LD) $(LDFLAGS) build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
+	$(LD) $(LDFLAGS) build/main.o build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:

@@ -17,12 +17,18 @@
 
 #include "init.h"
 
-#include "printf.h"
+#include "app.h"
+#include "printk.h"
 #include "task.h"
 
 #define INIT_PRIO 1
 
 stack_t init_stack;
+
+extern uint64_t _apps_start;
+extern uint64_t _apps_end;
+
+stack_t app_stack;
 
 /******************************************************************************
  * @brief Init task will launch all registered tasks in the system
@@ -30,14 +36,13 @@ stack_t init_stack;
  * @return None
  ******************************************************************************/
 void init_run(void) {
-  uint64_t init_task_id   = task_get_tid((task_t *)init_stack);
-  uint8_t  init_task_prio = task_get_priority((task_t *)init_stack);
-
-  printf("start task %d / prio %d\r\n", init_task_id, init_task_prio);
-
-  task_sleep();
-
-  printf("wake up task %d / prio %d\r\n", init_task_id, init_task_prio);
+  // iterate over all app descriptors saved in the section(.data.apps)
+  for (uint64_t *app_pt = &_apps_start; app_pt < &_apps_end; app_pt += 1) {
+    // get the app descriptor from the current pointer
+    app_info_t *app = (app_info_t *)*app_pt;
+    // create a task for the app
+    task_create(app->entry, &app_stack, app->prio);
+  }
 }
 
 /******************************************************************************

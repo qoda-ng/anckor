@@ -15,19 +15,14 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#ifndef BANNER_H
-#define BANNER_H
+#include "app.h"
+#include "printf.h"
 
-#include "../version.h"
-#include "printk.h"
+void main(void) {
+  printf("hello from the app\r\n");
 
-/**
- * @brief hello banner from the kernel with the build version
- * @param None
- * @return None
- */
-void banner_display(void) {
-  printk("Anckor OS build " BUILD_VERSION "\r\n");
+  while (1) {
+  }
 }
 
-#endif
+REGISTER_APP(my_first_app, 2, main)

@@ -30,6 +30,7 @@
 void idle_run(void) {
   while (1) {
     task_yield();
+    printk("idle run\r\n");
   }
 }
 

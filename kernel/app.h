@@ -15,19 +15,30 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#ifndef BANNER_H
-#define BANNER_H
+#ifndef APP_H
+#define APP_H
 
-#include "../version.h"
-#include "printk.h"
+#include "task.h"
+
+#define _app_section __attribute__((section(".data.apps")))
+
+#define REGISTER_APP(_name, _prio, _entry) \
+  app_info_t app_##_name = {               \
+      .name  = #_name,                     \
+      .prio  = _prio,                      \
+      .entry = _entry,                     \
+  };                                       \
+  _app_section app_info_t *app_##_name##_pt = &app_##_name;
 
 /**
- * @brief hello banner from the kernel with the build version
+ * @brief structure to save apps parameters
  * @param None
  * @return None
  */
-void banner_display(void) {
-  printk("Anckor OS build " BUILD_VERSION "\r\n");
-}
+typedef struct {
+  const char *name;
+  uint8_t     prio;
+  void (*entry)(void);
+} app_info_t;
 
 #endif

@@ -23,7 +23,7 @@ CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/kernel.o $(OBJDIR)/task.o $(OBJDIR)/sched.o $(OBJDIR)/init.o
+build: $(OBJDIR)/kernel.o $(OBJDIR)/task.o $(OBJDIR)/sched.o $(OBJDIR)/init.o $(OBJDIR)/main.o
 
 $(OBJDIR)/kernel.o: kernel.c
 	$(CC) $(CFLAGS) $(INC) -c kernel.c -o $(OBJDIR)/kernel.o
@@ -36,3 +36,6 @@ $(OBJDIR)/sched.o: sched.c
 
 $(OBJDIR)/init.o: init.c
 	$(CC) $(CFLAGS) $(INC) -c init.c -o $(OBJDIR)/init.o
+
+$(OBJDIR)/main.o: main.c
+	$(CC) $(CFLAGS) $(INC) -c main.c -o $(OBJDIR)/main.o
