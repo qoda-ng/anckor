@@ -17,12 +17,39 @@
 
 #include "app.h"
 #include "printf.h"
+#include "task.h"
 
-void main(void) {
-  printf("hello from the app\r\n");
+void main_thread(void) {
+  printf("[Test] threads\r\n");
+  printf("[Test] start\r\n");
 
-  while (1) {
-  }
+  // task_sleep();
+
+  printf("resume main thread\r\n");
+  printf("main thread finished, destroy it\r\n");
+
+  while (1)
+    ;
 }
 
-REGISTER_APP(hello, 2, main)
+REGISTER_APP(test_thread, 2, main_thread)
+
+void second_thread(void) {
+  printf("second thread\r\n");
+
+  task_yield();
+
+  printf("immediatly resume second thread\r\n");
+  printf("wakeup main thread\r\n");
+
+  task_wakeup((task_t *)stack_test_thread);
+
+  printf("second thread is resumed\r\n");
+
+  printf("[test] end\r\n");
+
+  while (1)
+    ;
+}
+
+// REGISTER_APP(second_thread, 1, second_thread)
