@@ -25,4 +25,4 @@ void main(void) {
   }
 }
 
-REGISTER_APP(my_first_app, 2, main)
+REGISTER_APP(hello, 2, main)

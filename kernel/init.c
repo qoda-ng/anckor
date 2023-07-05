@@ -28,8 +28,6 @@ stack_t init_stack;
 extern uint64_t _apps_start;
 extern uint64_t _apps_end;
 
-stack_t app_stack;
-
 /******************************************************************************
  * @brief Init task will launch all registered tasks in the system
  * @param None
@@ -41,7 +39,7 @@ void init_run(void) {
     // get the app descriptor from the current pointer
     app_info_t *app = (app_info_t *)*app_pt;
     // create a task for the app
-    task_create(app->entry, &app_stack, app->prio);
+    task_create(app->entry, app->stack, app->prio);
   }
 }
 
