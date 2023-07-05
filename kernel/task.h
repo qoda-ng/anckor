@@ -46,6 +46,7 @@ typedef struct task_id_t {
  * @brief structure to manage common thread and processes informations
  ******************************************************************************/
 typedef struct task_t {
+  const char  *name;
   task_id_t    task_id;
   uint8_t      prio;
   task_state_t state;
@@ -61,7 +62,7 @@ typedef struct task_t {
  * @param priority for the new task
  * @return none
  ******************************************************************************/
-void task_create(void (*)(void), stack_t *, uint8_t);
+void task_create(const char *, void (*)(void), stack_t *, uint8_t);
 
 /******************************************************************************
  * @brief task runtinme

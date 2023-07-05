@@ -20,7 +20,7 @@
 #include "processor.h"
 #include "stddef.h"
 
-#define MAX_PRIO  3
+#define MAX_PRIO  255
 #define IDLE_PRIO 0
 
 #define __idle_task_data __attribute__((section(".data.idle_task")))
