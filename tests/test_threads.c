@@ -23,16 +23,13 @@ void main_thread(void) {
   printf("[Test] threads\r\n");
   printf("[Test] start\r\n");
 
-  // task_sleep();
+  task_sleep();
 
   printf("resume main thread\r\n");
   printf("main thread finished, destroy it\r\n");
-
-  while (1)
-    ;
 }
 
-REGISTER_APP(test_thread, 2, main_thread)
+REGISTER_APP(test_thread, 3, main_thread)
 
 void second_thread(void) {
   printf("second thread\r\n");
@@ -52,4 +49,4 @@ void second_thread(void) {
     ;
 }
 
-// REGISTER_APP(second_thread, 1, second_thread)
+REGISTER_APP(second_thread, 2, second_thread)
