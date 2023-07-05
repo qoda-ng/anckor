@@ -39,7 +39,7 @@ void init_run(void) {
     // get the app descriptor from the current pointer
     app_info_t *app = (app_info_t *)*app_pt;
     // create a task for the app
-    task_create(app->entry, app->stack, app->prio);
+    task_create(app->name, app->entry, app->stack, app->prio);
   }
 }
 
@@ -49,5 +49,5 @@ void init_run(void) {
  * @return None
  ******************************************************************************/
 void init_create(void) {
-  task_create(init_run, &init_stack, INIT_PRIO);
+  task_create("init_task", init_run, &init_stack, INIT_PRIO);
 }

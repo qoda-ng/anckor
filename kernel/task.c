@@ -61,9 +61,12 @@ ATTR_NORETURN void task_rt(void (*task_entry)(void)) {
  * @param priority for the new task
  * @return none
  ******************************************************************************/
-void task_create(void (*task_entry)(void), stack_t *stack, uint8_t prio) {
+void task_create(const char *name, void (*task_entry)(void), stack_t *stack,
+                 uint8_t prio) {
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
+
+  task->name = name;
 
   // find a unique task ID
   task->task_id.vms_id    = 0;
