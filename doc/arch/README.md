@@ -13,3 +13,4 @@ As a remainder, these **records** contain the following fields:
 
 - [Kernel initialization](./adr-001.md)
 - [Task creation and context switching](./adr-002.md)
+- [Init task](./adr-003.md)
