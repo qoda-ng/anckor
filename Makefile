@@ -20,22 +20,22 @@ LD := riscv64-unknown-elf-ld
 
 LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld 
 
-.PHONY: all clean build run
+.PHONY: all build run
 
-all: clean build
-
-clean:
-	rm -r build
-	mkdir build
+all: build
 
 build:
+	@if [ -d "build" ]; then \
+		rm -r build; \
+	fi
+	@mkdir build
 # build all kernel components in objects files
-	cd arch && $(MAKE) $@
-	cd platform && $(MAKE) $@
-	cd drivers && $(MAKE) $@
-	cd kernel && $(MAKE) $@
-	cd lib && $(MAKE) $@
-	cd tests && $(MAKE) $@
+	@cd arch && $(MAKE) $@
+	@cd platform && $(MAKE) $@
+	@cd drivers && $(MAKE) $@
+	@cd kernel && $(MAKE) $@
+	@cd lib && $(MAKE) $@
+	@cd tests && $(MAKE) $@
 # link all components
 	$(LD) $(LDFLAGS) build/test_threads.o build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
