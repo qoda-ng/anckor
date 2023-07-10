@@ -13,10 +13,15 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build/
+CC := riscv64-unknown-elf-gcc
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
 
-INC := -I../tools -I../drivers -I../arch -I../lib
+OBJ_TARGETS := $(addprefix $(OBJDIR), $(OBJS))
 
-include ../build.mk
+.PHONY: build
+
+build: $(OBJ_TARGETS)
+
+$(OBJDIR)%.o: %.c
+	$(info compiling $<)
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
