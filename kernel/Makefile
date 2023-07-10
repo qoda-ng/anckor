@@ -15,24 +15,16 @@
 
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build
+OBJDIR := ../build/
+OBJ_TARGETS := $(addprefix $(OBJDIR), $(OBJS))
 CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
 INC := -I../tools -I../drivers -I../arch -I../lib
 
 CC := riscv64-unknown-elf-gcc
 
-.PHONY: all 
+.PHONY: all build
 
-build: $(OBJDIR)/kernel.o $(OBJDIR)/task.o $(OBJDIR)/sched.o $(OBJDIR)/init.o
+build: $(OBJ_TARGETS)
 
-$(OBJDIR)/kernel.o: kernel.c
-	$(CC) $(CFLAGS) $(INC) -c kernel.c -o $(OBJDIR)/kernel.o
-
-$(OBJDIR)/task.o: task.c
-	$(CC) $(CFLAGS) $(INC) -c task.c -o $(OBJDIR)/task.o
-
-$(OBJDIR)/sched.o: sched.c
-	$(CC) $(CFLAGS) $(INC) -c sched.c -o $(OBJDIR)/sched.o
-
-$(OBJDIR)/init.o: init.c
-	$(CC) $(CFLAGS) $(INC) -c init.c -o $(OBJDIR)/init.o
+$(OBJDIR)%.o: %.c
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
