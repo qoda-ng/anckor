@@ -13,20 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
+OBJDIR := ../build/
 INC := -I../tools
 
-CC := riscv64-unknown-elf-gcc
-
-.PHONY: all 
-
-build: $(OBJDIR)/strlen.o $(OBJDIR)/printf.o 
-
-$(OBJDIR)/strlen.o: strlen.c
-	$(CC) $(CFLAGS) $(INC) -c strlen.c -o $(OBJDIR)/strlen.o
-
-$(OBJDIR)/printf.o: printf.c
-	$(CC) $(CFLAGS) $(INC) -c printf.c -o $(OBJDIR)/printf.o
+include ../build.mk
