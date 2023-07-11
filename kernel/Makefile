@@ -13,10 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
 OBJDIR := ../build/
-
 INC := -I../tools -I../drivers -I../arch -I../lib
 
 include ../build.mk

@@ -13,17 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
+OBJDIR := ../build/
 INC := -I../tools -I../drivers -I../arch -I../lib -I../kernel
 
-CC := riscv64-unknown-elf-gcc
-
-.PHONY: all 
-
-build: $(OBJDIR)/test_threads.o
-
-$(OBJDIR)/test_threads.o: test_threads.c
-	$(CC) $(CFLAGS) $(INC) -c test_threads.c -o $(OBJDIR)/test_threads.o
+include ../build.mk

@@ -16,6 +16,9 @@
 CC := riscv64-unknown-elf-gcc
 CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
 
+SRCS := $(wildcard *.c)
+OBJS := $(SRCS:.c=.o)
+
 OBJ_TARGETS := $(addprefix $(OBJDIR), $(OBJS))
 
 .PHONY: build

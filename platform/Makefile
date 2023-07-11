@@ -13,17 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc 
+OBJDIR := ../build/
 INC := -I../tools -I../drivers
 
-CC := riscv64-unknown-elf-gcc
-
-.PHONY: all 
-
-build:$(OBJDIR)/platform.o
-
-$(OBJDIR)/platform.o: platform.c
-	$(CC) $(CFLAGS) $(INC) -c platform.c -o $(OBJDIR)/platform.o
+include ../build.mk
