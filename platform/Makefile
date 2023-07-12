@@ -14,6 +14,6 @@
 # not, see https://www.gnu.org/licenses/
 
 BUILD_DIR := ../build/
-INC := -I../tools/include -I../drivers/include
+MODULE_INCS:= -I../tools/include -I../drivers/include
 
 include ../build.mk
