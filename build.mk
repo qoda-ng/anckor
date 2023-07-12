@@ -13,18 +13,34 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
+include ../.config
+
 CC := riscv64-unknown-elf-gcc
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -ffreestanding
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
+ifeq ($(CONFIG_BUILD_DEBUG),y)
+	CFLAGS += -Og -ggdb
+else 
+	CFLAGS += -O1
+endif
 
-OBJ_TARGETS := $(addprefix $(OBJDIR), $(OBJS))
+MODULE_CSRCS := $(wildcard *.c)
+MODULE_ASMSRCS := $(wildcard *.S)
+
+MODULE_COBJS := $(MODULE_CSRCS:.c=.o)
+MODULE_ASMOBJS := $(MODULE_ASMSRCS:.S=.o)
+
+MODULE_CTARGETS := $(addprefix $(BUILD_DIR), $(MODULE_COBJS))
+MODULE_ASMTARGETS := $(addprefix $(BUILD_DIR), $(MODULE_ASMOBJS))
 
 .PHONY: build
 
-build: $(OBJ_TARGETS)
+build: $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)
 
-$(OBJDIR)%.o: %.c
+$(BUILD_DIR)%.o: %.c
 	$(info compiling $<)
-	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(BUILD_DIR)%.o: %.s
+	$(info compiling $<)
+	$(CC) $(CFLAGS) -c $< -o $@

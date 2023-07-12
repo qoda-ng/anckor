@@ -22,9 +22,21 @@ LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld
 
 .PHONY: all build run
 
-all: build
+all: clean build
 
-build:
+clean: 
+	@if [ -d "build" ]; then \
+		rm -r build; \
+	fi
+	@if [ $(wildcard .config) ]; then \
+		rm .config; \
+	fi
+
+defconfig: 
+	@cp make/defconfig .config
+
+build: .config
+# delete build directory if it already exists
 	@if [ -d "build" ]; then \
 		rm -r build; \
 	fi
@@ -41,7 +53,9 @@ build:
 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:
+	$(info run [release] build)
 	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
 
 debug:
+	$(info run [debug] build)
 	qemu-system-riscv64 -s -S -machine virt -cpu rv64 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
