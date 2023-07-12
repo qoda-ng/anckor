@@ -28,18 +28,12 @@ clean:
 	@if [ -d "build" ]; then \
 		rm -r build; \
 	fi
-	@if [ $(wildcard .config) ]; then \
-		rm .config; \
-	fi
 
 defconfig: 
 	@cp make/defconfig .config
 
-build: .config
+build: clean .config
 # delete build directory if it already exists
-	@if [ -d "build" ]; then \
-		rm -r build; \
-	fi
 	@mkdir build
 # build all kernel components in objects files
 	@cd arch && $(MAKE) $@
