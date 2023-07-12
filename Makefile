@@ -22,9 +22,20 @@ LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld
 
 .PHONY: all build run
 
-all: build
+all: clean build
 
-build:
+clean: 
+	@if [ -d "build" ]; then \
+		rm -r build; \
+	fi
+	@if [ $(wildcard .config) ]; then \
+		rm .config; \
+	fi
+
+defconfig: 
+	cp make/defconfig .config
+
+build: .config
 	@if [ -d "build" ]; then \
 		rm -r build; \
 	fi
