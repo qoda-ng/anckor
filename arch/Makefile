@@ -13,27 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-BUILD_DIR := ../build
-CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc
+BUILD_DIR := ../build/
 INC := -I../arch -I../tools -I../kernel
 
-CC := riscv64-unknown-elf-gcc
-
-.PHONY: all 
-
-build: $(BUILD_DIR)/context.o $(BUILD_DIR)/start.o $(BUILD_DIR)/trap.o $(BUILD_DIR)/task_arch.o
-
-# Build all assembly files
-$(BUILD_DIR)/context.o: context.S
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/start.o: start.S
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/trap.o: trap.S
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/task_arch.o: task_arch.c
-	$(CC) $(CFLAGS) $(INC) -c task_arch.c -o $(BUILD_DIR)/task_arch.o
+include ../build.mk

@@ -17,10 +17,10 @@ CC := riscv64-unknown-elf-gcc
 CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding
 
 MODULE_CSRCS := $(wildcard *.c)
-MODULE_ASMSRCS := $(wildcard *.s)
+MODULE_ASMSRCS := $(wildcard *.S)
 
 MODULE_COBJS := $(MODULE_CSRCS:.c=.o)
-MODULE_ASMOBJS := $(MODULE_ASMSRCS:.s=.o)
+MODULE_ASMOBJS := $(MODULE_ASMSRCS:.S=.o)
 
 MODULE_CTARGETS := $(addprefix $(BUILD_DIR), $(MODULE_COBJS))
 MODULE_ASMTARGETS := $(addprefix $(BUILD_DIR), $(MODULE_ASMOBJS))
@@ -35,4 +35,4 @@ $(BUILD_DIR)%.o: %.c
 
 $(BUILD_DIR)%.o: %.s
 	$(info compiling $<)
-	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
