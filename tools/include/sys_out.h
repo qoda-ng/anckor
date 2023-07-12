@@ -14,20 +14,19 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#ifndef SYS_OUT_H
+#define SYS_OUT_H
 
-#ifndef BANNER_H
-#define BANNER_H
+#include "../../drivers/include/uart.h"
 
-#include "../version.h"
-#include "printk.h"
-
-/**
- * @brief hello banner from the kernel with the build version
- * @param None
+/******************************************************************************
+ * @brief send char for printf routine
+ * @param character to send
+ * @param data to write
  * @return None
- */
-void banner_display(void) {
-  printk("Anckor OS build " BUILD_VERSION "\r\n");
+ ******************************************************************************/
+inline void _putchar(char character) {
+  uart_send((const uint8_t *)&character, 1);
 }
 
 #endif
