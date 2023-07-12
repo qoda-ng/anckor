@@ -14,6 +14,6 @@
 # not, see https://www.gnu.org/licenses/
 
 BUILD_DIR := ../build/
-INC := -I../tools
+INC := -I../tools/include -Iinclude
 
 include ../build.mk

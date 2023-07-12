@@ -39,8 +39,8 @@ build: $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)
 
 $(BUILD_DIR)%.o: %.c
 	$(info compiling $<)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-$(BUILD_DIR)%.o: %.s
+$(BUILD_DIR)%.o: %.S
 	$(info compiling $<)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
