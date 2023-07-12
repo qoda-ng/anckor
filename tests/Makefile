@@ -13,7 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-OBJDIR := ../build/
+BUILD_DIR := ../build/
 INC := -I../tools -I../drivers -I../arch -I../lib -I../kernel
 
 include ../build.mk

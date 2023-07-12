@@ -15,7 +15,7 @@
 
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
-OBJDIR := ../build
+BUILD_DIR := ../build
 CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -Og -ggdb -ffreestanding -nostdinc
 INC := -I../arch -I../tools -I../kernel
 
@@ -23,17 +23,17 @@ CC := riscv64-unknown-elf-gcc
 
 .PHONY: all 
 
-build: $(OBJDIR)/context.o $(OBJDIR)/start.o $(OBJDIR)/trap.o $(OBJDIR)/task_arch.o
+build: $(BUILD_DIR)/context.o $(BUILD_DIR)/start.o $(BUILD_DIR)/trap.o $(BUILD_DIR)/task_arch.o
 
 # Build all assembly files
-$(OBJDIR)/context.o: context.S
+$(BUILD_DIR)/context.o: context.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/start.o: start.S
+$(BUILD_DIR)/start.o: start.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/trap.o: trap.S
+$(BUILD_DIR)/trap.o: trap.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/task_arch.o: task_arch.c
-	$(CC) $(CFLAGS) $(INC) -c task_arch.c -o $(OBJDIR)/task_arch.o
+$(BUILD_DIR)/task_arch.o: task_arch.c
+	$(CC) $(CFLAGS) $(INC) -c task_arch.c -o $(BUILD_DIR)/task_arch.o
