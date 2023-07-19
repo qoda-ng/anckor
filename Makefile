@@ -15,7 +15,7 @@
 
 # TOP LEVEL MAKEFILE
 
-include macros.mk
+include tools/make/macros.mk
 
 include .config
 
@@ -37,7 +37,7 @@ setup_build_dir: clean
 	@mkdir build
 
 defconfig: 
-	@cp make/defconfig .config
+	@cp tools/make/defconfig/defconfig .config
 
 MODULE_LIST :=
 

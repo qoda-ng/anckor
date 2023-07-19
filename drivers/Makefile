@@ -16,4 +16,4 @@
 MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := tools
 
-include build.mk
+include tools/make/build.mk

@@ -19,4 +19,4 @@ MODULE_DEPS := tools \
 			arch \
 			lib \
 
-include build.mk
+include tools/make/build.mk

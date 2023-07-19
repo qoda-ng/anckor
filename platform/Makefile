@@ -17,4 +17,4 @@ MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := tools \
 			drivers
 
-include build.mk
+include tools/make/build.mk

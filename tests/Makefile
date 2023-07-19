@@ -20,4 +20,4 @@ MODULE_DEPS := tools \
 			lib \
 			kernel
 
-include build.mk
+include tools/make/build.mk
