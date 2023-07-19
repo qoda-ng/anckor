@@ -13,7 +13,7 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-BUILD_DIR := ../build/
-MODULE_INCS:= -I../tools/include -I../drivers/include -I../arch/include -I../lib/include -Iinclude
+MODULE_ID := $(GET_MODULE_ID)
+MODULE_DEPS := lib/sys
 
-include ../build.mk
+include tools/make/build.mk

@@ -15,36 +15,65 @@
 
 # TOP LEVEL MAKEFILE
 
+include tools/make/macros.mk
+
+include .config
+
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
-
-LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld 
+GLOBAL_LDFLAGS += -nostdlib -Map build/output.map -T tools/linker/virt.ld 
 
 .PHONY: all build run
 
 all: clean build
 
 clean: 
+# delete build directory if it already exists
 	@if [ -d "build" ]; then \
 		rm -r build; \
 	fi
 
-defconfig: 
-	@cp make/defconfig .config
-
-build: clean .config
-# delete build directory if it already exists
+setup_build_dir: clean
 	@mkdir build
-# build all kernel components in objects files
-	@cd arch && $(MAKE) $@
-	@cd platform && $(MAKE) $@
-	@cd drivers && $(MAKE) $@
-	@cd kernel && $(MAKE) $@
-	@cd lib && $(MAKE) $@
-	@cd tests && $(MAKE) $@
+
+defconfig: 
+	@cp tools/make/defconfig/defconfig .config
+
+MODULE_TARGET_LIST :=
+
+MODULE_DEPS :=
+MODULE_INCS :=
+
+MODULE_CSRCS :=
+MODULE_CINCS :=
+
+MODULE_ASMSRCS :=
+MODULE_ASMINCS :=
+
+MODULE_COBJS :=
+MODULE_ASMOBJS := 
+
+MODULE_CTARGETS := 
+MODULE_ASMTARGETS := 
+
+MODULE_CFLAGS := 
+
+GLOBAL_OBJECTS_LIST :=
+
+include drivers/module.mk
+include kernel/module.mk
+include lib/libc/module.mk
+include arch/module.mk
+include platform/module.mk
+include tests/module.mk
+
+# MODULE_TARGET_LIST contains all modules to build before linking
+build: .config setup_build_dir $(MODULE_TARGET_LIST)
 # link all components
-	$(LD) $(LDFLAGS) build/test_threads.o build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
-	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
+	$(info link all objects files)
+	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
+	$(info generate kernel image)
+	@$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:
 	$(info run [release] build)
