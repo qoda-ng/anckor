@@ -39,7 +39,7 @@ setup_build_dir: clean
 defconfig: 
 	@cp tools/make/defconfig/defconfig .config
 
-MODULE_LIST :=
+MODULE_TARGET_LIST :=
 
 MODULE_DEPS :=
 MODULE_INCS :=
@@ -67,8 +67,8 @@ include arch/module.mk
 include platform/module.mk
 include tests/module.mk
 
-# MODULE_LIST contains all modules to build before linking
-build: .config setup_build_dir $(MODULE_LIST)
+# MODULE_TARGET_LIST contains all modules to build before linking
+build: .config setup_build_dir $(MODULE_TARGET_LIST)
 # link all components
 	$(info link all objects files)
 	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
