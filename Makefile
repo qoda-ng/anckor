@@ -59,9 +59,7 @@ MODULE_ASMTARGETS :=
 include drivers/Makefile
 include kernel/Makefile
 
-MODULE_TARGET_LIST := $(addsuffix /target, $(MODULE_LIST))
-
-build: .config setup_build_dir $(MODULE_TARGET_LIST)
+build: .config setup_build_dir $(MODULE_LIST)
 # build all kernel components in objects files
 # @cd arch && $(MAKE) $@
 # @cd platform && $(MAKE) $@

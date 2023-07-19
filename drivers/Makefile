@@ -36,10 +36,10 @@ MODULE_INCS += -I$(MODULE_ID)/include
 
 # add sources for the current module
 MODULE_CSRCS := $(wildcard $(MODULE_ID)/*.c)
-MODULE_CINCS := $(MODULE_INCS)
+$(MODULE_ID): MODULE_CINCS := $(MODULE_INCS)
 
 MODULE_ASMSRCS := $(wildcard $(MODULE_ID)/*.S)
-MODULE_ASMINCS := $(MODULE_INCS)
+$(MODULE_ID): MODULE_ASMINCS := $(MODULE_INCS)
 
 MODULE_COBJS := $(MODULE_CSRCS:.c=.o)
 MODULE_ASMOBJS := $(MODULE_ASMSRCS:.S=.o)
@@ -58,13 +58,13 @@ create/$(MODULE_ID)/directory:
 
 $(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.c
 	$(info compiling $<)
-	@$(CC) $(CFLAGS) $(MODULE_CINCS) -c $< -o $@
+	$(CC) $(CFLAGS) $(MODULE_CINCS) -c $< -o $@
 
 $(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.S
 	$(info compiling $<)
-	@$(CC) $(CFLAGS) $(MODULE_ASMINCS) -c $< -o $@
+	$(CC) $(CFLAGS) $(MODULE_ASMINCS) -c $< -o $@
 
-$(MODULE_ID)/target: create/$(MODULE_ID)/directory $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)
+$(MODULE_ID): create/$(MODULE_ID)/directory $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)
 
 # reset variables set here
 MODULE_DEPS :=
