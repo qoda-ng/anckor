@@ -67,6 +67,7 @@ include arch/Makefile
 include platform/Makefile
 include tests/Makefile
 
+# MODULE_LIST contains all modules to build before linking
 build: .config setup_build_dir $(MODULE_LIST)
 # link all components
 	$(info link all objects files)
