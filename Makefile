@@ -56,8 +56,14 @@ MODULE_ASMOBJS :=
 MODULE_CTARGETS := 
 MODULE_ASMTARGETS := 
 
+MODULE_CFLAGS := 
+
 include drivers/Makefile
 include kernel/Makefile
+include lib/Makefile
+include arch/Makefile
+include platform/Makefile
+include tests/Makefile
 
 build: .config setup_build_dir $(MODULE_LIST)
 # build all kernel components in objects files
