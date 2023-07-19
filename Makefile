@@ -41,6 +41,9 @@ defconfig:
 
 MODULE_LIST :=
 
+MODULE_DEPS :=
+MODULE_INCS :=
+
 MODULE_CSRCS :=
 MODULE_CINCS :=
 

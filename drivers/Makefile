@@ -14,7 +14,8 @@
 # not, see https://www.gnu.org/licenses/
 
 MODULE_ID := $(GET_LOCAL_DIR)
-MODULE_INCS:= -Itools/include -I$(MODULE_ID)/include
+
+MODULE_DEPS := tools
 
 # GENERIC BUILD SCRIPT
 BUILD_DIR := build
@@ -28,6 +29,12 @@ else
 	CFLAGS += -O1
 endif
 
+# manage dependancies
+MODULE_DEPS_INCS := $(addsuffix /include,$(addprefix -I, $(MODULE_DEPS)))
+MODULE_INCS += $(MODULE_DEPS_INCS)
+MODULE_INCS += -I$(MODULE_ID)/include
+
+# add sources for the current module
 MODULE_CSRCS := $(wildcard $(MODULE_ID)/*.c)
 MODULE_CINCS := $(MODULE_INCS)
 
@@ -40,8 +47,10 @@ MODULE_ASMOBJS := $(MODULE_ASMSRCS:.S=.o)
 MODULE_CTARGETS := $(addprefix $(BUILD_DIR)/, $(MODULE_COBJS))
 MODULE_ASMTARGETS := $(addprefix $(BUILD_DIR)/, $(MODULE_ASMOBJS))
 
+# update global module list
 MODULE_LIST += $(MODULE_ID)
 
+# declare C and ASM targets
 .PHONY: build
 
 create/$(MODULE_ID)/directory:
@@ -56,3 +65,7 @@ $(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.S
 	@$(CC) $(CFLAGS) $(MODULE_ASMINCS) -c $< -o $@
 
 $(MODULE_ID)/target: create/$(MODULE_ID)/directory $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)
+
+# reset variables set here
+MODULE_DEPS :=
+MODULE_INCS :=
