@@ -13,7 +13,46 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-BUILD_DIR := ../build/
-MODULE_INCS:= -I../tools/include -Iinclude
+MODULE_ID := $(GET_LOCAL_DIR)
+MODULE_INCS:= -Itools/include -I$(MODULE_ID)/include
 
-include ../build.mk
+# GENERIC BUILD SCRIPT
+BUILD_DIR := build
+
+CC := riscv64-unknown-elf-gcc
+CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -ffreestanding
+
+ifeq ($(CONFIG_BUILD_DEBUG),y)
+	CFLAGS += -Og -ggdb
+else 
+	CFLAGS += -O1
+endif
+
+MODULE_CSRCS := $(wildcard $(MODULE_ID)/*.c)
+MODULE_CINCS := $(MODULE_INCS)
+
+MODULE_ASMSRCS := $(wildcard $(MODULE_ID)/*.S)
+MODULE_ASMINCS := $(MODULE_INCS)
+
+MODULE_COBJS := $(MODULE_CSRCS:.c=.o)
+MODULE_ASMOBJS := $(MODULE_ASMSRCS:.S=.o)
+
+MODULE_CTARGETS := $(addprefix $(BUILD_DIR)/, $(MODULE_COBJS))
+MODULE_ASMTARGETS := $(addprefix $(BUILD_DIR)/, $(MODULE_ASMOBJS))
+
+MODULE_LIST += $(MODULE_ID)
+
+.PHONY: build
+
+create/$(MODULE_ID)/directory:
+	mkdir $(BUILD_DIR)/drivers
+
+$(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.c
+	$(info compiling $<)
+	@$(CC) $(CFLAGS) $(MODULE_CINCS) -c $< -o $@
+
+$(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.S
+	$(info compiling $<)
+	@$(CC) $(CFLAGS) $(MODULE_ASMINCS) -c $< -o $@
+
+$(MODULE_ID)/target: create/$(MODULE_ID)/directory $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)

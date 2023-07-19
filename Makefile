@@ -15,9 +15,12 @@
 
 # TOP LEVEL MAKEFILE
 
+include macros.mk
+
+include .config
+
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
-
 LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld 
 
 .PHONY: all build run
@@ -25,26 +28,47 @@ LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld
 all: clean build
 
 clean: 
+# delete build directory if it already exists
 	@if [ -d "build" ]; then \
 		rm -r build; \
 	fi
 
+setup_build_dir: clean
+	@mkdir build
+
 defconfig: 
 	@cp make/defconfig .config
 
-build: clean .config
-# delete build directory if it already exists
-	@mkdir build
+MODULE_LIST :=
+
+MODULE_CSRCS :=
+MODULE_CINCS :=
+
+MODULE_ASMSRCS :=
+MODULE_ASMINCS :=
+
+MODULE_COBJS :=
+MODULE_ASMOBJS := 
+
+MODULE_CTARGETS := 
+MODULE_ASMTARGETS := 
+
+include drivers/Makefile
+include kernel/Makefile
+
+MODULE_TARGET_LIST := $(addsuffix /target, $(MODULE_LIST))
+
+build: .config setup_build_dir $(MODULE_TARGET_LIST)
 # build all kernel components in objects files
-	@cd arch && $(MAKE) $@
-	@cd platform && $(MAKE) $@
-	@cd drivers && $(MAKE) $@
-	@cd kernel && $(MAKE) $@
-	@cd lib && $(MAKE) $@
-	@cd tests && $(MAKE) $@
-# link all components
-	$(LD) $(LDFLAGS) build/test_threads.o build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
-	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
+# @cd arch && $(MAKE) $@
+# @cd platform && $(MAKE) $@
+# @cd drivers && $(MAKE) $@
+# 	@cd kernel && $(MAKE) $@
+# 	@cd lib && $(MAKE) $@
+# 	@cd tests && $(MAKE) $@
+# # link all components
+# 	$(LD) $(LDFLAGS) build/test_threads.o build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
+# 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:
 	$(info run [release] build)
