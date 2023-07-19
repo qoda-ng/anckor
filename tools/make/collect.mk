@@ -22,6 +22,7 @@ MODULE := $(word $(words $(GLOBAL_MODULE_LIST)),$(GLOBAL_MODULE_LIST))
 GLOBAL_MODULE_LIST := $(filter-out $(MODULE),$(GLOBAL_MODULE_LIST))
 # include the module specific makefile
 include $(addsuffix /module.mk,$(MODULE))
+MODULE :=
 
 include tools/make/collect.mk
 
