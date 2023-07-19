@@ -21,7 +21,7 @@ include .config
 
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
-LDFLAGS += -nostdlib -Map build/output.map -T tools/virt.ld 
+GLOBAL_LDFLAGS += -nostdlib -Map build/output.map -T tools/linker/virt.ld 
 
 .PHONY: all build run
 
@@ -62,7 +62,7 @@ GLOBAL_OBJECTS_LIST :=
 
 include drivers/Makefile
 include kernel/Makefile
-include lib/Makefile
+include lib/libc/Makefile
 include arch/Makefile
 include platform/Makefile
 include tests/Makefile
@@ -70,7 +70,7 @@ include tests/Makefile
 build: .config setup_build_dir $(MODULE_LIST)
 # link all components
 	$(info link all objects files)
-	@$(LD) $(LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
+	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
 	$(info generate kernel image)
 	@$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 

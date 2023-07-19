@@ -14,9 +14,9 @@
 # not, see https://www.gnu.org/licenses/
 
 MODULE_ID := $(GET_MODULE_ID)
-MODULE_DEPS := tools \
+MODULE_DEPS := lib/sys \
 			drivers \
 			arch \
-			lib \
+			lib/libc \
 
 include tools/make/build.mk
