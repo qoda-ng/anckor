@@ -58,6 +58,8 @@ MODULE_ASMTARGETS :=
 
 MODULE_CFLAGS := 
 
+GLOBAL_OBJECTS_LIST :=
+
 include drivers/Makefile
 include kernel/Makefile
 include lib/Makefile
@@ -66,16 +68,11 @@ include platform/Makefile
 include tests/Makefile
 
 build: .config setup_build_dir $(MODULE_LIST)
-# build all kernel components in objects files
-# @cd arch && $(MAKE) $@
-# @cd platform && $(MAKE) $@
-# @cd drivers && $(MAKE) $@
-# 	@cd kernel && $(MAKE) $@
-# 	@cd lib && $(MAKE) $@
-# 	@cd tests && $(MAKE) $@
-# # link all components
-# 	$(LD) $(LDFLAGS) build/test_threads.o build/init.o build/printf.o build/strlen.o build/context.o build/start.o build/trap.o build/task_arch.o build/uart.o build/kernel.o build/task.o build/sched.o build/platform.o -o build/kernel.elf
-# 	$(OBJCPY) -O binary build/kernel.elf build/kernel.img
+# link all components
+	$(info link all objects files)
+	@$(LD) $(LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
+	$(info generate kernel image)
+	@$(OBJCPY) -O binary build/kernel.elf build/kernel.img
 
 run:
 	$(info run [release] build)
