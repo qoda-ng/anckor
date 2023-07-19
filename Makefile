@@ -60,12 +60,12 @@ MODULE_CFLAGS :=
 
 GLOBAL_OBJECTS_LIST :=
 
-include drivers/Makefile
-include kernel/Makefile
-include lib/libc/Makefile
-include arch/Makefile
-include platform/Makefile
-include tests/Makefile
+include drivers/module.mk
+include kernel/module.mk
+include lib/libc/module.mk
+include arch/module.mk
+include platform/module.mk
+include tests/module.mk
 
 # MODULE_LIST contains all modules to build before linking
 build: .config setup_build_dir $(MODULE_LIST)
