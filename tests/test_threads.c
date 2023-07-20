@@ -29,7 +29,7 @@ void main_thread(void) {
   printf("main thread finished, destroy it\r\n");
 }
 
-REGISTER_APP(test_thread, 3, main_thread)
+REGISTER_APP(main_thread, 3)
 
 void second_thread(void) {
   printf("second thread\r\n");
@@ -39,7 +39,7 @@ void second_thread(void) {
   printf("immediatly resume second thread\r\n");
   printf("wakeup main thread\r\n");
 
-  task_wakeup((task_t *)stack_test_thread);
+  task_wakeup((task_t *)stack_main_thread);
 
   printf("second thread is resumed\r\n");
 
@@ -49,4 +49,4 @@ void second_thread(void) {
     ;
 }
 
-REGISTER_APP(second_thread, 2, second_thread)
+REGISTER_APP(second_thread, 2)

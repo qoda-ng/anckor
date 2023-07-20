@@ -22,15 +22,15 @@
 
 #define _app_section __attribute__((section(".data.apps")))
 
-#define REGISTER_APP(_name, _prio, _entry) \
-  stack_t    stack_##_name;                \
-  app_info_t app_##_name = {               \
-      .name  = #_name,                     \
-      .stack = &stack_##_name,             \
-      .prio  = _prio,                      \
-      .entry = _entry,                     \
-  };                                       \
-  _app_section app_info_t *app_##_name##_pt = &app_##_name;
+#define REGISTER_APP(_entry, _prio) \
+  stack_t    stack_##_entry;        \
+  app_info_t app_##_entry = {       \
+      .name  = #_entry,             \
+      .stack = &stack_##_entry,     \
+      .prio  = _prio,               \
+      .entry = _entry,              \
+  };                                \
+  _app_section app_info_t *app_##_entry##_pt = &app_##_entry;
 
 /**
  * @brief structure to save apps parameters

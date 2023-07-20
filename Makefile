@@ -17,7 +17,7 @@
 
 include tools/make/macros.mk
 
-include .config
+include tools/make/defconfig/defconfig
 
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
@@ -35,9 +35,6 @@ clean:
 
 setup_build_dir: clean
 	@mkdir build
-
-defconfig: 
-	@cp tools/make/defconfig/defconfig .config
 
 MODULE_TARGET_LIST :=
 
@@ -60,15 +57,12 @@ MODULE_CFLAGS :=
 
 GLOBAL_OBJECTS_LIST :=
 
-include drivers/module.mk
-include kernel/module.mk
-include lib/libc/module.mk
-include arch/module.mk
-include platform/module.mk
-include tests/module.mk
+GLOBAL_MODULE_LIST := drivers kernel lib/libc arch platform tests
+
+include tools/make/collect.mk
 
 # MODULE_TARGET_LIST contains all modules to build before linking
-build: .config setup_build_dir $(MODULE_TARGET_LIST)
+build: setup_build_dir $(MODULE_TARGET_LIST)
 # link all components
 	$(info link all objects files)
 	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
