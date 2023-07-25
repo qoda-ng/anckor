@@ -13,70 +13,66 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-BUILD_DIR := build
+# TOP LEVEL MAKEFILE
 
-CC := riscv64-unknown-elf-gcc
-GLOBAL_CFLAGS := -Wall -march=rv64gc -mabi=lp64 -fpie -ffreestanding
+include tools/make/macros.mk
 
-ifeq ($(CONFIG_BUILD_DEBUG),y)
-	MODULE_CFLAGS += -Og -ggdb
-else 
-	MODULE_CFLAGS += -O1
-endif
+include tools/generated/config.mk
 
-# manage dependencies
-MODULE_DEPS_INCS := $(addsuffix /include,$(addprefix -I, $(MODULE_DEPS)))
-MODULE_INCS := $(MODULE_DEPS_INCS)
-MODULE_INCS += -I$(MODULE_ID)/include
+OBJCPY := riscv64-unknown-elf-objcopy
+LD := riscv64-unknown-elf-ld
+GLOBAL_LDFLAGS += -nostdlib -Map build/output.map -T tools/linker/virt.ld 
 
-# add sources for the current module
-MODULE_CSRCS := $(wildcard $(MODULE_ID)/*.c)
-MODULE_ASMSRCS := $(wildcard $(MODULE_ID)/*.S)
+.PHONY: all build run
 
-MODULE_CINCS := $(MODULE_INCS)
-MODULE_ASMINCS := $(MODULE_INCS)
+all: clean build
 
-MODULE_COBJS := $(MODULE_CSRCS:.c=.o)
-MODULE_ASMOBJS := $(MODULE_ASMSRCS:.S=.o)
+clean: 
+# delete build directory if it already exists
+	@if [ -d "build" ]; then \
+		rm -r build; \
+	fi
 
-MODULE_CTARGETS := $(addprefix $(BUILD_DIR)/, $(MODULE_COBJS))
-MODULE_ASMTARGETS := $(addprefix $(BUILD_DIR)/, $(MODULE_ASMOBJS))
+setup_build_dir: clean
+	@mkdir build
 
-# update global module list
-MODULE_TARGET_LIST += $(MODULE_ID)
-GLOBAL_OBJECTS_LIST += $(MODULE_CTARGETS)
-GLOBAL_OBJECTS_LIST += $(MODULE_ASMTARGETS)
+MODULE_TARGET_LIST :=
 
-# use target specific variables to set module specific variables
-$(MODULE_ID): MODULE_CINCS := $(MODULE_CINCS)
-$(MODULE_ID): MODULE_ASMINCS := $(MODULE_ASMINCS)
-$(MODULE_ID): MODULE_CFLAGS := $(MODULE_CFLAGS)
-
-# declare C and ASM targets
-.PHONY: build
-
-$(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.c
-	@$(MKDIR)
-	$(info compiling $<)
-	@$(CC) $(GLOBAL_CFLAGS) $(MODULE_CFLAGS) $(MODULE_CINCS) -c $< -o $@
-
-$(BUILD_DIR)/$(MODULE_ID)/%.o: $(MODULE_ID)/%.S
-	@$(MKDIR)
-	$(info compiling $<)
-	@$(CC) $(GLOBAL_CFLAGS) $(MODULE_CFLAGS) $(MODULE_ASMINCS) -c $< -o $@
-
-$(MODULE_ID): $(MODULE_CTARGETS) $(MODULE_ASMTARGETS)
-
-# reset variables set here
 MODULE_DEPS :=
-MODULE_DEPS_INCS :=
 MODULE_INCS :=
+
 MODULE_CSRCS :=
-MODULE_ASMSRCS :=
 MODULE_CINCS :=
+
+MODULE_ASMSRCS :=
 MODULE_ASMINCS :=
+
 MODULE_COBJS :=
-MODULE_ASMOBJS :=
+MODULE_ASMOBJS := 
+
+MODULE_CTARGETS := 
+MODULE_ASMTARGETS := 
+
 MODULE_CFLAGS := 
-MODULE_CTARGETS :=
-MODULE_ASMTARGETS :=
+
+GLOBAL_OBJECTS_LIST :=
+
+
+
+include tools/make/collect.mk
+
+# MODULE_TARGET_LIST contains all modules to build before linking
+build: setup_build_dir $(MODULE_TARGET_LIST)
+# link all components
+	$(info link all objects files)
+	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
+	$(info generate kernel image)
+	@$(OBJCPY) -O binary build/kernel.elf build/kernel.img
+
+run:
+	$(info run [release] build)
+	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
+
+debug:
+	$(info run [debug] build)
+	qemu-system-riscv64 -s -S -machine virt -cpu rv64 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf

@@ -16,4 +16,4 @@
 MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := lib/sys
 
-include tools/make/build.mk
+include tools/make/compile.mk

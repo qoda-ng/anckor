@@ -20,7 +20,7 @@ def configure(args):
 def clean(args):
     print("[CLEAN]")
 
-    os.system('make clean')
+    os.system('make -f tools/make/build.mk clean')
 
 # *******************************************************************************
 # @brief call make to build the kernel sources
@@ -30,7 +30,7 @@ def clean(args):
 def build(args):
     print("[BUILD]")
 
-    os.system('make build')
+    os.system('make -f tools/make/build.mk build')
 
 # *******************************************************************************
 # @brief run the kernel on the configured target
@@ -40,7 +40,7 @@ def build(args):
 def run(args):
     print("[RUN]")
 
-    os.system('make run')
+    os.system('make -f tools/make/build.mk run')
 
 # *******************************************************************************
 # @brief find the root directory absolute path

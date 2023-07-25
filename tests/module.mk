@@ -20,4 +20,4 @@ MODULE_DEPS := lib/sys \
 			lib/libc \
 			kernel
 
-include tools/make/build.mk
+include tools/make/compile.mk
