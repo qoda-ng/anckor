@@ -45,7 +45,7 @@ def configure(args):
 
     input_file.close()
     output_file.close()
-    print("configure the build system")
+    print("generate config.mk file")
 
 # *******************************************************************************
 # @brief delete build directory and all build artifacts
