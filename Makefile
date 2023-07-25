@@ -17,7 +17,7 @@
 
 include tools/make/macros.mk
 
-include tools/make/defconfig/defconfig
+include tools/generated/config.mk
 
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
@@ -57,7 +57,7 @@ MODULE_CFLAGS :=
 
 GLOBAL_OBJECTS_LIST :=
 
-GLOBAL_MODULE_LIST := drivers kernel lib/libc arch platform tests
+
 
 include tools/make/collect.mk
 
