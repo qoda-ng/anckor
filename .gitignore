@@ -7,3 +7,4 @@ build/
 # directory to store cli artifacts
 tools/cli/anckor_CLI.egg-info
 tools/cli/build
+tools/generated

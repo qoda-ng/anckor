@@ -12,6 +12,39 @@ __version__ = "x.x.x"
 def configure(args):
     print("[CONFIGURE]")
 
+    # copy the default configuration file
+    if os.path.isdir("tools/generated"):
+        os.system("rm -r tools/generated")
+        os.mkdir("tools/generated")
+    else:
+        os.mkdir("tools/generated")
+
+    os.system('cp tools/defconfig/default_defconfig tools/generated/.config')
+    print("generate .config file")
+
+    # convert the configuration file to a config.mk file
+    input_file = open("tools/generated/.config", "r")
+    output_file = open("tools/generated/config.mk", "w+")
+
+    module_list = "GLOBAL_MODULE_LIST := "
+
+    for line in input_file:
+        if "CONFIG" in line:
+            output_file.write(line)
+        elif "MODULE" in line:
+            if "=y" in line:
+                line = line.replace("MODULE_", '')
+                index = line.rfind("=y")
+                line = line[:index]
+                line = line.replace("_", "/")
+                line = line.lower()
+
+                module_list = module_list + line + ' '
+    
+    output_file.write(module_list)
+
+    input_file.close()
+    output_file.close()
     print("configure the build system")
 
 # *******************************************************************************
