@@ -1,3 +1,18 @@
+# Copyright (c) 2023 Qoda, engineering
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms and conditions of the GNU General Public License,
+# version 3 or later, as published by the Free Software Foundation.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# You should have received copies of the GNU General Public License and
+# the GNU Lesser General Public License along with this program.  If
+# not, see https://www.gnu.org/licenses/
+
 import argparse
 import sys
 import os
@@ -13,33 +28,32 @@ def configure(args):
     print("[CONFIGURE]")
 
     # copy the default configuration file
+    os.system("python3 tools/cli/src/menuconfig.py")
+
+    # convert the configuration file to a config.mk file
     if os.path.isdir("tools/generated"):
         os.system("rm -r tools/generated")
         os.mkdir("tools/generated")
     else:
         os.mkdir("tools/generated")
 
-    os.system('cp tools/defconfig/default_defconfig tools/generated/.config')
-    print("generate .config file")
-
-    # convert the configuration file to a config.mk file
-    input_file = open("tools/generated/.config", "r")
+    input_file = open(".config", "r")
     output_file = open("tools/generated/config.mk", "w+")
 
     module_list = "GLOBAL_MODULE_LIST := "
 
     for line in input_file:
-        if "CONFIG" in line:
-            output_file.write(line)
-        elif "MODULE" in line:
+        line = line.lower()
+        if "module" in line:
             if "=y" in line:
-                line = line.replace("MODULE_", '')
+                line = line.replace("config_module_", '')
                 index = line.rfind("=y")
                 line = line[:index]
                 line = line.replace("_", "/")
-                line = line.lower()
 
                 module_list = module_list + line + ' '
+        elif "config" in line:
+            output_file.write(line)
     
     output_file.write(module_list)
 

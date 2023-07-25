@@ -2,21 +2,68 @@
 
 mainmenu "Anckor Kernel Configuration"
 
-menu "Modules"
+menu "build type"
+
+config build_debug
+	bool "debug build"
+	default y
+	help
+	  	compile kernel with debug flags
 
 endmenu
 
-config kernel
-	bool "kernel core"
+menu "kernel"
+
+config module_kernel
+	bool "kernel module"
 	default y
 	help
-	  If the application is built for chain-loading by a bootloader this
-	  variable is required to be set to value that leaves sufficient
-	  space between the beginning of the image and the start of the first
-	  section to store an image header or any other metadata.
-	  In the particular case of the MCUboot bootloader this reserves enough
-	  space to store the image header, which should also meet vector table
-	  alignment requirements on most ARM targets, although some targets
-	  may require smaller or larger values.
+	  	This module is core kernel one which contains base services 
+	  	such as scheduling, threads creation, memory protection, etc...
 
+config module_platform
+	bool "platform module"
+	default y
+	help
+	  	platform specific module
+
+config module_arch
+	bool "arch module"
+	default y
+	help
+		architecture specific module
+
+config module_drivers
+	bool "drivers module"
+	default y
+	help
+		drivers specific module
+
+endmenu
+
+menu "lib"
+
+config module_lib_libc
+	bool "libc module"
+	default y
+	help
+		libc module
+
+endmenu
+
+menu "tests"
+
+config module_tests_threads
+	bool "test threads app"
+	default y
+	help
+		test threads app
+
+config module_tests_apps
+	bool "test apps app"
+	default n
+	help
+		test apps app
+
+endmenu
 

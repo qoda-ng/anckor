@@ -355,7 +355,6 @@ _NAMED_COLORS = {
     "brightpurple":  curses.COLOR_MAGENTA + 8,
 }
 
-
 def _rgb_to_6cube(rgb):
     # Converts an 888 RGB color to a 3-tuple (nice in that it's hashable)
     # representing the closest xterm 256-color 6x6x6 color cube color.

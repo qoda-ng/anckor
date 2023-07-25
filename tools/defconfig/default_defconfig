@@ -1,4 +1,4 @@
-CONFIG_BUILD_DEBUG=y
+config_build_debug=y
 
 MODULE_TESTS_THREADS=y
 MODULE_TESTS_apps=n
