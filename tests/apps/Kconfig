@@ -1,0 +1,5 @@
+config module_tests_apps
+	bool "test apps app"
+	default n
+	help
+		test apps app
