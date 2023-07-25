@@ -19,4 +19,4 @@ MODULE_DEPS := lib/sys \
 			arch \
 			lib/libc \
 
-include tools/make/build.mk
+include tools/make/compile.mk
