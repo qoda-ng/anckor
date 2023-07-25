@@ -1,0 +1,22 @@
+
+
+mainmenu "Anckor Kernel Configuration"
+
+menu "Modules"
+
+endmenu
+
+config kernel
+	bool "kernel core"
+	default y
+	help
+	  If the application is built for chain-loading by a bootloader this
+	  variable is required to be set to value that leaves sufficient
+	  space between the beginning of the image and the start of the first
+	  section to store an image header or any other metadata.
+	  In the particular case of the MCUboot bootloader this reserves enough
+	  space to store the image header, which should also meet vector table
+	  alignment requirements on most ARM targets, although some targets
+	  may require smaller or larger values.
+
+
