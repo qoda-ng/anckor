@@ -1,0 +1,2 @@
+source "tests/threads/Kconfig"
+source "tests/apps/Kconfig"

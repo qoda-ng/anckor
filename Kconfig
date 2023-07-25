@@ -1,5 +1,3 @@
-
-
 mainmenu "Anckor Kernel Configuration"
 
 menu "build type"
@@ -14,56 +12,37 @@ endmenu
 
 menu "kernel"
 
-config module_kernel
-	bool "kernel module"
-	default y
-	help
-	  	This module is core kernel one which contains base services 
-	  	such as scheduling, threads creation, memory protection, etc...
+source "kernel/Kconfig"
 
-config module_platform
-	bool "platform module"
-	default y
-	help
-	  	platform specific module
+endmenu
 
-config module_arch
-	bool "arch module"
-	default y
-	help
-		architecture specific module
+menu "platform"
 
-config module_drivers
-	bool "drivers module"
-	default y
-	help
-		drivers specific module
+source "platform/Kconfig"
+
+endmenu
+
+menu "arch"
+
+source "arch/Kconfig"
+
+endmenu
+
+menu "drivers"
+
+source "drivers/Kconfig"
 
 endmenu
 
 menu "lib"
 
-config module_lib_libc
-	bool "libc module"
-	default y
-	help
-		libc module
+source "lib/Kconfig"
 
 endmenu
 
 menu "tests"
 
-config module_tests_threads
-	bool "test threads app"
-	default y
-	help
-		test threads app
-
-config module_tests_apps
-	bool "test apps app"
-	default n
-	help
-		test apps app
+source "tests/Kconfig"
 
 endmenu
 

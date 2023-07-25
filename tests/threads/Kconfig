@@ -1,0 +1,5 @@
+config module_tests_threads
+	bool "test threads app"
+	default y
+	help
+		test threads app
