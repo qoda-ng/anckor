@@ -10,14 +10,13 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 - [ ] heap allocator (binary buddy system)
 - [ ] cooperative scheduling with min heap priority queue
 - [x] Qemu riscv 64 bits support
+- [x] Modular build system
 - [ ] Interrupt management
 - [ ] User / Kernel modes
 
 ### r-0.2.0 / Tests and continous integration
 
-- [ ] Use a test framework
 - [ ] Configure CI to run tests for each pull request
-- [ ] Migrate build system to cmake
 
 ### r-0.3.0 / Threads synchronisation
 
