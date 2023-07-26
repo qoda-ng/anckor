@@ -1,10 +1,43 @@
-config_build_debug=y
 
-MODULE_TESTS_THREADS=y
-MODULE_TESTS_apps=n
+#
+# build type
+#
+CONFIG_build_debug=y
+# end of build type
 
-MODULE_ARCH=y
-MODULE_DRIVERS=y
-MODULE_KERNEL=y
-MODULE_LIB_LIBC=y
-MODULE_PLATFORM=y
+#
+# kernel
+#
+CONFIG_module_kernel=y
+# end of kernel
+
+#
+# platform
+#
+CONFIG_module_platform=y
+# end of platform
+
+#
+# arch
+#
+CONFIG_module_arch=y
+# end of arch
+
+#
+# drivers
+#
+CONFIG_module_drivers=y
+# end of drivers
+
+#
+# lib
+#
+CONFIG_module_lib_libc=y
+# end of lib
+
+#
+# tests
+#
+CONFIG_module_tests_threads=y
+# CONFIG_module_tests_apps is not set
+# end of tests

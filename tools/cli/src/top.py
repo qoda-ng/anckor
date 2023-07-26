@@ -20,17 +20,12 @@ import os
 __version__ = "x.x.x"
 
 # *******************************************************************************
-# @brief set all defines variable to configure the build
+# @brief convert the .config file to config.mk
 # @param None
 # @return None
 # *******************************************************************************
-def configure(args):
-    print("[CONFIGURE]")
-
-    # copy the default configuration file
-    os.system("python3 tools/cli/src/menuconfig.py")
-
-    # convert the configuration file to a config.mk file
+def convert_config_to_make():
+    # convert the .config file to a config.mk file
     if os.path.isdir("tools/generated"):
         os.system("rm -r tools/generated")
         os.mkdir("tools/generated")
@@ -60,6 +55,33 @@ def configure(args):
     input_file.close()
     output_file.close()
     print("generate config.mk file")
+
+# *******************************************************************************
+# @brief create a config.mk file from a _defconfig file
+# @param None
+# @return None
+# *******************************************************************************
+def configure(args):
+    print("[CONFIGURE]")
+
+    # copy the specified configuration file
+    os.system("cp tools/defconfig/" + args.config + " .config")
+    print("use config: " + args.config)
+
+    convert_config_to_make()
+
+# *******************************************************************************
+# @brief create a config.mk file through a menuconfig gui tool
+# @param None
+# @return None
+# *******************************************************************************
+def menuconfig(args):
+    print("[CONFIGURE]")
+
+    # copy the default configuration file
+    os.system("python3 tools/cli/src/menuconfig.py")
+
+    convert_config_to_make()
 
 # *******************************************************************************
 # @brief delete build directory and all build artifacts
@@ -137,24 +159,32 @@ def options():
     subparsers = parser.add_subparsers()
 
     # declare "configure" subcommand
-    build_parser = subparsers.add_parser('configure',
-                                         help='configure the build system for a target')
-    build_parser.set_defaults(func=configure)
+    config_parser = subparsers.add_parser('configure',
+                                         help='create a .config file from a _defconfig one')
+    config_parser.add_argument('--config',
+                                help='select the _defconfig file to use',
+                                default='default_defconfig')
+    config_parser.set_defaults(func=configure)
+
+    # declare "menuconfig" subcommand
+    menu_parser = subparsers.add_parser('menuconfig',
+                                         help='use a menuconfig tool to create a .config file')
+    menu_parser.set_defaults(func=menuconfig)
 
     # declare "clean" subcommand
-    build_parser = subparsers.add_parser('clean',
+    clean_parser = subparsers.add_parser('clean',
                                          help='delete all build artifacts')
-    build_parser.set_defaults(func=clean)
+    clean_parser.set_defaults(func=clean)
 
     # declare "build" subcommand
     build_parser = subparsers.add_parser('build',
-                                         help='build the kernel following the saved configuration')
+                                         help='compile and link the kernel')
     build_parser.set_defaults(func=build)
 
     # declare "run" subcommand
-    build_parser = subparsers.add_parser('run',
-                                         help='run the kernel on the configured target')
-    build_parser.set_defaults(func=run)
+    run_parser = subparsers.add_parser('run',
+                                         help='run the kernel on the target')
+    run_parser.set_defaults(func=run)
 
     return parser
 

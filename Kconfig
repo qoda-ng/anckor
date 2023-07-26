@@ -12,37 +12,37 @@ endmenu
 
 menu "kernel"
 
-source "kernel/Kconfig"
+rsource "kernel/Kconfig"
 
 endmenu
 
 menu "platform"
 
-source "platform/Kconfig"
+rsource "platform/Kconfig"
 
 endmenu
 
 menu "arch"
 
-source "arch/Kconfig"
+rsource "arch/Kconfig"
 
 endmenu
 
 menu "drivers"
 
-source "drivers/Kconfig"
+rsource "drivers/Kconfig"
 
 endmenu
 
 menu "lib"
 
-source "lib/Kconfig"
+rsource "lib/Kconfig"
 
 endmenu
 
 menu "tests"
 
-source "tests/Kconfig"
+rsource "tests/Kconfig"
 
 endmenu
 

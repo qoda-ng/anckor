@@ -18,13 +18,20 @@ First install the **cross-toolchain** and **Qemu** for riscv. Then download the 
 ```shell
 git clone https://github.com/qoda-dev/anckor.git
 ```
-
-Then you can simply build and run the kernel. Default target is **qemu-riscv64**.
+Then run the **setenv.sh** script: 
 
 ```shell
-make build
+./setenv.sh
+```
 
-make run
+Now you can use the **anckor** meta tool to **configure**, **build** and **run** the project. Default target is **qemu-riscv64**.
+
+```shell
+anckor configure
+
+anckor build
+
+anckor run
 ```
 
 ## [Roadmap](/ROADMAP.md)
