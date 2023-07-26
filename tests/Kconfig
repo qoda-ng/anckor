@@ -1,2 +1,2 @@
-source "tests/threads/Kconfig"
-source "tests/apps/Kconfig"
+rsource "threads/Kconfig"
+rsource "apps/Kconfig"
