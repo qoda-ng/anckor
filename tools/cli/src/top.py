@@ -138,7 +138,7 @@ def options():
 
     # declare "configure" subcommand
     build_parser = subparsers.add_parser('configure',
-                                         help='configure the build system for a target')
+                                         help='use a menuconfig tool to create a configuration')
     build_parser.set_defaults(func=configure)
 
     # declare "clean" subcommand
@@ -148,12 +148,12 @@ def options():
 
     # declare "build" subcommand
     build_parser = subparsers.add_parser('build',
-                                         help='build the kernel following the saved configuration')
+                                         help='compile and link the kernel')
     build_parser.set_defaults(func=build)
 
     # declare "run" subcommand
     build_parser = subparsers.add_parser('run',
-                                         help='run the kernel on the configured target')
+                                         help='run the kernel on the target')
     build_parser.set_defaults(func=run)
 
     return parser
