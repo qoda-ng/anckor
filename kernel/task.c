@@ -19,6 +19,8 @@
 #include "sched.h"
 #include "stddef.h"
 
+#define __no_return __attribute__((noreturn))
+
 uint64_t last_thread_id = (uint64_t)NULL;
 
 /******************************************************************************
@@ -42,7 +44,7 @@ static uint64_t task_get_new_thread_id() {
  * @param function to run in the task
  * @return none
  ******************************************************************************/
-ATTR_NORETURN void task_rt(void (*task_entry)(void)) {
+__no_return void task_rt(void (*task_entry)(void)) {
   // start the main task routine
   task_entry();
 
