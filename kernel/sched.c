@@ -24,6 +24,7 @@
 #define IDLE_PRIO 0
 
 #define __idle_task_data __attribute__((section(".data.idle_task")))
+#define __no_inline      __attribute__((noinline))
 
 /******************************************************************************
  * context switch procedure
@@ -79,7 +80,7 @@ task_t *sched_get_next_task() {
  * @param next_task address pointer
  * @return none
  ******************************************************************************/
-static void sched_switch(task_t *prev_task, task_t *new_task) {
+__no_inline static void sched_switch(task_t *prev_task, task_t *new_task) {
   _switch_to(&prev_task->thread, &new_task->thread);
 }
 
