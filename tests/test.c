@@ -52,4 +52,5 @@ void test_set_error(bool_t error_state) {
   test_error = error_state;
 }
 
+// define max priority for the test engine thread
 REGISTER_APP("test_engine", test_engine, test_engine_stack, 0);
