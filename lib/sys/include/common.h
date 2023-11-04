@@ -17,6 +17,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "stdbool.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -24,6 +26,7 @@
 #define uint32_t unsigned int
 #define uint16_t unsigned short int
 #define uint8_t  unsigned char
+#define bool_t   bool
 
 // #define NULL 0
 

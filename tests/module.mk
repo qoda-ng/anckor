@@ -18,7 +18,6 @@ MODULE_DEPS := lib/sys \
 			drivers \
 			arch \
 			lib/libc \
-			kernel \
-			tests
+			kernel
 
 include tools/make/compile.mk
