@@ -19,10 +19,12 @@
 #include "printf.h"
 #include "task.h"
 
-void main_thread(void) {
+stack_t apps_test_stack;
+
+void apps_test_thread(void) {
   printf("[Test] apps\r\n");
 
   printf("thread finished, destroy it\r\n");
 }
 
-REGISTER_APP(main_thread, 3)
+REGISTER_APP("apps_test", apps_test_thread, apps_test_stack, 3)

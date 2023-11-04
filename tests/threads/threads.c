@@ -19,17 +19,8 @@
 #include "printf.h"
 #include "task.h"
 
-void main_thread(void) {
-  printf("[Test] threads\r\n");
-  printf("[Test] start\r\n");
-
-  task_sleep();
-
-  printf("resume main thread\r\n");
-  printf("main thread finished, destroy it\r\n");
-}
-
-REGISTER_APP(main_thread, 3)
+stack_t main_thread_stack;
+stack_t second_thread_stack;
 
 void second_thread(void) {
   printf("second thread\r\n");
@@ -39,7 +30,7 @@ void second_thread(void) {
   printf("immediatly resume second thread\r\n");
   printf("wakeup main thread\r\n");
 
-  task_wakeup((task_t *)stack_main_thread);
+  task_wakeup((task_t *)main_thread_stack);
 
   printf("second thread is resumed\r\n");
 
@@ -49,4 +40,18 @@ void second_thread(void) {
     ;
 }
 
-REGISTER_APP(second_thread, 2)
+void threads_test_thread(void) {
+  printf("[Test] threads\r\n");
+  printf("[Test] start\r\n");
+
+  // create the second thread
+  task_create("second_thread", second_thread, &second_thread_stack, 2);
+
+  // switch from the main thread to the second thread
+  task_sleep();
+
+  printf("resume main thread\r\n");
+  printf("main thread finished, destroy it\r\n");
+}
+
+REGISTER_APP("threads_test", threads_test_thread, main_thread_stack, 3)
