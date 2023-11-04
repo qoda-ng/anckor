@@ -36,12 +36,14 @@ uint8_t test_step = 0;
 void second_thread(void) {
   // STEP 2
   test_step += 1;
+  TEST_ASSERT(test_step >= 2)
 
   // yield the second thread and resume immediatly
   task_yield();
 
   // STEP 3
   test_step += 1;
+  TEST_ASSERT(test_step >= 3)
 
   // return from the second thread
   task_wakeup((task_t *)main_thread_stack);
@@ -59,6 +61,7 @@ void second_thread(void) {
 void threads_test_thread(void) {
   // STEP 1
   test_step += 1;
+  TEST_ASSERT(test_step >= 1)
 
   // create the second thread
   task_create("second_thread", second_thread, &second_thread_stack, 2);
@@ -68,6 +71,7 @@ void threads_test_thread(void) {
 
   // STEP 4
   test_step += 1;
+  TEST_ASSERT(test_step >= 4)
 }
 
 REGISTER_APP("threads_test", threads_test_thread, main_thread_stack, 3)
