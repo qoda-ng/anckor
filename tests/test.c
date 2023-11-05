@@ -37,7 +37,7 @@ extern uint64_t _tests_end;
  * @return None
  ******************************************************************************/
 void test_engine(void) {
-  printf("ATE - Anckor tests engine\r\n");
+  printf("ATE - Anckor test engine\r\n");
 
   // iterate over all tests descriptors saved in the section(.data.tests)
   for (uint64_t *test_pt = &_tests_start; test_pt < &_tests_end; test_pt += 1) {

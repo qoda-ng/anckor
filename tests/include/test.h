@@ -23,6 +23,9 @@
 
 #define _test_section __attribute__((section(".data.tests")))
 
+/*******************************************************************************
+ * macros to register test applications and run them with the ATE
+ ******************************************************************************/
 #define REGISTER_TEST(_entry_name, _entry, _entry_stack, _prio) \
   test_info_t test_##_entry = {                                 \
       .name  = _entry_name,                                     \
@@ -32,11 +35,11 @@
   };                                                            \
   _test_section test_info_t *test_##_entry##_pt = &test_##_entry;
 
-/**
+/*******************************************************************************
  * @brief structure to save tests parameters
  * @param None
  * @return None
- */
+ ******************************************************************************/
 typedef struct {
   const char *name;
   stack_t    *stack;
@@ -45,7 +48,7 @@ typedef struct {
 } test_info_t;
 
 /*******************************************************************************
- * Definitions
+ * macros to use into test applications
  ******************************************************************************/
 void test_set_error(bool_t);
 
