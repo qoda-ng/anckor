@@ -74,4 +74,4 @@ void threads_test_thread(void) {
   TEST_ASSERT(test_step >= 4)
 }
 
-REGISTER_APP("threads_test", threads_test_thread, main_thread_stack, 3)
+REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 3)
