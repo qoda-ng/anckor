@@ -19,10 +19,18 @@
 #include "task.h"
 #include "test.h"
 
+/*******************************************************************************
+ * Definitions
+ ******************************************************************************/
 stack_t apps_test_stack;
 
 static uint8_t test_step = 0;
 
+/******************************************************************************
+ * @brief just create a thread and return from it
+ * @param None
+ * @return None
+ ******************************************************************************/
 void apps_test_thread(void) {
   test_step += 1;
   TEST_ASSERT(test_step >= 1)

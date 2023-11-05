@@ -28,7 +28,7 @@ stack_t second_thread_stack;
 static uint8_t test_step = 0;
 
 /******************************************************************************
- * @brief second thread
+ * @brief get into the second thread and return to the main one
  * @param None
  * @return None
  ******************************************************************************/
@@ -53,7 +53,7 @@ void second_thread(void) {
 }
 
 /******************************************************************************
- * @brief main thread
+ * @brief jump from main thread to the second thread
  * @param None
  * @return None
  ******************************************************************************/
