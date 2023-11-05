@@ -12,3 +12,9 @@ jobs:
 
       - name: test code
         run: echo testing the kernel
+
+      - name: return error
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('test to return an error')
