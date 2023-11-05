@@ -16,6 +16,7 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 
 ### r-0.2.0 / Tests and continous integration
 
+- [x] Anckor test engine
 - [ ] Configure CI to run tests for each pull request
 
 ### r-0.3.0 / Threads synchronisation
