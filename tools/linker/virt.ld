@@ -93,6 +93,13 @@ SECTIONS
     KEEP(*(.data.apps));
     PROVIDE(_apps_end = .);
 
+    /* 
+    tests section
+    */
+    PROVIDE(_tests_start = .);
+    KEEP(*(.data.tests));
+    PROVIDE(_tests_end = .);
+
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)
 	  *(.data .data.*)

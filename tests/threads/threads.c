@@ -15,7 +15,6 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#include "app.h"
 #include "printf.h"
 #include "task.h"
 #include "test.h"
@@ -26,7 +25,7 @@
 stack_t main_thread_stack;
 stack_t second_thread_stack;
 
-uint8_t test_step = 0;
+static uint8_t test_step = 0;
 
 /******************************************************************************
  * @brief second thread

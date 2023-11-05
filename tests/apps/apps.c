@@ -15,16 +15,17 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#include "app.h"
 #include "printf.h"
 #include "task.h"
+#include "test.h"
 
 stack_t apps_test_stack;
 
-void apps_test_thread(void) {
-  printf("[Test] apps\r\n");
+static uint8_t test_step = 0;
 
-  printf("thread finished, destroy it\r\n");
+void apps_test_thread(void) {
+  test_step += 1;
+  TEST_ASSERT(test_step >= 1)
 }
 
-REGISTER_APP("apps_test", apps_test_thread, apps_test_stack, 3)
+REGISTER_TEST("apps_test", apps_test_thread, apps_test_stack, 3)
