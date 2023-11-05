@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install code
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: build code
-      - run: echo building the kernel
+        run: echo building the kernel
 
       - name: test code
-      - run: echo testing the kernel
+        run: echo testing the kernel
