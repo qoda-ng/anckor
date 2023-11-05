@@ -15,7 +15,6 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#include "app.h"
 #include "printf.h"
 #include "task.h"
 #include "test.h"
@@ -26,10 +25,10 @@
 stack_t main_thread_stack;
 stack_t second_thread_stack;
 
-uint8_t test_step = 0;
+static uint8_t test_step = 0;
 
 /******************************************************************************
- * @brief second thread
+ * @brief get into the second thread and return to the main one
  * @param None
  * @return None
  ******************************************************************************/
@@ -54,7 +53,7 @@ void second_thread(void) {
 }
 
 /******************************************************************************
- * @brief main thread
+ * @brief jump from main thread to the second thread
  * @param None
  * @return None
  ******************************************************************************/
@@ -74,4 +73,4 @@ void threads_test_thread(void) {
   TEST_ASSERT(test_step >= 4)
 }
 
-REGISTER_APP("threads_test", threads_test_thread, main_thread_stack, 3)
+REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 3)

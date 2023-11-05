@@ -24,7 +24,12 @@
  * Definitions
  ******************************************************************************/
 stack_t       test_engine_stack;
-static bool_t test_error = false;
+static bool_t test_error   = false;
+uint64_t      tests_passed = 0;
+uint64_t      tests_failed = 0;
+
+extern uint64_t _tests_start;
+extern uint64_t _tests_end;
 
 /******************************************************************************
  * @brief test scheduling routine
@@ -34,12 +39,33 @@ static bool_t test_error = false;
 void test_engine(void) {
   printf("ATE - Anckor tests engine\r\n");
 
-  task_yield();
+  // iterate over all tests descriptors saved in the section(.data.tests)
+  for (uint64_t *test_pt = &_tests_start; test_pt < &_tests_end; test_pt += 1) {
+    // get the test descriptor from the current pointer
+    test_info_t *test = (test_info_t *)*test_pt;
+    // create a task for the test
+    task_create(test->name, test->entry, test->stack, test->prio);
 
+    // jump into the freshly created thread
+    task_yield();
+    // when the test returns, display its result
+    if (test_error) {
+      tests_failed += 1;
+      printf("ATE - %s - failed\r\n", test->name);
+    } else {
+      tests_passed += 1;
+      printf("ATE - %s - passed\r\n", test->name);
+    }
+    // create a thread for the next test and go on
+  }
+
+  // all registered tests have been runned
   if (test_error) {
-    printf("ATE results - FAILED\r\n");
+    printf("ATE - FAILED - %d passed - %d failed\r\n", tests_passed,
+           tests_failed);
   } else {
-    printf("ATE results - PASSED\r\n");
+    printf("ATE - PASSED - %d passed - %d failed\r\n", tests_passed,
+           tests_failed);
   }
 }
 
