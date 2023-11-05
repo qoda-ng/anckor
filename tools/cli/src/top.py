@@ -111,7 +111,24 @@ def build(args):
 def run(args):
     print("[RUN]")
 
-    os.system('make -f tools/make/build.mk run')
+    # get the build argument
+    root_dir = get_root_dir()
+    config_file_name = os.path.join(root_dir, '.config')
+    config_file = open(config_file_name)
+
+    for line in config_file:
+        line = line.lower()
+        if "config_build_debug" in line:
+            if "=y" in line:
+                run_debug_build = True
+            else:
+                run_debug_build = False
+
+    # call the right make target
+    if run_debug_build:
+        os.system('make -f tools/make/build.mk debug')
+    else:
+        os.system('make -f tools/make/build.mk run')
 
 # *******************************************************************************
 # @brief find the root directory absolute path

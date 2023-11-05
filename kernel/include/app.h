@@ -22,14 +22,13 @@
 
 #define _app_section __attribute__((section(".data.apps")))
 
-#define REGISTER_APP(_entry, _prio) \
-  stack_t    stack_##_entry;        \
-  app_info_t app_##_entry = {       \
-      .name  = #_entry,             \
-      .stack = &stack_##_entry,     \
-      .prio  = _prio,               \
-      .entry = _entry,              \
-  };                                \
+#define REGISTER_APP(_entry_name, _entry, _entry_stack, _prio) \
+  app_info_t app_##_entry = {                                  \
+      .name  = _entry_name,                                    \
+      .stack = &_entry_stack,                                  \
+      .prio  = _prio,                                          \
+      .entry = _entry,                                         \
+  };                                                           \
   _app_section app_info_t *app_##_entry##_pt = &app_##_entry;
 
 /**
@@ -41,7 +40,7 @@ typedef struct {
   const char *name;
   stack_t    *stack;
   uint8_t     prio;
-  void (*entry)(void);
+  void        (*entry)(void);
 } app_info_t;
 
 #endif
