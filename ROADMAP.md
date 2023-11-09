@@ -6,41 +6,58 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 
 ### r-0.1.0 / Minimal runtime
 
-- [] thread creation
-- [] cooperative scheduling
-- [] mutex support
-- [] SMP support
-- [] Qemu aarch64 support
-- [] Qemu riscv 64 bits support
+- [x] thread creation
+- [ ] heap allocator (binary buddy system)
+- [ ] cooperative scheduling with min heap priority queue
+- [x] Qemu riscv 64 bits support
+- [x] Modular build system
+- [ ] Interrupt management
+- [ ] User / Kernel modes
 
-### r-0.2.0 / Process management
+### r-0.2.0 / Tests and continous integration
 
-- [] process creation
-- [] memory management
+- [x] Anckor test engine
+- [x] Configure CI to run tests for each pull request
 
-### r-0.3.0 / Inter-Process Communication
+### r-0.3.0 / Threads synchronisation
 
-- [] synchronous message-based IPC
-- [] asynchronous signal-based IPC
+- [ ] mutex support
 
-### r-0.4.0 / Drivers support
+### r-0.4.0 / Process management
 
-- [] independant module compilation
-- [] IRQ redirection
-- [] serial driver
-- [] gpio driver
+- [ ] virtual memory management
+- [ ] slab memory allocator
 
-### r-0.5.0 / Shell
+### r-0.5.0 / Inter-Process Communication
 
-- [] minimal version for ash (anckor shell)
+- [ ] synchronous message-based IPC
+- [ ] asynchronous signal-based IPC
 
-### r-0.6.0 / Kernel debug
+### r-0.6.0 / Drivers support
 
-- [] gdb server
+- [ ] independant module compilation
+- [ ] IRQ redirection
+- [ ] serial driver
+- [ ] gpio driver
+
+### r-0.7.0 / Shell
+
+- [ ] minimal version for ash (anckor shell)
+
+### r-0.8.0 / Kernel debug
+
+- [ ] gdb server
+
+### r-0.9.0 / Multi-Processor support
+
+- [ ] SMP support
+
+### r-0.10.0 / Aarch64 support
+
+- [ ] Qemu aarch64 support
 
 ## Backlog / Post r-1.0.0
 
-- [] dynamic memory allocation support
-- [] a convenient way to declare drivers for a platform (device tree ?)
-- [] IDL support for inter-processes communication
-- [] network stack
+- [ ] a convenient way to declare drivers for a platform (device tree ?)
+- [ ] IDL support for inter-processes communication
+- [ ] network stack

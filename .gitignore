@@ -1,1 +1,16 @@
+# IDE specific directory
+.vscode/
+
+# directory to store all build artifacts
 build/
+
+# directory to store cli artifacts
+tools/cli/anckor_CLI.egg-info
+tools/cli/build
+tools/cli/__pycache__
+tools/cli/src/__pycache__
+tools/generated
+
+# output of the menuconfig
+.config
+.config.old

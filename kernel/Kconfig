@@ -1,0 +1,6 @@
+config module_kernel
+	bool "kernel module"
+	default y
+	help
+	  	This module is core kernel one which contains base services 
+	  	such as scheduling, threads creation, memory protection, etc...

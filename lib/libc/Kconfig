@@ -1,0 +1,5 @@
+config module_lib_libc
+	bool "libc module"
+	default y
+	help
+		libc module

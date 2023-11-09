@@ -1,0 +1,48 @@
+mainmenu "Anckor Kernel Configuration"
+
+menu "build type"
+
+config build_debug
+	bool "debug build"
+	default y
+	help
+	  	compile kernel with debug flags
+
+endmenu
+
+menu "kernel"
+
+rsource "kernel/Kconfig"
+
+endmenu
+
+menu "platform"
+
+rsource "platform/Kconfig"
+
+endmenu
+
+menu "arch"
+
+rsource "arch/Kconfig"
+
+endmenu
+
+menu "drivers"
+
+rsource "drivers/Kconfig"
+
+endmenu
+
+menu "lib"
+
+rsource "lib/Kconfig"
+
+endmenu
+
+menu "tests"
+
+rsource "tests/Kconfig"
+
+endmenu
+

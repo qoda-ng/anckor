@@ -1,0 +1,8 @@
+config module_tests
+	bool "anckor test engine"
+	default y
+	help
+		test engine
+
+rsource "threads/Kconfig"
+rsource "apps/Kconfig"

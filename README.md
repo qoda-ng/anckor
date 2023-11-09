@@ -1,32 +1,37 @@
 # Anckor
 
-A lightweight kernel with a focus on **determinism**, **robustness** and **simplicity**.
+Anckor aims to be a real-time kernel with a focus on **determinism**, **robustness** and **simplicity**.
+
+The main goal is to design a lightweight kernel with robust partionning between processes. Its architecture and API has to be as simple as possible to lower the cost of application design and maintenance. A particular attention is done on keeping as fewer system calls as possible.
+
+All design choices are recorded following the [ADR](./doc/arch/README.md) framework.
+
+## Features
+
+* Preemptive, tickless scheduler with priorities
+* Riscv64 architecture support
 
 ## Getting started
 
-## Design goals
+First install the **cross-toolchain** and **Qemu** for riscv. Then download the sources:
 
-The main goal is to design a small determinist kernel with robust partionning between processes.
+```shell
+git clone https://github.com/qoda-dev/anckor.git
+```
+Then run the **setenv.sh** script: 
 
-This kernel aims to be as simple as possible to lower the cost of application design and maintenance.
+```shell
+./setenv.sh
+```
 
-To achieve this, a particular attention is done on keeping as fewer system calls as possible. Kernel services limits at the following primitives:
-- process management
-- thread management
-- scheduling
-- thread synchronization
-- inter-process communication
+Now you can use the **anckor** meta tool to **configure**, **build** and **run** the project. Default target is **qemu-riscv64**.
 
-All design choices will be done with performance in mind but when a tradeoff is needed, determinism, robustness and simplicity will always have priority.
+```shell
+anckor configure
 
-For more information about ankor kernel design, please read the [docs](/docs/ARCHITECTURE.md).
+anckor build
 
-## Tests
+anckor run
+```
 
 ## [Roadmap](/ROADMAP.md)
-
-## Supported platform
-
-This kernel aims to run on **Aarch64** and **risv64** architectures.
-
-See [platform](/PLATFORM.md) for a comprehensive list of supported platforms.

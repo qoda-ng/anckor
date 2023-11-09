@@ -1,0 +1,5 @@
+config module_platform
+	bool "platform module"
+	default y
+	help
+	  	platform specific module
