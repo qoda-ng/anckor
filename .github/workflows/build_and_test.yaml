@@ -17,4 +17,5 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
+              python tools/ci/ci_stub.py
               core.setFailed('test to return an error')
