@@ -1,0 +1,32 @@
+name: build-and-test
+on: 
+  pull_request:
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install code
+        uses: actions/checkout@v4
+
+      - name: install qemu
+        run: |
+          sudo apt install qemu-system-riscv64
+          qemu-system-riscv64 --version
+
+      - name: install riscv cross-toolchain
+        run: |
+          sudo apt install gcc-riscv64-unknown-elf
+          riscv64-unknown-elf-gcc --version
+
+      - name: install anckor tool
+        run: |
+          source ./setenv.sh
+          anckor --version
+
+      - name: build code
+        run: |
+          anckor configure
+          anckor build
+
+      - name: test code
+        run: python tools/ci/ci.py
