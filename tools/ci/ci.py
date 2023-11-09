@@ -17,6 +17,7 @@
 # server provider
 
 from pexpect import *
+import sys
 
 # create a process with the QEMU guest
 child = spawn('anckor run')
@@ -34,8 +35,10 @@ while True:
 
 if test_passed:
     print("TEST PASSED")
+    sys.exit(0)
 else:
     print("TEST FAILED")
+    sys.exit(1)
 
 # kill the Qemu guest
 child.terminate(force=True)

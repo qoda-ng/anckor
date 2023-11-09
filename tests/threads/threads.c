@@ -35,7 +35,7 @@ static uint8_t test_step = 0;
 void second_thread(void) {
   // STEP 2
   test_step += 1;
-  TEST_ASSERT(test_step >= 2)
+  TEST_ASSERT(test_step >= 6)
 
   // yield the second thread and resume immediatly
   task_yield();

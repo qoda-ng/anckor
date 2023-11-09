@@ -7,15 +7,25 @@ jobs:
       - name: install code
         uses: actions/checkout@v4
 
+      - name: install qemu
+        run: |
+          sudo apt install qemu-system-riscv64
+          qemu-system-riscv64 --version
+
+      - name: install riscv cross-toolchain
+        run: |
+          sudo apt install gcc-riscv64-unknown-elf
+          riscv64-unknown-elf-gcc --version
+
+      - name: install anckor tool
+        run: |
+          source ./setenv.sh
+          anckor --version
+
       - name: build code
-        run: echo building the kernel
+        run: |
+          anckor configure
+          anckor build
 
       - name: test code
-        run: echo testing the kernel
-
-      - name: return error
-        uses: actions/github-script@v3
-        with:
-          script: |
-              python tools/ci/ci_stub.py
-              core.setFailed('test to return an error')
+        run: python tools/ci/ci.py
