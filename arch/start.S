@@ -15,6 +15,8 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "registers.h"
+
 .option norvc
 
 # place this routine at the top of the binary file, this is the
@@ -50,20 +52,20 @@ _primary_hart_init:
 	# set MPP = 0b11, MPIE = 0b1, MIE = 0b1
 	# hart will switch to MACHINE mode after the next 
 	# exception handling
-    li		t0, (0b11 << 11) | (1 << 7) | (1 << 3)
+    li		t0, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
     csrw	mstatus, t0
 	# set the trap vector register with our trap handler
     la		t1, _trap_handler
     csrw	mtvec, t1
 	# enable software level interrupt and external
 	# interrupts for machine mode
-    li		t3, (1 << 3) | (1 << 11)
+    li		t3, MACHINE_EXTERNAL_INTERRUPT_ENABLE | MACHINE_SOFTWARE_INTERRUPT_ENABLE
     csrw	mie, t3
 	# initialize hardware and platform related stuff
-	jal 	platform_init 
+	call 	platform_init 
 	# jump to the kernel init procedure, this should
 	# never return
-    jal     kernel_init
+    call     kernel_init
 3:
 	# hang if we return from the kernel
 	wfi
