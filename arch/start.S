@@ -17,7 +17,10 @@
 
 .option norvc
 
+# place this routine at the top of the binary file, this is the
+# program entry point
 .section .text.init
+# use .global keyworkd makes the symbol visible to the linker
 .global _start
 _start:
 	# check hart id and hang if it's not 0
