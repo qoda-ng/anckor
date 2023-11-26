@@ -42,6 +42,7 @@ _primary_hart_init:
 	addi	a0, a0, 8
 	bltu	a0, a1, 1b
 2:
+	# from here the kernel runs in the idle task context
     la		sp, _idle_stack_end
 	# set MPP = 0b11, MPIE = 0b1, MIE = 0b1
 	# hart will switch to MACHINE mode after the next 
