@@ -49,9 +49,8 @@ _primary_hart_init:
 2:
 	# from here the kernel runs in the idle task context
     la		sp, _idle_stack_end
-	# set MPP = 0b11, MPIE = 0b1, MIE = 0b1
-	# hart will switch to MACHINE mode after the next 
-	# exception handling
+	# set MPP = MACHINE_MODE, MPIE = ENABLE, MIE = ENABLE
+	# enable machine level interrupts
     li		t0, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
     csrw	mstatus, t0
 	# set the trap vector register with our trap handler
