@@ -15,17 +15,16 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-.section .text
-.global _trap_handler
-_trap_handler:
-    # get the interrupt cause 
-    # save it in the first argument register
-    csrr	a0, mcause
-    # reset pending interrupt
-    csrw    mip, 0x0
-    # handle the interrupt
-    call    _handle_exception
-    # increment mepc
-    # csrr a0, mepc
-    # addi a0, a0, 0x04
-    # csrw mepc, a0
+ /*
+ * Syscall is a routine which calls supervisor environment and passes
+ * gives it the syscall number to serve
+ *
+ * a0: syscall number
+ *
+ */
+
+# use .global keyworkd makes the symbol visible to the linker
+ .global _syscall
+_syscall:
+    ecall 
+    ret

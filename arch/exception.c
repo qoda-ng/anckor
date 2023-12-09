@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 Qoda, engineering
  *
- * This program is free software; you can redistribute it and/or modify 
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms and conditions of the GNU General Public License,
  * version 3 or later, as published by the Free Software Foundation.
 
@@ -14,18 +14,18 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+ #include "common.h"
+ #include "printk.h"
 
-.section .text
-.global _trap_handler
-_trap_handler:
-    # get the interrupt cause 
-    # save it in the first argument register
-    csrr	a0, mcause
-    # reset pending interrupt
-    csrw    mip, 0x0
-    # handle the interrupt
-    call    _handle_exception
-    # increment mepc
-    # csrr a0, mepc
-    # addi a0, a0, 0x04
-    # csrw mepc, a0
+ void _handle_exception(uint64_t exception_cause) {
+    switch(exception_cause){
+        case 8:
+        case 9:
+        case 11:
+            printk("ecall !\n");
+            break;
+        default:
+            printk("exception not handled\n");
+            break;
+    }
+ }
