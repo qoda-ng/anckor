@@ -23,6 +23,10 @@ OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
 GLOBAL_LDFLAGS += -nostdlib -Map build/output.map -T tools/linker/virt.ld 
 
+ifeq ($(config_build_debug),y)
+	GLOBAL_LDFLAGS += -g
+endif
+
 .PHONY: all build run
 
 all: clean build
