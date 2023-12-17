@@ -26,8 +26,9 @@ _trap_handler:
     # reset pending interrupt
     csrw    mip, 0x0
     # handle the interrupt
-    call    _handle_exception
+    call    handle_exception
     # increment mepc
     # csrr a0, mepc
     # addi a0, a0, 0x04
     # csrw mepc, a0
+    ret

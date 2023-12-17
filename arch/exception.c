@@ -17,7 +17,7 @@
 #include "common.h"
 #include "printk.h"
 
-void _handle_exception(uint64_t exception_cause) {
+void handle_exception(uint64_t exception_cause) {
   switch (exception_cause) {
     case 8:
     case 9:
