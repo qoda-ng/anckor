@@ -15,8 +15,12 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+ /*
+ * trap handler is call by an exception or an interrupt
+ */
 .section .text
-# mtvec base address must be 4-byte aligned as defined in RISCV Privileged ISA, 3.1.7.
+# trap_handler will be stored in mtvec register and mtvec base address
+# must be 4-byte aligned as defined in RISCV Privileged ISA, 3.1.7.
 .align 4
 .global _trap_handler
 _trap_handler:
@@ -27,8 +31,11 @@ _trap_handler:
     csrw    mip, 0x0
     # handle the interrupt
     call    handle_exception
-    # increment mepc
-    # csrr a0, mepc
-    # addi a0, a0, 0x04
-    # csrw mepc, a0
-    ret
+    # return from trap by using the mepc register
+    # ecall is a 4-byte length instruction so mepc
+    # register is updated with the next instruction
+    csrr    t0, mepc
+    addi    t0, t0, 0x04
+    csrw    mepc, t0
+    # copy mepc to pc register and jump
+    mret

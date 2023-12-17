@@ -25,7 +25,7 @@ void handle_exception(uint64_t exception_cause) {
       printk("ecall !\n");
       break;
     default:
-      printk("exception not handled\n");
+      // printk("exception not handled\n");
       break;
   }
 }

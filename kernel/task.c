@@ -67,7 +67,6 @@ __no_return void task_rt(void (*task_entry)(void)) {
  ******************************************************************************/
 void task_create(const char *name, void (*task_entry)(void), stack_t *stack,
                  uint8_t prio) {
-
   _syscall(9);
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
