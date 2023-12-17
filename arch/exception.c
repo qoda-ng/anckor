@@ -14,18 +14,18 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
- #include "common.h"
- #include "printk.h"
+#include "common.h"
+#include "printk.h"
 
- void _handle_exception(uint64_t exception_cause) {
-    switch(exception_cause){
-        case 8:
-        case 9:
-        case 11:
-            printk("ecall !\n");
-            break;
-        default:
-            printk("exception not handled\n");
-            break;
-    }
- }
+void _handle_exception(uint64_t exception_cause) {
+  switch (exception_cause) {
+    case 8:
+    case 9:
+    case 11:
+      printk("ecall !\n");
+      break;
+    default:
+      printk("exception not handled\n");
+      break;
+  }
+}

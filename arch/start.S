@@ -54,12 +54,12 @@ _primary_hart_init:
     li		t0, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
     csrw	mstatus, t0
 	# set the trap vector register with our trap handler
-    la		t1, _trap_handler
-    csrw	mtvec, t1
+    la		t0, _trap_handler
+    csrw	mtvec, t0
 	# enable software level interrupt and external
 	# interrupts for machine mode
-    li		t3, MACHINE_EXTERNAL_INTERRUPT_ENABLE | MACHINE_SOFTWARE_INTERRUPT_ENABLE
-    csrw	mie, t3
+    li		t0, MACHINE_EXTERNAL_INTERRUPT_ENABLE | MACHINE_SOFTWARE_INTERRUPT_ENABLE
+    csrw	mie, t0
 	# initialize hardware and platform related stuff
 	call 	platform_init 
 	# jump to the kernel init procedure, this should

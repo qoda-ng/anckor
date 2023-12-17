@@ -16,6 +16,8 @@
  */
 
 .section .text
+# mtvec base address must be 4-byte aligned as defined in RISCV Privileged ISA, 3.1.7.
+.align 4
 .global _trap_handler
 _trap_handler:
     # get the interrupt cause 
