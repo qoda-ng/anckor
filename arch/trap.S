@@ -24,6 +24,10 @@
 .align 4
 .global _trap_handler
 _trap_handler:
+    # return address needs to be saved because exception_handler
+    # will update ra register
+    add	sp,sp,-16
+    sd	ra,8(sp)
     # get the interrupt cause 
     # save it in the first argument register
     csrr	a0, mcause
@@ -31,6 +35,10 @@ _trap_handler:
     csrw    mip, 0x0
     # handle the interrupt
     call    handle_exception
+    # once the exception has been managed, get the return 
+    # address from the stack
+    ld	ra,8(sp)
+    add	sp,sp,16
     # return from trap by using the mepc register
     # ecall is a 4-byte length instruction so mepc
     # register is updated with the next instruction

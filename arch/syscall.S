@@ -24,17 +24,9 @@
  */
 
 # use .global keyworkd makes the symbol visible to the linker
- .global _syscall
+.global _syscall
 _syscall:
-    # return address needs to be saved because exception_handler
-    # will update ra register
-    add	sp,sp,-16
-    sd	ra,8(sp)
     # rise exception, this will update mepc register but left
     # the ra register unchanged
     ecall
-    # once the exception has been managed, get the return 
-    # address from the stack
-    ld	ra,8(sp)
-    add	sp,sp,16
     ret
