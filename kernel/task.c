@@ -145,11 +145,14 @@ void task_wakeup(task_t *task) {
  * @param none
  * @return none
  ******************************************************************************/
-void task_destroy() {
+__no_return void task_destroy() {
   // get the current_task task
   task_t *current_task = sched_get_current_task();
   // remove it from the run queue
   sched_remove_task(current_task);
   // call the scheduler
   sched_run();
+  // this place should never be reached as the kernel should at least run
+  // the init task
+  __builtin_unreachable();
 }
