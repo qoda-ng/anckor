@@ -26,23 +26,30 @@
 _trap_handler:
     # return address needs to be saved because handle_exception
     # will update ra register
-    add	sp,sp,-16
-    sd	ra,8(sp)
+    add	    sp,sp,-16
+    sd	    ra,8(sp)
     # reset pending interrupt
     csrw    mip, 0x0
     # move syscall number to a1 register
-    addi a1, a0, 0
+    mv      a1, a0
+    # handle_interrupt and handle_exception
+    # will exit to _ret_from_trap
+    la	    ra, _ret_from_trap
     # get the interrupt cause 
     # save it in the first argument register
     csrr	a0, mcause
-    bge     a0, zero, 1f
-    call    handle_interrupt
+    bgez    a0, 1f
+    # tail does not affect ra register
+    tail    handle_interrupt
 1:
-    call    handle_exception
+    tail    handle_exception
+    
+.local _ret_from_trap
+_ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
-    ld	ra,8(sp)
-    add	sp,sp,16
+    ld	    ra,8(sp)
+    add	    sp,sp,16
     # return from trap by using the mepc register
     # ecall is a 4-byte length instruction so mepc
     # register is updated with the next instruction

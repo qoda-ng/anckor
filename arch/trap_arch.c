@@ -38,8 +38,6 @@ void handle_exception(uint64_t exception_cause, uint64_t syscall_number) {
 
 /******************************************************************************
  * @brief handle interruptions
- * @param exception cause
- * @param syscall number
  * @return none
  ******************************************************************************/
 void handle_interrupt() {
