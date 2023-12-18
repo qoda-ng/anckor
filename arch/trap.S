@@ -24,19 +24,23 @@
 .align 4
 .global _trap_handler
 _trap_handler:
-    # return address needs to be saved because exception_handler
+    # return address needs to be saved because handle_exception
     # will update ra register
     add	sp,sp,-16
     sd	ra,8(sp)
+    # reset pending interrupt
+    csrw    mip, 0x0
+    # move syscall number to a1 register
+    addi a1, a0, 0
     # get the interrupt cause 
     # save it in the first argument register
     csrr	a0, mcause
-    # reset pending interrupt
-    csrw    mip, 0x0
-    # handle the interrupt
+    bge     a0, zero, 1f
+    call    handle_interrupt
+1:
     call    handle_exception
-    # once the exception has been managed, get the return 
-    # address from the stack
+    # once the exception or interrupt has been processed, 
+    # get the return address from the stack
     ld	ra,8(sp)
     add	sp,sp,16
     # return from trap by using the mepc register

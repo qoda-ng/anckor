@@ -17,15 +17,31 @@
 #include "common.h"
 #include "printk.h"
 
-void handle_exception(uint64_t exception_cause) {
+/******************************************************************************
+ * @brief handle exceptions
+ * @param exception cause
+ * @param syscall number
+ * @return none
+ ******************************************************************************/
+void handle_exception(uint64_t exception_cause, uint64_t syscall_number) {
   switch (exception_cause) {
     case 8:
     case 9:
     case 11:
-      printk("ecall !\n");
+      printk("syscall nb° %d\n", syscall_number);
       break;
     default:
-      // printk("exception not handled\n");
+      printk("exception not handled\n");
       break;
   }
+}
+
+/******************************************************************************
+ * @brief handle interruptions
+ * @param exception cause
+ * @param syscall number
+ * @return none
+ ******************************************************************************/
+void handle_interrupt() {
+  printk("interrupt has been detected !\n");
 }
