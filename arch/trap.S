@@ -44,6 +44,11 @@ _trap_handler:
 1:
     tail    handle_exception
     
+ /*
+ * _ret_from_trap is called when handle_interrupt and
+ * handle_exceptions returns as its address is stored
+ * in ra register
+ */
 .local _ret_from_trap
 _ret_from_trap:
     # once the exception or interrupt has been processed, 
