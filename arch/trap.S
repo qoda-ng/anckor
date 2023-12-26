@@ -23,7 +23,7 @@
 .section .text
 # trap_handler will be stored in mtvec register and mtvec base address
 # must be 4-byte aligned as defined in RISCV Privileged ISA, 3.1.7.
-.align 4
+.align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
     # return address needs to be saved because handle_exception
@@ -82,7 +82,7 @@ _ret_from_trap:
 # this table contains all exception handlers
 # 0 padding is adding to maintain alignment between
 # mcause value and handler addresses
-.align 4
+.align RISCV_PTR_LENGTH
 _exception_vector_table:
     .dword handle_exception
     .dword 0
