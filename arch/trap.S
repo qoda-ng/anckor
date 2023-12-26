@@ -30,8 +30,6 @@ _trap_handler:
     # will update ra register
     add	    sp,sp,-16
     sd	    ra,8(sp)
-    # reset pending interrupt
-    csrw    mip, 0x0
     # handle_interrupt and handle_exception
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
