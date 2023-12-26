@@ -15,6 +15,8 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "registers.h"
+
  /*
  * trap handler is called by an exception or an interrupt
  */
@@ -30,23 +32,35 @@ _trap_handler:
     sd	    ra,8(sp)
     # reset pending interrupt
     csrw    mip, 0x0
-    # move syscall number to a1 register
-    mv      a1, a0
     # handle_interrupt and handle_exception
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
     # get the interrupt cause 
     # save it in the first argument register
-    csrr	a0, mcause
-    bgez    a0, 1f
+    csrr	t0, mcause
+    bgez    t0, 1f
     # tail does not affect ra register
     tail    handle_interrupt
 1:
-    tail    handle_exception
+    # compute the exception vector offset
+    slli    t0, t0, RISCV_PTR_LENGTH
+    la      t1, _exception_vector_table
+    la      t2, _exception_vector_table_end
+    # compute the exception handler address
+    add     t0, t1, t0
+    # check if the exception_vector_table can 
+    # handle the exception
+    bgeu    t0, t2, 2f
+    # jump to the dedicated handler
+    ld      t0, 0(t0)
+    jr      t0
+2:
+    # handle unknown exception
+    tail    handle_syscall
     
  /*
  * _ret_from_trap is called when handle_interrupt and
- * handle_exceptions returns as its address is stored
+ * handle_exception returns as its address is stored
  * in ra register
  */
 .local _ret_from_trap
@@ -63,3 +77,43 @@ _ret_from_trap:
     csrw    mepc, t0
     # copy mepc to pc register and jump
     mret
+
+.section .rodata
+# this table contains all exception handlers
+# 0 padding is adding to maintain alignment between
+# mcause value and handler addresses
+.align 4
+_exception_vector_table:
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_syscall
+    .dword 0
+    .dword handle_syscall
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_syscall
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+    .dword handle_exception
+    .dword 0
+_exception_vector_table_end:

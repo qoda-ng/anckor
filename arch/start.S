@@ -64,7 +64,7 @@ _primary_hart_init:
 	call 	platform_init 
 	# jump to the kernel init procedure, this should
 	# never return
-    call     kernel_init
+    call    kernel_init
 3:
 	# hang if we return from the kernel
 	wfi

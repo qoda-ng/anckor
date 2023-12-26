@@ -23,17 +23,18 @@
  * @param syscall number
  * @return none
  ******************************************************************************/
-void handle_exception(uint64_t exception_cause, uint64_t syscall_number) {
-  switch (exception_cause) {
-    case 8:
-    case 9:
-    case 11:
-      printk("syscall nb° %d\n", syscall_number);
-      break;
-    default:
-      printk("exception not handled\n");
-      break;
-  }
+void handle_exception() {
+  printk("exception not handled\n");
+}
+
+/******************************************************************************
+ * @brief handle exceptions
+ * @param exception cause
+ * @param syscall number
+ * @return none
+ ******************************************************************************/
+void handle_syscall(uint64_t syscall_number) {
+  printk("syscall nb° %d\n", syscall_number);
 }
 
 /******************************************************************************
