@@ -17,3 +17,4 @@ As a remainder, these **records** contain the following fields:
 - [Build system](./adr-004.md)
 - [Anckor test engine](./adr-005.md)
 - [Continous integration](./adr-006.md)
+- [Exceptions](./adr-007.md)

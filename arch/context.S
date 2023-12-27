@@ -25,6 +25,7 @@
  */
 #include "offsets.h"
 
+# use .global keyworkd makes the symbol visible to the linker
 .global _switch_to
 _switch_to:
     mv a3, a0

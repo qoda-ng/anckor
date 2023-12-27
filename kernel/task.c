@@ -21,6 +21,8 @@
 
 #define __no_return __attribute__((noreturn))
 
+extern void _syscall(uint64_t syscall_number);
+
 uint64_t last_thread_id = (uint64_t)NULL;
 
 /******************************************************************************
@@ -65,6 +67,7 @@ __no_return void task_rt(void (*task_entry)(void)) {
  ******************************************************************************/
 void task_create(const char *name, void (*task_entry)(void), stack_t *stack,
                  uint8_t prio) {
+  _syscall(3);
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
 
@@ -142,11 +145,14 @@ void task_wakeup(task_t *task) {
  * @param none
  * @return none
  ******************************************************************************/
-void task_destroy() {
+__no_return void task_destroy() {
   // get the current_task task
   task_t *current_task = sched_get_current_task();
   // remove it from the run queue
   sched_remove_task(current_task);
   // call the scheduler
   sched_run();
+  // this place should never be reached as the kernel should at least run
+  // the init task
+  __builtin_unreachable();
 }

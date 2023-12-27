@@ -63,7 +63,7 @@ void threads_test_thread(void) {
   TEST_ASSERT(test_step >= 1)
 
   // create the second thread
-  task_create("second_thread", second_thread, &second_thread_stack, 2);
+  task_create("second_thread", second_thread, &second_thread_stack, 4);
 
   // switch from the main thread to the second thread
   task_sleep();
@@ -73,4 +73,4 @@ void threads_test_thread(void) {
   TEST_ASSERT(test_step >= 4)
 }
 
-REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 3)
+REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 5)
