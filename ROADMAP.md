@@ -11,6 +11,8 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 - [ ] cooperative scheduling with min heap priority queue
 - [x] Qemu riscv 64 bits support
 - [x] Modular build system
+- [x] exception management
+- [ ] syscalls
 - [ ] Interrupt management
 - [ ] User / Kernel modes
 
