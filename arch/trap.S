@@ -26,11 +26,11 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # return address needs to be saved because handle_exception
+    # return address needs to be saved because handle_unknown_exception
     # will update ra register
     add	    sp,sp,-16
     sd	    ra,8(sp)
-    # handle_interrupt and handle_exception
+    # handle_interrupt and handle_unknown_exception
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
     # get the interrupt cause 
@@ -54,11 +54,11 @@ _trap_handler:
     jr      t0
 2:
     # handle unknown exception
-    tail    handle_syscall
+    tail    handle_unknown_exception
     
  /*
- * _ret_from_trap is called when handle_interrupt and
- * handle_exception returns as its address is stored
+ * _ret_from_trap is called when handle_interrupt or
+ * the exception handler returns as its address is stored
  * in ra register
  */
 .local _ret_from_trap
@@ -82,36 +82,36 @@ _ret_from_trap:
 # mcause value and handler addresses
 .align RISCV_PTR_LENGTH
 _exception_vector_table:
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
-    .dword 0
-    .dword handle_syscall
+    .dword handle_unknown_exception
     .dword 0
     .dword handle_syscall
     .dword 0
-    .dword handle_exception
+    .dword handle_syscall
+    .dword 0
+    .dword handle_unknown_exception
     .dword 0
     .dword handle_syscall
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
-    .dword handle_exception
+    .dword handle_unknown_exception
     .dword 0
 _exception_vector_table_end:

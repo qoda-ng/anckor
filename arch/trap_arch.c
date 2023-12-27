@@ -23,7 +23,7 @@
  * @param syscall number
  * @return none
  ******************************************************************************/
-void handle_exception() {
+void handle_unknown_exception() {
   printk("exception not handled\n");
 }
 
