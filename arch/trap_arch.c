@@ -33,7 +33,7 @@ void handle_unknown_exception() {
  * @param syscall number
  * @return none
  ******************************************************************************/
-void handle_syscall(uint64_t syscall_number) {
+void sys_default(uint64_t syscall_number) {
   printk("syscall nb° %d\n", syscall_number);
 }
 

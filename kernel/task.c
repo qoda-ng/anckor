@@ -67,7 +67,6 @@ __no_return void task_rt(void (*task_entry)(void)) {
  ******************************************************************************/
 void task_create(const char *name, void (*task_entry)(void), stack_t *stack,
                  uint8_t prio) {
-  _syscall(3);
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
 
@@ -112,6 +111,7 @@ void task_yield() {
  * @return none
  ******************************************************************************/
 void task_sleep() {
+  _syscall(3);
   // get the current_task task
   task_t *current_task = sched_get_current_task();
 
@@ -128,6 +128,7 @@ void task_sleep() {
  * @return none
  ******************************************************************************/
 void task_wakeup(task_t *task) {
+  _syscall(4);
   task_set_state(task, READY);
   // add the task to the run queue
   sched_add_task(task);

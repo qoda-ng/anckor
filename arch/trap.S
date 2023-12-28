@@ -41,7 +41,7 @@ _trap_handler:
     tail    handle_interrupt
 1:
     # compute the exception vector offset
-    slli    t0, t0, RISCV_PTR_LENGTH
+    slli    t0, t0, COMPUTE_8_BYTES_ADDRESS
     la      t1, _exception_vector_table
     la      t2, _exception_vector_table_end
     # compute the exception handler address
@@ -83,35 +83,19 @@ _ret_from_trap:
 .align RISCV_PTR_LENGTH
 _exception_vector_table:
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
-    .dword handle_syscall
-    .dword 0
-    .dword handle_syscall
-    .dword 0
+    .dword _syscall_wrapper
+    .dword _syscall_wrapper
     .dword handle_unknown_exception
-    .dword 0
-    .dword handle_syscall
-    .dword 0
+    .dword _syscall_wrapper
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
 _exception_vector_table_end:
