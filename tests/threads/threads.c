@@ -15,6 +15,7 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "ax_syscall.h"
 #include "printf.h"
 #include "task.h"
 #include "test.h"
@@ -66,7 +67,7 @@ void threads_test_thread(void) {
   task_create("second_thread", second_thread, &second_thread_stack, 4);
 
   // switch from the main thread to the second thread
-  task_sleep();
+  ax_task_sleep();
 
   // STEP 4
   test_step += 1;

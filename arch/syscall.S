@@ -16,6 +16,24 @@
  */
 
 #include "registers.h"
+#include "syscall.h"
+
+ /*
+ * Syscall is a routine which calls supervisor environment and passes
+ * gives it the syscall number to serve
+ *
+ * a0: syscall number
+ *
+ */
+
+# use .global keyworkd makes the symbol visible to the linker
+.global ax_task_sleep
+ax_task_sleep:
+    li a7, SYSCALL_TASK_SLEEP
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
 
 /*
  * Syscall wrapper is used to call the syscall saved in the syscall table.
@@ -29,7 +47,7 @@
  .global _syscall_wrapper
 _syscall_wrapper:
     # compute the offset address in the syscall table
-    mv      t0, a0
+    mv      t0, a7
     slli    t0, t0, COMPUTE_8_BYTES_ADDRESS
     la      t1, _syscall_table
     la      t2, _syscall_table_end
@@ -42,28 +60,12 @@ _syscall_wrapper:
 1:
     tail sys_default
 
- /*
- * Syscall is a routine which calls supervisor environment and passes
- * gives it the syscall number to serve
- *
- * a0: syscall number
- *
- */
-
-# use .global keyworkd makes the symbol visible to the linker
-.global _syscall
-_syscall:
-    # rise exception, this will update mepc register but left
-    # the ra register unchanged
-    ecall
-    ret
-
 .section .rodata
 .align RISCV_PTR_LENGTH
 _syscall_table:
     .dword sys_default
     .dword sys_default
-    .dword sys_default
+    .dword task_sleep
     .dword sys_default
     .dword sys_default
     .dword sys_default
