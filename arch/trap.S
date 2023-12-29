@@ -68,12 +68,12 @@ _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
     ld	    ra,8(sp)
+    # get the instruction address which asserts the exception
     ld      t0, 0(sp)
     add	    sp,sp,16
     # return from trap by using the mepc register
     # ecall is a 4-byte length instruction so mepc
     # register is updated with the next instruction
-    # csrr    t0, mepc
     addi    t0, t0, 0x04
     csrw    mepc, t0
     # the kernels returns in machine mode after mret
