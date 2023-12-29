@@ -48,7 +48,7 @@ void test_engine(void) {
     ax_task_create(test->name, test->entry, test->stack, test->prio);
 
     // jump into the freshly created thread
-    task_yield();
+    ax_task_yield();
     // when the test returns, display its result
     if (test_error) {
       tests_failed += 1;

@@ -39,7 +39,7 @@ void second_thread(void) {
   TEST_ASSERT(test_step >= 2)
 
   // yield the second thread and resume immediatly
-  task_yield();
+  ax_task_yield();
 
   // STEP 3
   test_step += 1;

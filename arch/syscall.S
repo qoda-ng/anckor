@@ -42,6 +42,29 @@ ax_task_create:
     ret
 
  /*
+ * ax_task_yield syscall
+ *
+ * a0: not used
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+# use .global keyworkd makes the symbol visible to the linker
+.global ax_task_yield
+ax_task_yield:
+    li a7, SYSCALL_TASK_YIELD
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
  * ax_task_sleep syscall
  *
  * a0: not used
@@ -93,7 +116,7 @@ ax_task_wakeup:
  * avoid to pass arguments on the stack as all syscalls don't have the same 
  * prototype. 
  *
- * a0 contains the syscall number
+ * a7 contains the syscall number
  *
  */
  .global _syscall_wrapper
@@ -116,7 +139,7 @@ _syscall_wrapper:
 .align RISCV_PTR_LENGTH
 _syscall_table:
     .dword task_create
-    .dword sys_default
+    .dword task_yield
     .dword task_sleep
     .dword task_wakeup
     .dword sys_default
