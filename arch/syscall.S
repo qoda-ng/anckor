@@ -19,10 +19,16 @@
 #include "syscall.h"
 
  /*
- * Syscall is a routine which calls supervisor environment and passes
- * gives it the syscall number to serve
+ * ax_task_sleep syscall
  *
- * a0: syscall number
+ * a0: not used
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
  *
  */
 
