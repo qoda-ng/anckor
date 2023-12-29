@@ -46,7 +46,7 @@ void second_thread(void) {
   TEST_ASSERT(test_step >= 3)
 
   // return from the second thread
-  task_wakeup((task_t *)main_thread_stack);
+  ax_task_wakeup((task_t *)main_thread_stack);
 
   // STEP 5
   test_step += 1;

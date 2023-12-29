@@ -17,6 +17,9 @@
 #ifndef AX_SYSCALL_H
 #define AX_SYSCALL_H
 
+#include "task.h"
+
 extern void ax_task_sleep(void);
+extern void ax_task_wakeup(task_t *);
 
 #endif

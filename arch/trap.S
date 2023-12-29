@@ -30,6 +30,8 @@ _trap_handler:
     # will update ra register
     add	    sp,sp,-16
     sd	    ra,8(sp)
+    csrr    t0, mepc
+    sd      t0, 0(sp)
     # handle_interrupt and handle_unknown_exception
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
@@ -66,14 +68,20 @@ _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
     ld	    ra,8(sp)
+    ld      t0, 0(sp)
     add	    sp,sp,16
     # return from trap by using the mepc register
     # ecall is a 4-byte length instruction so mepc
     # register is updated with the next instruction
-    csrr    t0, mepc
+    # csrr    t0, mepc
     addi    t0, t0, 0x04
     csrw    mepc, t0
-    # copy mepc to pc register and jump
+    # the kernels returns in machine mode after mret
+    # execution
+    li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
+    csrw	mstatus, t1
+    # mret sets PC to MEPC, sets the hart mode to MPP
+    # and sets MPP to USER mode
     mret
 
 .section .rodata
