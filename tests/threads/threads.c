@@ -64,7 +64,7 @@ void threads_test_thread(void) {
   TEST_ASSERT(test_step >= 1)
 
   // create the second thread
-  task_create("second_thread", second_thread, &second_thread_stack, 4);
+  ax_task_create("second_thread", second_thread, &second_thread_stack, 4);
 
   // switch from the main thread to the second thread
   ax_task_sleep();

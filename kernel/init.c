@@ -18,6 +18,7 @@
 #include "init.h"
 
 #include "app.h"
+#include "ax_syscall.h"
 #include "printk.h"
 #include "task.h"
 
@@ -39,7 +40,7 @@ void init_run(void) {
     // get the app descriptor from the current pointer
     app_info_t *app = (app_info_t *)*app_pt;
     // create a task for the app
-    task_create(app->name, app->entry, app->stack, app->prio);
+    ax_task_create(app->name, app->entry, app->stack, app->prio);
   }
 }
 
@@ -49,5 +50,5 @@ void init_run(void) {
  * @return None
  ******************************************************************************/
 void init_create(void) {
-  task_create("init_task", init_run, &init_stack, INIT_PRIO);
+  ax_task_create("init_task", init_run, &init_stack, INIT_PRIO);
 }

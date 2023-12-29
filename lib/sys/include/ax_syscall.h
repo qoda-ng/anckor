@@ -19,6 +19,7 @@
 
 #include "task.h"
 
+extern void ax_task_create(const char *, void (*)(void), stack_t *, uint8_t);
 extern void ax_task_sleep(void);
 extern void ax_task_wakeup(task_t *);
 

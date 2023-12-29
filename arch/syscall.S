@@ -19,6 +19,29 @@
 #include "syscall.h"
 
  /*
+ * ax_task_create syscall
+ *
+ * a0: task name
+ * a1: task entry
+ * a2: task stack
+ * a3: task priority
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+# use .global keyworkd makes the symbol visible to the linker
+.global ax_task_create
+ax_task_create:
+    li a7, SYSCALL_TASK_CREATE
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
  * ax_task_sleep syscall
  *
  * a0: not used
@@ -92,7 +115,7 @@ _syscall_wrapper:
 .section .rodata
 .align RISCV_PTR_LENGTH
 _syscall_table:
-    .dword sys_default
+    .dword task_create
     .dword sys_default
     .dword task_sleep
     .dword task_wakeup

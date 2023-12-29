@@ -18,6 +18,7 @@
 #include "include/test.h"
 
 #include "app.h"
+#include "ax_syscall.h"
 #include "printf.h"
 
 /*******************************************************************************
@@ -44,7 +45,7 @@ void test_engine(void) {
     // get the test descriptor from the current pointer
     test_info_t *test = (test_info_t *)*test_pt;
     // create a task for the test
-    task_create(test->name, test->entry, test->stack, test->prio);
+    ax_task_create(test->name, test->entry, test->stack, test->prio);
 
     // jump into the freshly created thread
     task_yield();
