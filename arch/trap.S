@@ -26,17 +26,19 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # return address needs to be saved because handle_unknown_exception
-    # will update ra register
+    # return address needs to be saved because ra register will 
+    # be overwritten with _ret_from_trap address
     add	    sp,sp,-16
     sd	    ra,8(sp)
+    # save mepc as the kernel can switch context and return by an 
+    # another function from which it enters in _trap_handler 
     csrr    t0, mepc
     sd      t0, 0(sp)
-    # handle_interrupt and handle_unknown_exception
+    # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
-    # get the interrupt cause 
-    # save it in the first argument register
+    # get the exception cause and dispatch
+    # from interrupt or synchronous exception
     csrr	t0, mcause
     bgez    t0, 1f
     # tail does not affect ra register
