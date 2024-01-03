@@ -23,8 +23,8 @@ extern void (*_task_start)(void);
 /******************************************************************************
  * @brief initialize task stack
  *
- * The stack follows the riscv ABI i.e task_rt() argument is stored in a0 and sp
- * is 128 bits aligned:
+ * The stack follows the riscv ABI i.e task_runtime() argument is stored in a0
+ *and sp is 128 bits aligned:
  *
  * ra
  * sp -> stack_start + stack_size - 2*128
@@ -53,7 +53,7 @@ extern void (*_task_start)(void);
  * ----------- <--- SP
  * _task_start
  * task_entry
- * task_rt
+ * task_runtime
  * ----------------------- stack_end
  *
  * @param stack start address pointer
@@ -84,10 +84,10 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // and 16-bytes align it
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
 
-  // move up sp and save task_rt / task_entry
+  // move up sp and save task_runtime / task_entry
   // these two pointers will be used by _task_start
   task->thread.sp -= LWORD_SIZE;
-  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)task_rt;
+  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)task_runtime;
   *(uint64_t *)(task->thread.sp)              = (uint64_t)task_entry;
 
   // move up sp and save _task_start

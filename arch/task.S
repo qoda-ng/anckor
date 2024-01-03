@@ -23,13 +23,13 @@
  */
 .global _task_start
 _task_start:
-    # get task_rt 
+    # get task_runtime 
     ld t0, 8(sp)
     # get task_entry address
     ld a0, 0(sp)
     # move up stack pointer
     add sp, sp, 16
-    # load task_rt in mepc
+    # load task_runtime in mepc
     csrw mepc, t0
     # load mstatus value
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE

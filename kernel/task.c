@@ -46,7 +46,7 @@ static uint64_t task_get_new_thread_id() {
  * @param function to run in the task
  * @return none
  ******************************************************************************/
-__no_return void task_rt(void (*task_entry)(void)) {
+__no_return void task_runtime(void (*task_entry)(void)) {
   // start the main task routine
   task_entry();
 
