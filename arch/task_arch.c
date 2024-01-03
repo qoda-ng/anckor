@@ -27,7 +27,7 @@ extern void (*_task_start)(void);
  *and sp is 128 bits aligned:
  *
  * ra
- * sp -> stack_start + stack_size - 2*128
+ * sp -> stack_start + stack_size - 3*128
  * s0
  * s1
  * s2
@@ -40,7 +40,7 @@ extern void (*_task_start)(void);
  * s9
  * s10
  * s11
- * a0 -> task_entry
+ * a0
  * a1
  * a2
  * a3
@@ -54,6 +54,8 @@ extern void (*_task_start)(void);
  * _task_start
  * task_entry
  * task_runtime
+ * -----------
+ * -----------
  * ----------------------- stack_end
  *
  * @param stack start address pointer
