@@ -23,5 +23,6 @@
 #define SYSCALL_TASK_YIELD  1
 #define SYSCALL_TASK_SLEEP  2
 #define SYSCALL_TASK_WAKEUP 3
+#define SYSCALL_TASK_EXIT   4
 
 #endif

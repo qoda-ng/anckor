@@ -110,6 +110,29 @@ ax_task_wakeup:
     ecall
     ret
 
+ /*
+ * ax_task_exit syscall
+ *
+ * a0: not used
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+# use .global keyworkd makes the symbol visible to the linker
+.global ax_task_exit
+ax_task_exit:
+    li a7, SYSCALL_TASK_EXIT
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
 /*
  * Syscall wrapper is used to call the syscall saved in the syscall table.
  * This routine is written in assembly left a[0-7] registers unchanged. This
@@ -142,7 +165,7 @@ _syscall_table:
     .dword task_yield
     .dword task_sleep
     .dword task_wakeup
-    .dword sys_default
+    .dword task_exit
     .dword sys_default
     .dword sys_default
     .dword sys_default

@@ -16,6 +16,7 @@
  */
 #include "task.h"
 
+#include "ax_syscall.h"
 #include "sched.h"
 #include "stddef.h"
 
@@ -51,7 +52,7 @@ __no_return void task_runtime(void (*task_entry)(void)) {
   task_entry();
 
   // clean the task if ever it returns
-  task_destroy();
+  ax_task_exit();
 
   // tell the compiler we will never reach this point
   __builtin_unreachable();
@@ -144,7 +145,7 @@ void task_wakeup(task_t *task) {
  * @param none
  * @return none
  ******************************************************************************/
-__no_return void task_destroy() {
+__no_return void task_exit() {
   // get the current_task task
   task_t *current_task = sched_get_current_task();
   // remove it from the run queue
