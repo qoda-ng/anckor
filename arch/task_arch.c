@@ -18,6 +18,8 @@
 #include "processor.h"
 #include "task.h"
 
+extern void (*_task_start)(void);
+
 /******************************************************************************
  * @brief initialize task stack
  *
@@ -25,7 +27,7 @@
  * is 128 bits aligned:
  *
  * ra
- * sp -> stack_start + stack_size - 128
+ * sp -> stack_start + stack_size - 2*128
  * s0
  * s1
  * s2
@@ -47,7 +49,12 @@
  * a6
  * a7
  * ...
+ * ----------------------- stack_start
+ * ----------- <--- SP
+ * _task_start
+ * task_entry
  * task_rt
+ * ----------------------- stack_end
  *
  * @param stack start address pointer
  * @param size of the stack
@@ -73,14 +80,17 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   task->thread.s[10] = 0;
   task->thread.s[11] = 0;
 
-  // save task entry in the a0 register which is the first function parameter in
-  // the riscv ABI
-  task->thread.a[0] = (uint64_t)task_entry;
+  // initialiaze SP at the end of the stack
+  // and 16-bytes align it
+  task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
 
-  // save the return address at the first address of the stack
-  uint64_t stack_return_addr       = (uint64_t)stack + stack_size - DWORD_SIZE;
-  *(uint64_t *)(stack_return_addr) = (uint64_t)task_rt;
+  // move up sp and save task_rt / task_entry
+  // these two pointers will be used by _task_start
+  task->thread.sp -= LWORD_SIZE;
+  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)task_rt;
+  *(uint64_t *)(task->thread.sp)              = (uint64_t)task_entry;
 
-  // move SP (128 bits aligned) to save return address
-  task->thread.sp = (uint64_t)stack + STACK_SIZE - LWORD_SIZE;
+  // move up sp and save _task_start
+  task->thread.sp -= LWORD_SIZE;
+  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_task_start;
 }

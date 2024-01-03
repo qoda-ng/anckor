@@ -119,7 +119,7 @@ ax_task_wakeup:
  * a7 contains the syscall number
  *
  */
- .global _syscall_wrapper
+.global _syscall_wrapper
 _syscall_wrapper:
     # compute the offset address in the syscall table
     mv      t0, a7
@@ -128,7 +128,7 @@ _syscall_wrapper:
     la      t2, _syscall_table_end
     add     t0, t1, t0
     bgeu    t0, t2, 1f
-    # load the syscall handler adress from the syscall table
+    # load the syscall handler address from the syscall table
     ld      t0, 0(t0)
     # jump to the syscall
     jr      t0
