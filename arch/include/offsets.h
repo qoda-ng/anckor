@@ -17,20 +17,18 @@
 #ifndef OFFSETS_H
 #define OFFSETS_H
 
-#define TASK_THREAD_RA  0
-#define TASK_THREAD_SP  8
-#define TASK_THREAD_S0  16
-#define TASK_THREAD_S1  24
-#define TASK_THREAD_S2  32
-#define TASK_THREAD_S3  40
-#define TASK_THREAD_S4  48
-#define TASK_THREAD_S5  56
-#define TASK_THREAD_S6  64
-#define TASK_THREAD_S7  72
-#define TASK_THREAD_S8  80
-#define TASK_THREAD_S9  88
-#define TASK_THREAD_S10 96
-#define TASK_THREAD_S11 104
-#define TASK_THREAD_A0  112
+#define TASK_THREAD_SP  0
+#define TASK_THREAD_S0  8
+#define TASK_THREAD_S1  16
+#define TASK_THREAD_S2  24
+#define TASK_THREAD_S3  32
+#define TASK_THREAD_S4  40
+#define TASK_THREAD_S5  48
+#define TASK_THREAD_S6  56
+#define TASK_THREAD_S7  64
+#define TASK_THREAD_S8  72
+#define TASK_THREAD_S9  80
+#define TASK_THREAD_S10 88
+#define TASK_THREAD_S11 96
 
 #endif

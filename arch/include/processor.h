@@ -23,11 +23,10 @@
 
 /******************************************************************************
  * @struct thread_t
- * @brief structure to save cpu specific state of a task
+ * @brief structure used for thread local storage
  ******************************************************************************/
 typedef struct thread_t {
   // callee saved registers
-  uint64_t ra;
   uint64_t sp;
   uint64_t s[12];
 } thread_t;
