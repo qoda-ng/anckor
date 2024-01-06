@@ -15,6 +15,7 @@
  * not, see https://www.gnu.org/licenses/
  */
 #include "common.h"
+#include "offsets.h"
 #include "processor.h"
 #include "task.h"
 
@@ -24,32 +25,26 @@ extern void (*_task_start)(void);
  * @brief initialize task stack
  *
  * The stack follows the riscv ABI i.e task_runtime() argument is stored in a0
- *and sp is 128 bits aligned:
+ * and sp is 128 bits aligned:
  *
- * ra
- * sp -> stack_start + stack_size - 3*128
- * s0
- * s1
- * s2
- * s3
- * s4
- * s5
- * s6
- * s7
- * s8
- * s9
- * s10
- * s11
- * a0
- * a1
- * a2
- * a3
- * a4
- * a5
- * a6
- * a7
- * ...
  * ----------------------- stack_start
+ * task_t start
+ * ...
+ * task_t end
+ * -----------------------
+ * ...
+ * s11
+ * s10
+ * s9
+ * s8
+ * s7
+ * s6
+ * s5
+ * s4
+ * s3
+ * s2
+ * s1
+ * s0
  * ----------- <--- SP
  * _task_start
  * task_entry
@@ -68,20 +63,6 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // get task pointer from the stack
   task_t *task = (task_t *)stack;
 
-  // zeroied callee-saved registers
-  task->thread.s[0]  = 0;
-  task->thread.s[1]  = 0;
-  task->thread.s[2]  = 0;
-  task->thread.s[3]  = 0;
-  task->thread.s[4]  = 0;
-  task->thread.s[5]  = 0;
-  task->thread.s[6]  = 0;
-  task->thread.s[7]  = 0;
-  task->thread.s[8]  = 0;
-  task->thread.s[9]  = 0;
-  task->thread.s[10] = 0;
-  task->thread.s[11] = 0;
-
   // initialiaze SP at the end of the stack
   // and 16-bytes align it
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
@@ -95,4 +76,18 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // move up sp and save _task_start
   task->thread.sp -= LWORD_SIZE;
   *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_task_start;
+
+  // zeroied callee-saved registers with are saved on top of the stack
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S0)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S1)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S2)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S3)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S4)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S5)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S6)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S7)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S8)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S9)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S10) = 0;
+  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S11) = 0;
 }

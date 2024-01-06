@@ -45,7 +45,7 @@ _trap_handler:
     tail    handle_interrupt
 1:
     # compute the exception vector offset
-    slli    t0, t0, COMPUTE_8_BYTES_ADDRESS
+    slli    t0, t0, SHIFT_8_BYTES_ADDRESS
     la      t1, _exception_vector_table
     la      t2, _exception_vector_table_end
     # compute the exception handler address

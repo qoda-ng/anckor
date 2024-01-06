@@ -28,7 +28,7 @@
 typedef struct thread_t {
   // callee saved registers
   uint64_t sp;
-  uint64_t s[12];
+  // uint64_t s[12];
 } thread_t;
 
 #endif

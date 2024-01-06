@@ -146,7 +146,7 @@ ax_task_exit:
 _syscall_wrapper:
     # compute the offset address in the syscall table
     mv      t0, a7
-    slli    t0, t0, COMPUTE_8_BYTES_ADDRESS
+    slli    t0, t0, SHIFT_8_BYTES_ADDRESS
     la      t1, _syscall_table
     la      t2, _syscall_table_end
     add     t0, t1, t0
