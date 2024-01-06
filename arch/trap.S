@@ -59,7 +59,7 @@ _trap_handler:
 2:
     # handle unknown exception
     tail    handle_unknown_exception
-    
+
  /*
  * _ret_from_trap is called when handle_interrupt or
  * the exception handler returns as its address is stored
@@ -71,13 +71,10 @@ _ret_from_trap:
     # get the return address from the stack
     ld	    ra,8(sp)
     # get the instruction address which asserts the exception
+    # to resume execution
     ld      t0, 0(sp)
-    add	    sp,sp,16
-    # return from trap by using the mepc register
-    # ecall is a 4-byte length instruction so mepc
-    # register is updated with the next instruction
-    addi    t0, t0, 0x04
     csrw    mepc, t0
+    add	    sp,sp,16
     # the kernels returns in machine mode after mret
     # execution
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
