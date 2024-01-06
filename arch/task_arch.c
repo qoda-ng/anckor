@@ -24,6 +24,9 @@ extern void (*_task_start)(void);
 /******************************************************************************
  * @brief initialize task stack
  *
+ * WARNING : the stack design heavily relies on how _switch_to and sched_switch
+ * behaves. This should not be modified without careful attention.
+ *
  * The stack follows the riscv ABI i.e task_runtime() argument is stored in a0
  * and sp is 128 bits aligned:
  *
