@@ -16,6 +16,7 @@
  */
 #include "task.h"
 
+#include "ax_syscall.h"
 #include "sched.h"
 #include "stddef.h"
 
@@ -46,12 +47,12 @@ static uint64_t task_get_new_thread_id() {
  * @param function to run in the task
  * @return none
  ******************************************************************************/
-__no_return void task_rt(void (*task_entry)(void)) {
+__no_return void task_runtime(void (*task_entry)(void)) {
   // start the main task routine
   task_entry();
 
   // clean the task if ever it returns
-  task_destroy();
+  ax_task_exit();
 
   // tell the compiler we will never reach this point
   __builtin_unreachable();
@@ -67,7 +68,6 @@ __no_return void task_rt(void (*task_entry)(void)) {
  ******************************************************************************/
 void task_create(const char *name, void (*task_entry)(void), stack_t *stack,
                  uint8_t prio) {
-  _syscall(3);
   // save task infos at the beginning of the task
   task_t *task = (task_t *)stack;
 
@@ -145,7 +145,7 @@ void task_wakeup(task_t *task) {
  * @param none
  * @return none
  ******************************************************************************/
-__no_return void task_destroy() {
+__no_return void task_exit() {
   // get the current_task task
   task_t *current_task = sched_get_current_task();
   // remove it from the run queue

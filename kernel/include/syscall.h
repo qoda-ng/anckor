@@ -14,22 +14,15 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef OFFSETS_H
-#define OFFSETS_H
+#ifndef SYSCALL_H
+#define SYSCALL_H
 
-#define TASK_THREAD_SP 0
+#define SYSCALL_MAX_NB 32
 
-#define TASK_STACK_FRAME_S0  -8
-#define TASK_STACK_FRAME_S1  -16
-#define TASK_STACK_FRAME_S2  -24
-#define TASK_STACK_FRAME_S3  -32
-#define TASK_STACK_FRAME_S4  -40
-#define TASK_STACK_FRAME_S5  -48
-#define TASK_STACK_FRAME_S6  -56
-#define TASK_STACK_FRAME_S7  -64
-#define TASK_STACK_FRAME_S8  -72
-#define TASK_STACK_FRAME_S9  -80
-#define TASK_STACK_FRAME_S10 -88
-#define TASK_STACK_FRAME_S11 -96
+#define SYSCALL_TASK_CREATE 0
+#define SYSCALL_TASK_YIELD  1
+#define SYSCALL_TASK_SLEEP  2
+#define SYSCALL_TASK_WAKEUP 3
+#define SYSCALL_TASK_EXIT   4
 
 #endif

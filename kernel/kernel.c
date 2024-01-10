@@ -15,6 +15,7 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "ax_syscall.h"
 #include "banner.h"
 #include "common.h"
 #include "init.h"
@@ -29,7 +30,7 @@
  ******************************************************************************/
 void idle_run(void) {
   while (1) {
-    task_yield();
+    ax_task_yield();
   }
 }
 

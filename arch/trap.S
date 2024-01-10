@@ -26,22 +26,26 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # return address needs to be saved because handle_unknown_exception
-    # will update ra register
+    # return address needs to be saved because ra register will 
+    # be overwritten with _ret_from_trap address
     add	    sp,sp,-16
     sd	    ra,8(sp)
-    # handle_interrupt and handle_unknown_exception
+    # save mepc as the kernel can switch context and return by an 
+    # another function from which it enters in _trap_handler 
+    csrr    t0, mepc
+    sd      t0, 0(sp)
+    # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
-    # get the interrupt cause 
-    # save it in the first argument register
+    # get the exception cause and dispatch
+    # from interrupt or synchronous exception
     csrr	t0, mcause
     bgez    t0, 1f
     # tail does not affect ra register
     tail    handle_interrupt
 1:
     # compute the exception vector offset
-    slli    t0, t0, RISCV_PTR_LENGTH
+    slli    t0, t0, SHIFT_8_BYTES_ADDRESS
     la      t1, _exception_vector_table
     la      t2, _exception_vector_table_end
     # compute the exception handler address
@@ -55,7 +59,7 @@ _trap_handler:
 2:
     # handle unknown exception
     tail    handle_unknown_exception
-    
+
  /*
  * _ret_from_trap is called when handle_interrupt or
  * the exception handler returns as its address is stored
@@ -66,14 +70,17 @@ _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
     ld	    ra,8(sp)
-    add	    sp,sp,16
-    # return from trap by using the mepc register
-    # ecall is a 4-byte length instruction so mepc
-    # register is updated with the next instruction
-    csrr    t0, mepc
-    addi    t0, t0, 0x04
+    # get the instruction address which asserts the exception
+    # to resume execution
+    ld      t0, 0(sp)
     csrw    mepc, t0
-    # copy mepc to pc register and jump
+    add	    sp,sp,16
+    # the kernels returns in machine mode after mret
+    # execution
+    li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
+    csrw	mstatus, t1
+    # mret sets PC to MEPC, sets the hart mode to MPP
+    # and sets MPP to USER mode
     mret
 
 .section .rodata
@@ -83,35 +90,19 @@ _ret_from_trap:
 .align RISCV_PTR_LENGTH
 _exception_vector_table:
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
-    .dword handle_syscall
-    .dword 0
-    .dword handle_syscall
-    .dword 0
+    .dword _syscall_wrapper
+    .dword _syscall_wrapper
     .dword handle_unknown_exception
-    .dword 0
-    .dword handle_syscall
-    .dword 0
+    .dword _syscall_wrapper
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
     .dword handle_unknown_exception
-    .dword 0
 _exception_vector_table_end:

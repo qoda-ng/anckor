@@ -74,7 +74,7 @@ void task_create(const char *, void (*)(void), stack_t *, uint8_t);
  * @param function to run in the task
  * @return none
  ******************************************************************************/
-void task_rt(void (*)(void));
+void task_runtime(void (*)(void));
 
 /******************************************************************************
  * @brief initialize task stack
@@ -117,7 +117,7 @@ void task_wakeup(task_t *);
  * @param none
  * @return none
  ******************************************************************************/
-void task_destroy();
+void task_exit();
 
 /******************************************************************************
  * @brief modify the state of the given task
