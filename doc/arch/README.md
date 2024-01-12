@@ -19,3 +19,4 @@ As a remainder, these **records** contain the following fields:
 - [Continous integration](./adr-006.md)
 - [Exceptions](./adr-007.md)
 - [syscalls](./adr-008.md)
+- [Prevent tasks to run in kernel mode](./adr-009.md)
