@@ -12,7 +12,7 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 - [x] Qemu riscv 64 bits support
 - [x] Modular build system
 - [x] exception management
-- [ ] syscalls
+- [x] syscalls
 - [ ] Interrupt management
 - [ ] User / Kernel modes
 
