@@ -10,11 +10,13 @@ jobs:
 
       - name: install qemu
         run: |
+          sudo apt-get update
           sudo apt install qemu-system-riscv64
           qemu-system-riscv64 --version
 
       - name: install riscv cross-toolchain
         run: |
+          sudo apt-get update
           sudo apt install gcc-riscv64-unknown-elf
           riscv64-unknown-elf-gcc --version
 
