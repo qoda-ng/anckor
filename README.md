@@ -2,7 +2,7 @@
 
 Anckor aims to be a real-time kernel with a focus on **determinism**, **robustness** and **simplicity**.
 
-The main goal is to design a lightweight kernel with robust partionning between processes. Its architecture and API has to be as simple as possible to lower the cost of application design and maintenance. A particular attention is done on keeping as fewer system calls as possible.
+The main goal is to design a lightweight kernel with robust partitioning between processes. Its architecture and API has to be as simple as possible to lower the cost of application design and maintenance. A particular attention is done on keeping as fewer system calls as possible.
 
 All design choices are recorded following the [ADR](./doc/arch/README.md) framework.
 
