@@ -16,10 +16,13 @@
  */
 #include "task.h"
 
+#include "ax_syscall.h"
 #include "sched.h"
 #include "stddef.h"
 
 #define __no_return __attribute__((noreturn))
+
+extern void _syscall(uint64_t syscall_number);
 
 uint64_t last_thread_id = (uint64_t)NULL;
 
@@ -44,12 +47,12 @@ static uint64_t task_get_new_thread_id() {
  * @param function to run in the task
  * @return none
  ******************************************************************************/
-__no_return void task_rt(void (*task_entry)(void)) {
+__no_return void task_runtime(void (*task_entry)(void)) {
   // start the main task routine
   task_entry();
 
   // clean the task if ever it returns
-  task_destroy();
+  ax_task_exit();
 
   // tell the compiler we will never reach this point
   __builtin_unreachable();
@@ -142,11 +145,14 @@ void task_wakeup(task_t *task) {
  * @param none
  * @return none
  ******************************************************************************/
-void task_destroy() {
+__no_return void task_exit() {
   // get the current_task task
   task_t *current_task = sched_get_current_task();
   // remove it from the run queue
   sched_remove_task(current_task);
   // call the scheduler
   sched_run();
+  // this place should never be reached as the kernel should at least run
+  // the init task
+  __builtin_unreachable();
 }

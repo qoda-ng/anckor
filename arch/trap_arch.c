@@ -14,37 +14,33 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-
-#include "ax_syscall.h"
-#include "banner.h"
 #include "common.h"
-#include "init.h"
-#include "sched.h"
-#include "task.h"
-#include "uart.h"
+#include "printk.h"
 
 /******************************************************************************
- * @brief Idle routine runned when no other tasks are ready
- * @param None
- * @return None
+ * @brief handle exceptions
+ * @param exception cause
+ * @param syscall number
+ * @return none
  ******************************************************************************/
-void idle_run(void) {
-  while (1) {
-    ax_task_yield();
-  }
+void handle_unknown_exception() {
+  printk("exception not handled\n");
 }
 
 /******************************************************************************
- * @brief initialisation of kernel structures and launch the first task
- * @param None
- * @return None
+ * @brief handle exceptions
+ * @param exception cause
+ * @param syscall number
+ * @return none
  ******************************************************************************/
-void kernel_init() {
-  banner_display();
+void sys_default(uint64_t syscall_number) {
+  printk("syscall nb° %d\n", syscall_number);
+}
 
-  sched_init();
-
-  init_create();
-
-  idle_run();
+/******************************************************************************
+ * @brief handle interruptions
+ * @return none
+ ******************************************************************************/
+void handle_interrupt() {
+  printk("interrupt has been detected !\n");
 }

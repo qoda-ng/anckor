@@ -18,6 +18,7 @@
 #include "include/test.h"
 
 #include "app.h"
+#include "ax_syscall.h"
 #include "printf.h"
 
 /*******************************************************************************
@@ -44,10 +45,10 @@ void test_engine(void) {
     // get the test descriptor from the current pointer
     test_info_t *test = (test_info_t *)*test_pt;
     // create a task for the test
-    task_create(test->name, test->entry, test->stack, test->prio);
+    ax_task_create(test->name, test->entry, test->stack, test->prio);
 
     // jump into the freshly created thread
-    task_yield();
+    ax_task_yield();
     // when the test returns, display its result
     if (test_error) {
       tests_failed += 1;
@@ -79,4 +80,4 @@ void test_set_error(bool_t error_state) {
 }
 
 // define max priority for the test engine thread
-REGISTER_APP("test_engine", test_engine, test_engine_stack, 0);
+REGISTER_APP("test_engine", test_engine, test_engine_stack, 2);

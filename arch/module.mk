@@ -15,6 +15,7 @@
 
 MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := lib/sys \
+			lib/libc \
 			kernel
 
 include tools/make/compile.mk

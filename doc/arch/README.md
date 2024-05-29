@@ -16,3 +16,7 @@ As a remainder, these **records** contain the following fields:
 - [Init task](./adr-003.md)
 - [Build system](./adr-004.md)
 - [Anckor test engine](./adr-005.md)
+- [Continous integration](./adr-006.md)
+- [Exceptions](./adr-007.md)
+- [syscalls](./adr-008.md)
+- [Prevent tasks to run in kernel mode](./adr-009.md)

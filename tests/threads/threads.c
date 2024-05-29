@@ -15,6 +15,7 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "ax_syscall.h"
 #include "printf.h"
 #include "task.h"
 #include "test.h"
@@ -38,14 +39,14 @@ void second_thread(void) {
   TEST_ASSERT(test_step >= 2)
 
   // yield the second thread and resume immediatly
-  task_yield();
+  ax_task_yield();
 
   // STEP 3
   test_step += 1;
   TEST_ASSERT(test_step >= 3)
 
   // return from the second thread
-  task_wakeup((task_t *)main_thread_stack);
+  ax_task_wakeup((task_t *)main_thread_stack);
 
   // STEP 5
   test_step += 1;
@@ -63,14 +64,14 @@ void threads_test_thread(void) {
   TEST_ASSERT(test_step >= 1)
 
   // create the second thread
-  task_create("second_thread", second_thread, &second_thread_stack, 2);
+  ax_task_create("second_thread", second_thread, &second_thread_stack, 4);
 
   // switch from the main thread to the second thread
-  task_sleep();
+  ax_task_sleep();
 
   // STEP 4
   test_step += 1;
   TEST_ASSERT(test_step >= 4)
 }
 
-REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 3)
+REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 5)

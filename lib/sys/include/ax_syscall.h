@@ -14,22 +14,15 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef OFFSETS_H
-#define OFFSETS_H
+#ifndef AX_SYSCALL_H
+#define AX_SYSCALL_H
 
-#define TASK_THREAD_SP 0
+#include "task.h"
 
-#define TASK_STACK_FRAME_S0  -8
-#define TASK_STACK_FRAME_S1  -16
-#define TASK_STACK_FRAME_S2  -24
-#define TASK_STACK_FRAME_S3  -32
-#define TASK_STACK_FRAME_S4  -40
-#define TASK_STACK_FRAME_S5  -48
-#define TASK_STACK_FRAME_S6  -56
-#define TASK_STACK_FRAME_S7  -64
-#define TASK_STACK_FRAME_S8  -72
-#define TASK_STACK_FRAME_S9  -80
-#define TASK_STACK_FRAME_S10 -88
-#define TASK_STACK_FRAME_S11 -96
+extern void ax_task_create(const char *, void (*)(void), stack_t *, uint8_t);
+extern void ax_task_yield(void);
+extern void ax_task_sleep(void);
+extern void ax_task_wakeup(task_t *);
+extern void ax_task_exit(void);
 
 #endif
