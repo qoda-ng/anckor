@@ -75,6 +75,7 @@ _ret_from_trap:
     # to resume execution
     ld      t0, EXCEPTION_FRAME_MEPC(sp)
     csrw    mepc, t0
+    # move up stack pointer
     add	    sp, sp, EXCEPTION_FRAME_LENGTH
     # the kernels returns in machine mode after mret
     # execution
