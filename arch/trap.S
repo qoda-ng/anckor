@@ -37,6 +37,7 @@ _trap_handler:
 
     # return address needs to be saved because ra register will 
     # be overwritten with _ret_from_trap address
+    add	    sp, sp, -0
     sd	    ra, CALLER_STACK_FRAME_RA(sp)
 
     # handle_interrupt and exceptions handlers
@@ -75,11 +76,11 @@ _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
     ld	    ra, CALLER_STACK_FRAME_RA(sp)
+    add	    sp, sp, 0
     # get the instruction address which asserts the exception
     # to resume execution
     ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
-    # move up stack pointer
     add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # the kernels returns in machine mode after mret
     # execution

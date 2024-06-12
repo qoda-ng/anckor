@@ -72,6 +72,11 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
 
   // initialize caller-saved stack frame
   task->thread.sp -= CALLER_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
+      (uint64_t)task_runtime;
+
+  // initialize caller-saved stack frame
+  task->thread.sp -= 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_RA) = (uint64_t)task_entry;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T0) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T1) = 0;
@@ -88,10 +93,6 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A5) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A6) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A7) = 0;
-
-  // initialize kernel stack frame
-  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
-      (uint64_t)task_runtime;
 
   // move up sp and save _task_start
   task->thread.sp -= LWORD_SIZE;
