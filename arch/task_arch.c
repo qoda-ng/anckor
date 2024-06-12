@@ -72,7 +72,7 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
 
   // move up sp and save task_runtime / task_entry
   // these two pointers will be used by _task_start
-  task->thread.sp -= LWORD_SIZE;
+  task->thread.sp -= EXCEPTION_FRAME_LENGTH;
   *(uint64_t *)(task->thread.sp)              = (uint64_t)task_runtime;
   *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)task_entry;
 
