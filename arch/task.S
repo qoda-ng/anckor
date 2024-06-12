@@ -15,7 +15,8 @@
  * not, see https://www.gnu.org/licenses/
  */
 
- #include "registers.h"
+#include "registers.h"
+#include "offsets.h"
 
  /*
  * _task_start is the first routine which is runned when a task is created.
@@ -24,11 +25,11 @@
 .global _task_start
 _task_start:
     # get task_runtime 
-    ld t0, 8(sp)
+    ld t0, EXCEPTION_FRAME_RA(sp)
     # get task_entry address
-    ld a0, 0(sp)
+    ld a0, EXCEPTION_FRAME_MEPC(sp)
     # move up stack pointer
-    add sp, sp, 16
+    add sp, sp, EXCEPTION_FRAME_LENGTH
     # load task_runtime in mepc
     csrw mepc, t0
     # load mstatus value

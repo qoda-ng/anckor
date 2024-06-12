@@ -81,16 +81,16 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_task_start;
 
   // zeroied callee-saved registers with are saved on top of the stack
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S0)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S1)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S2)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S3)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S4)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S5)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S6)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S7)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S8)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S9)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S10) = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S11) = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S0)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S1)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S2)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S3)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S4)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S5)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S6)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S7)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S8)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S9)  = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S10) = 0;
+  *(uint64_t *)(task->thread.sp + TASK_FRAME_S11) = 0;
 }

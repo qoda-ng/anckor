@@ -16,6 +16,7 @@
  */
 
 #include "registers.h"
+#include "offsets.h"
 
  /*
  * trap handler is called by an exception or an interrupt
@@ -28,12 +29,12 @@
 _trap_handler:
     # return address needs to be saved because ra register will 
     # be overwritten with _ret_from_trap address
-    add	    sp,sp,-16
-    sd	    ra,8(sp)
+    add	    sp,sp,-EXCEPTION_FRAME_LENGTH
+    sd	    ra,EXCEPTION_FRAME_RA(sp)
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     csrr    t0, mepc
-    sd      t0, 0(sp)
+    sd      t0, EXCEPTION_FRAME_MEPC(sp)
     # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
@@ -69,10 +70,10 @@ _trap_handler:
 _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
-    ld	    ra,8(sp)
+    ld	    ra,EXCEPTION_FRAME_RA(sp)
     # get the instruction address which asserts the exception
     # to resume execution
-    ld      t0, 0(sp)
+    ld      t0, EXCEPTION_FRAME_MEPC(sp)
     csrw    mepc, t0
     add	    sp,sp,16
     # the kernels returns in machine mode after mret

@@ -16,6 +16,7 @@
  */
 
 #include "registers.h"
+#include "offsets.h"
 #include "syscall.h"
 
  /*
@@ -147,9 +148,9 @@ _syscall_wrapper:
     # trap has been triggered by an ecall instruction
     # as ecall is a 4-byte length instruction, mepc
     # register is updated with the next instruction
-    ld      t0, 0(sp)
+    ld      t0, EXCEPTION_FRAME_MEPC(sp)
     addi    t0, t0, 0x04
-    sd      t0, 0(sp)
+    sd      t0, EXCEPTION_FRAME_MEPC(sp)
     # compute the offset address in the syscall table
     mv      t0, a7
     slli    t0, t0, SHIFT_8_BYTES_ADDRESS
