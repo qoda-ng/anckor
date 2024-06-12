@@ -19,6 +19,51 @@
 #include "offsets.h"
 
  /*
+ * macro to save all callee-saved registers
+ * we need this as the trap can be asynchronous
+ */
+.macro SAVE_CALLER_REGS
+    sd	    ra, CALLER_STACK_FRAME_RA(sp)
+    sd      t0, CALLER_STACK_FRAME_T0(sp)
+    sd      t1, CALLER_STACK_FRAME_T1(sp)
+    sd      t2, CALLER_STACK_FRAME_T2(sp)
+    sd      t3, CALLER_STACK_FRAME_T3(sp)
+    sd      t4, CALLER_STACK_FRAME_T4(sp)
+    sd      t5, CALLER_STACK_FRAME_T5(sp)
+    sd      t6, CALLER_STACK_FRAME_T6(sp)
+    sd      a0, CALLER_STACK_FRAME_A0(sp)
+    sd      a1, CALLER_STACK_FRAME_A1(sp)
+    sd      a2, CALLER_STACK_FRAME_A2(sp)
+    sd      a3, CALLER_STACK_FRAME_A3(sp)
+    sd      a4, CALLER_STACK_FRAME_A4(sp)
+    sd      a5, CALLER_STACK_FRAME_A5(sp)
+    sd      a6, CALLER_STACK_FRAME_A6(sp)
+    sd      a7, CALLER_STACK_FRAME_A7(sp)
+.endm
+
+ /*
+ * macro to restore all callee-saved registers
+ */
+.macro RESTORE_CALLER_REGS
+    ld	    ra, CALLER_STACK_FRAME_RA(sp)
+    ld      t0, CALLER_STACK_FRAME_T0(sp)
+    ld      t1, CALLER_STACK_FRAME_T1(sp)
+    ld      t2, CALLER_STACK_FRAME_T2(sp)
+    ld      t3, CALLER_STACK_FRAME_T3(sp)
+    ld      t4, CALLER_STACK_FRAME_T4(sp)
+    ld      t5, CALLER_STACK_FRAME_T5(sp)
+    ld      t6, CALLER_STACK_FRAME_T6(sp)
+    ld      a0, CALLER_STACK_FRAME_A0(sp)
+    ld      a1, CALLER_STACK_FRAME_A1(sp)
+    ld      a2, CALLER_STACK_FRAME_A2(sp)
+    ld      a3, CALLER_STACK_FRAME_A3(sp)
+    ld      a4, CALLER_STACK_FRAME_A4(sp)
+    ld      a5, CALLER_STACK_FRAME_A5(sp)
+    ld      a6, CALLER_STACK_FRAME_A6(sp)
+    ld      a7, CALLER_STACK_FRAME_A7(sp)
+.endm
+
+ /*
  * trap handler is called by an exception or an interrupt
  */
 .section .text
@@ -27,18 +72,16 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # move up stack pointer to save caller-saved stack frame
-    add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
-
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
+    add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
     csrr    t0, mepc
     sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
 
-    # return address needs to be saved because ra register will 
-    # be overwritten with _ret_from_trap address
+    # store caller-saved registers as this trap can be triggered
+    # by an interrupt, not an exception
     add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
-    sd	    ra, CALLER_STACK_FRAME_RA(sp)
+    SAVE_CALLER_REGS
 
     # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
@@ -71,11 +114,10 @@ _trap_handler:
  * the exception handler returns as its address is stored
  * in ra register
  */
-.local _ret_from_trap
+.global _ret_from_trap
 _ret_from_trap:
-    # once the exception or interrupt has been processed, 
-    # get the return address from the stack
-    ld	    ra, CALLER_STACK_FRAME_RA(sp)
+    # restore caller-saved register
+    RESTORE_CALLER_REGS
     add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # get the instruction address which asserts the exception
     # to resume execution
@@ -89,23 +131,6 @@ _ret_from_trap:
     # mret sets PC to MEPC, sets the hart mode to MPP
     # and sets MPP to USER mode
     mret
-
- /*
- * _task_start is the first routine which is runned when a task is created.
- * It's saved on the top of the task stack
- */
-.global _task_start
-_task_start:
-    # get task_entry address
-    # and load it in the first argument register
-    ld a0, CALLER_STACK_FRAME_RA(sp)
-    # load 0x0 to the stack CALLER_STACK_FRAME_RA
-    # as _ret_from_trap will copy it and we do not
-    # want user mode to be able to read it.
-    li t0, 0x0
-    sd t0, CALLER_STACK_FRAME_RA(sp)
-    # exit kernel mode 
-    j _ret_from_trap
 
 .section .rodata
 # this table contains all exception handlers
@@ -130,12 +155,3 @@ _exception_vector_table:
     .dword handle_unknown_exception
     .dword handle_unknown_exception
 _exception_vector_table_end:
-
-
-
-# #define DO_CALLER_SAVED(op) 
-#     # save mepc as the kernel can switch context and return by an 
-#     # another function from which it enters in _trap_handler 
-#     op t0, KERNEL_STACK_FRAME_MEPC(sp)
-#         # return address needs to be saved because ra register will 
-#     # be overwritten with _ret_from_trap address

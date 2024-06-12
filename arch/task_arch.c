@@ -19,7 +19,10 @@
 #include "processor.h"
 #include "task.h"
 
-extern void (*_task_start)(void);
+/******************************************************************************
+ * @brief used to switch from kernel mode to user mode at task startup
+ ******************************************************************************/
+extern void (*_ret_from_trap)(void);
 
 /******************************************************************************
  * @brief initialize task stack
@@ -36,21 +39,23 @@ extern void (*_task_start)(void);
  * task_t end
  * -----------------------
  * ...
- * s11
- * s10
- * s9
- * s8
- * s7
- * s6
- * s5
- * s4
- * s3
- * s2
+ * ...
+ * ...
+ * s0 <--- SP
  * s1
- * s0
- * ----------- <--- SP
- * _task_start
- * task_entry
+ * ...
+ * s10
+ * s11
+ * -----------
+ * _ret_from_trap
+ * ra
+ * t0
+ * ...
+ * t6
+ * a0
+ * ...
+ * a6
+ * a7
  * task_runtime
  * -----------
  * -----------
@@ -71,13 +76,16 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
 
   // initialize kernel stack frame
+  // task_runtime will be loaded in pc register by _ret_from_trap
   task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
   *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
       (uint64_t)task_runtime;
 
   // initialize caller-saved stack frame
+  // a0 is loaded by _ret_from_trap and is used as first
+  // argument of task_runtime
   task->thread.sp -= CALLER_STACK_FRAME_LENGTH;
-  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_RA) = (uint64_t)task_entry;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_RA) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T0) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T1) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T2) = 0;
@@ -85,7 +93,7 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T4) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T5) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T6) = 0;
-  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A0) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A0) = (uint64_t)task_entry;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A1) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A2) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A3) = 0;
@@ -94,9 +102,9 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A6) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A7) = 0;
 
-  // move up sp and save _task_start
+  // move up sp and save _ret_from_trap
   task->thread.sp -= LWORD_SIZE;
-  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_task_start;
+  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_ret_from_trap;
 
   // move up sp to initialize callee-saved registers
   task->thread.sp -= CALLEE_STACK_FRAME_LENGTH;
