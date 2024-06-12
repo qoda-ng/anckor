@@ -29,7 +29,7 @@
 _trap_handler:
     # return address needs to be saved because ra register will 
     # be overwritten with _ret_from_trap address
-    add	    sp,sp,-CALLER_STACK_FRAME_LENGTH
+    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
     sd	    ra, CALLER_STACK_FRAME_RA(sp)
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
