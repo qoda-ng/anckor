@@ -17,7 +17,7 @@
 #ifndef OFFSETS_H
 #define OFFSETS_H
 
-#define TASK_FRAME_SP 0
+#define TASK_THREAD_SP 0
 
 #define TASK_FRAME_S0  -8
 #define TASK_FRAME_S1  -16

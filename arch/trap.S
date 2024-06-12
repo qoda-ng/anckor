@@ -75,7 +75,7 @@ _ret_from_trap:
     # to resume execution
     ld      t0, EXCEPTION_FRAME_MEPC(sp)
     csrw    mepc, t0
-    add	    sp,sp,16
+    add	    sp,sp,EXCEPTION_FRAME_LENGTH
     # the kernels returns in machine mode after mret
     # execution
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE

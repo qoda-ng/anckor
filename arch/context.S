@@ -29,7 +29,7 @@
 .global _switch_to
 _switch_to:
     # save previous thread context
-    sd sp, TASK_FRAME_SP(a0)
+    sd sp, TASK_THREAD_SP(a0)
     sd s0, TASK_FRAME_S0(sp)
     sd s1, TASK_FRAME_S1(sp)
     sd s2, TASK_FRAME_S2(sp)
@@ -44,7 +44,7 @@ _switch_to:
     sd s11, TASK_FRAME_S11(sp)
 
     # load next thread context
-    ld sp, TASK_FRAME_SP(a1)
+    ld sp, TASK_THREAD_SP(a1)
     ld s0, TASK_FRAME_S0(sp)
     ld s1, TASK_FRAME_S1(sp)
     ld s2, TASK_FRAME_S2(sp)
