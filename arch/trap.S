@@ -30,7 +30,7 @@ _trap_handler:
     # return address needs to be saved because ra register will 
     # be overwritten with _ret_from_trap address
     add	    sp,sp,-EXCEPTION_FRAME_LENGTH
-    sd	    ra,EXCEPTION_FRAME_RA(sp)
+    sd	    ra, EXCEPTION_FRAME_RA(sp)
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     csrr    t0, mepc
@@ -125,3 +125,12 @@ _exception_vector_table:
     .dword handle_unknown_exception
     .dword handle_unknown_exception
 _exception_vector_table_end:
+
+
+
+# #define DO_CALLER_SAVED(op) 
+#     # save mepc as the kernel can switch context and return by an 
+#     # another function from which it enters in _trap_handler 
+#     op t0, EXCEPTION_FRAME_MEPC(sp)
+#         # return address needs to be saved because ra register will 
+#     # be overwritten with _ret_from_trap address
