@@ -64,7 +64,8 @@
 .endm
 
  /*
- * trap handler is called by an exception or an interrupt
+ * trap handler is the top level entry triggered 
+ * by an exception or an interrupt
  */
 .section .text
 # trap_handler will be stored in mtvec register and mtvec base address
