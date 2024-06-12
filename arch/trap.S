@@ -29,12 +29,12 @@
 _trap_handler:
     # return address needs to be saved because ra register will 
     # be overwritten with _ret_from_trap address
-    add	    sp,sp,-EXCEPTION_FRAME_LENGTH
-    sd	    ra, EXCEPTION_FRAME_RA(sp)
+    add	    sp,sp,-CALLER_STACK_FRAME_LENGTH
+    sd	    ra, CALLER_STACK_FRAME_RA(sp)
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     csrr    t0, mepc
-    sd      t0, EXCEPTION_FRAME_MEPC(sp)
+    sd      t0, CALLER_STACK_FRAME_MEPC(sp)
     # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
@@ -70,13 +70,13 @@ _trap_handler:
 _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
-    ld	    ra, EXCEPTION_FRAME_RA(sp)
+    ld	    ra, CALLER_STACK_FRAME_RA(sp)
     # get the instruction address which asserts the exception
     # to resume execution
-    ld      t0, EXCEPTION_FRAME_MEPC(sp)
+    ld      t0, CALLER_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
     # move up stack pointer
-    add	    sp, sp, EXCEPTION_FRAME_LENGTH
+    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # the kernels returns in machine mode after mret
     # execution
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
@@ -94,11 +94,11 @@ _task_start:
     # get task_entry address
     # and load it in the first argument register
     ld a0, TASK_INIT_STACK_RA(sp)
-    # load 0x0 to the stack EXCEPTION_FRAME_RA
+    # load 0x0 to the stack CALLER_STACK_FRAME_RA
     # as _ret_from_trap will copy it and we do not
     # want user mode to be able to read it.
     li t0, 0x0
-    sd t0, EXCEPTION_FRAME_RA(sp)
+    sd t0, CALLER_STACK_FRAME_RA(sp)
     # exit kernel mode 
     j _ret_from_trap
 
@@ -131,6 +131,6 @@ _exception_vector_table_end:
 # #define DO_CALLER_SAVED(op) 
 #     # save mepc as the kernel can switch context and return by an 
 #     # another function from which it enters in _trap_handler 
-#     op t0, EXCEPTION_FRAME_MEPC(sp)
+#     op t0, CALLER_STACK_FRAME_MEPC(sp)
 #         # return address needs to be saved because ra register will 
 #     # be overwritten with _ret_from_trap address
