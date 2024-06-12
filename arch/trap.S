@@ -72,17 +72,15 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
+    # store caller-saved registers as this trap can be triggered
+    # by an interrupt, not an exception
+    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
+    SAVE_CALLER_REGS
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
     csrr    t0, mepc
     sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
-
-    # store caller-saved registers as this trap can be triggered
-    # by an interrupt, not an exception
-    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
-    SAVE_CALLER_REGS
-
     # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
@@ -116,14 +114,14 @@ _trap_handler:
  */
 .global _ret_from_trap
 _ret_from_trap:
-    # restore caller-saved register
-    RESTORE_CALLER_REGS
-    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # get the instruction address which asserts the exception
     # to resume execution
     ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
     add	    sp, sp, KERNEL_STACK_FRAME_LENGTH
+    # restore caller-saved register
+    RESTORE_CALLER_REGS
+    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # the kernels returns in machine mode after mret
     # execution
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE

@@ -48,6 +48,8 @@ extern void (*_ret_from_trap)(void);
  * s11
  * -----------
  * _ret_from_trap
+ * task_runtime
+ * -----------
  * ra
  * t0
  * ...
@@ -56,8 +58,6 @@ extern void (*_ret_from_trap)(void);
  * ...
  * a6
  * a7
- * task_runtime
- * -----------
  * -----------
  * ----------------------- stack_end
  *
@@ -74,12 +74,6 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // initialiaze SP at the end of the stack
   // and 16-bytes align it
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
-
-  // initialize kernel stack frame
-  // task_runtime will be loaded in pc register by _ret_from_trap
-  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
-  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
-      (uint64_t)task_runtime;
 
   // initialize caller-saved stack frame
   // a0 is loaded by _ret_from_trap and is used as first
@@ -101,6 +95,12 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A5) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A6) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A7) = 0;
+
+  // initialize kernel stack frame
+  // task_runtime will be loaded in pc register by _ret_from_trap
+  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
+      (uint64_t)task_runtime;
 
   // move up sp and save _ret_from_trap
   task->thread.sp -= LWORD_SIZE;
