@@ -80,7 +80,8 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   task->thread.sp -= LWORD_SIZE;
   *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_task_start;
 
-  // zeroied callee-saved registers with are saved on top of the stack
+  // move up sp to initialize callee-saved registers
+  task->thread.sp -= TASK_FRAME_LENGTH;
   *(uint64_t *)(task->thread.sp + TASK_FRAME_S0)  = 0;
   *(uint64_t *)(task->thread.sp + TASK_FRAME_S1)  = 0;
   *(uint64_t *)(task->thread.sp + TASK_FRAME_S2)  = 0;

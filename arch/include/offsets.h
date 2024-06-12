@@ -21,19 +21,19 @@
 
 #define TASK_THREAD_SP 0
 
-#define TASK_FRAME_LENGTH 112
-#define TASK_FRAME_S0     -8
-#define TASK_FRAME_S1     -16
-#define TASK_FRAME_S2     -24
-#define TASK_FRAME_S3     -32
-#define TASK_FRAME_S4     -40
-#define TASK_FRAME_S5     -48
-#define TASK_FRAME_S6     -56
-#define TASK_FRAME_S7     -64
-#define TASK_FRAME_S8     -72
-#define TASK_FRAME_S9     -80
-#define TASK_FRAME_S10    -88
-#define TASK_FRAME_S11    -96
+#define TASK_FRAME_LENGTH 96
+#define TASK_FRAME_S0     0
+#define TASK_FRAME_S1     8
+#define TASK_FRAME_S2     16
+#define TASK_FRAME_S3     24
+#define TASK_FRAME_S4     32
+#define TASK_FRAME_S5     40
+#define TASK_FRAME_S6     48
+#define TASK_FRAME_S7     56
+#define TASK_FRAME_S8     64
+#define TASK_FRAME_S9     72
+#define TASK_FRAME_S10    80
+#define TASK_FRAME_S11    88
 
 #define EXCEPTION_FRAME_LENGTH 144
 #define EXCEPTION_FRAME_MEPC   0

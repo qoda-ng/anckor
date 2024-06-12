@@ -28,8 +28,9 @@
 # use .global keyworkd makes the symbol visible to the linker
 .global _switch_to
 _switch_to:
+    # move down sp to have space to save callee saved registers
+    add	sp, sp, -TASK_FRAME_LENGTH
     # save previous thread context
-    sd sp, TASK_THREAD_SP(a0)
     sd s0, TASK_FRAME_S0(sp)
     sd s1, TASK_FRAME_S1(sp)
     sd s2, TASK_FRAME_S2(sp)
@@ -42,9 +43,12 @@ _switch_to:
     sd s9, TASK_FRAME_S9(sp)
     sd s10, TASK_FRAME_S10(sp)
     sd s11, TASK_FRAME_S11(sp)
+    # save stack pointer in thread structure
+    sd sp, TASK_THREAD_SP(a0)
 
-    # load next thread context
+    # load stack pointer from new thread context
     ld sp, TASK_THREAD_SP(a1)
+    # load callee saved regs from next thread context
     ld s0, TASK_FRAME_S0(sp)
     ld s1, TASK_FRAME_S1(sp)
     ld s2, TASK_FRAME_S2(sp)
@@ -57,5 +61,7 @@ _switch_to:
     ld s9, TASK_FRAME_S9(sp)
     ld s10, TASK_FRAME_S10(sp)
     ld s11, TASK_FRAME_S11(sp)
+    # move up sp to have space to save callee saved registers
+    add	sp, sp, TASK_FRAME_LENGTH
     
     ret
