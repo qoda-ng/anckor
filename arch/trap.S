@@ -28,7 +28,7 @@
 .global _trap_handler
 _trap_handler:
     # move up stack pointer to save caller-saved stack frame
-    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
+    add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
 
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
@@ -37,7 +37,7 @@ _trap_handler:
 
     # return address needs to be saved because ra register will 
     # be overwritten with _ret_from_trap address
-    add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
+    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
     sd	    ra, CALLER_STACK_FRAME_RA(sp)
 
     # handle_interrupt and exceptions handlers
@@ -76,12 +76,12 @@ _ret_from_trap:
     # once the exception or interrupt has been processed, 
     # get the return address from the stack
     ld	    ra, CALLER_STACK_FRAME_RA(sp)
-    add	    sp, sp, KERNEL_STACK_FRAME_LENGTH
+    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # get the instruction address which asserts the exception
     # to resume execution
     ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
-    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
+    add	    sp, sp, KERNEL_STACK_FRAME_LENGTH
     # the kernels returns in machine mode after mret
     # execution
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE

@@ -148,9 +148,9 @@ _syscall_wrapper:
     # trap has been triggered by an ecall instruction
     # as ecall is a 4-byte length instruction, mepc
     # register is updated with the next instruction
-    ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
+    ld      t0, KERNEL_STACK_FRAME_MEPC + CALLER_STACK_FRAME_LENGTH(sp)
     addi    t0, t0, 0x04
-    sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
+    sd      t0, KERNEL_STACK_FRAME_MEPC + CALLER_STACK_FRAME_LENGTH(sp)
     # compute the offset address in the syscall table
     mv      t0, a7
     slli    t0, t0, SHIFT_8_BYTES_ADDRESS
