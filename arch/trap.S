@@ -93,7 +93,7 @@ _ret_from_trap:
 _task_start:
     # get task_entry address
     # and load it in the first argument register
-    ld a0, TASK_INIT_STACK_RA(sp)
+    ld a0, CALLER_STACK_FRAME_RA(sp)
     # load 0x0 to the stack CALLER_STACK_FRAME_RA
     # as _ret_from_trap will copy it and we do not
     # want user mode to be able to read it.
