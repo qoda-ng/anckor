@@ -34,7 +34,7 @@ _trap_handler:
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     csrr    t0, mepc
-    sd      t0, CALLER_STACK_FRAME_MEPC(sp)
+    sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
     # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
@@ -73,7 +73,7 @@ _ret_from_trap:
     ld	    ra, CALLER_STACK_FRAME_RA(sp)
     # get the instruction address which asserts the exception
     # to resume execution
-    ld      t0, CALLER_STACK_FRAME_MEPC(sp)
+    ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
     # move up stack pointer
     add	    sp, sp, CALLER_STACK_FRAME_LENGTH
@@ -131,6 +131,6 @@ _exception_vector_table_end:
 # #define DO_CALLER_SAVED(op) 
 #     # save mepc as the kernel can switch context and return by an 
 #     # another function from which it enters in _trap_handler 
-#     op t0, CALLER_STACK_FRAME_MEPC(sp)
+#     op t0, KERNEL_STACK_FRAME_MEPC(sp)
 #         # return address needs to be saved because ra register will 
 #     # be overwritten with _ret_from_trap address
