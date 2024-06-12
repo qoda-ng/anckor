@@ -76,7 +76,7 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
       (uint64_t)task_runtime;
 
   // initialize caller-saved stack frame
-  task->thread.sp -= 0;
+  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_RA) = (uint64_t)task_entry;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T0) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T1) = 0;
