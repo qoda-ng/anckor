@@ -24,14 +24,14 @@
  */
 .global _task_start
 _task_start:
-    # get task_runtime 
-    ld t0, EXCEPTION_FRAME_RA(sp)
     # get task_entry address
     ld a0, EXCEPTION_FRAME_MEPC(sp)
+    # get task_runtime 
+    # load it in mepc
+    ld t0, EXCEPTION_FRAME_RA(sp)
+    csrw mepc, t0
     # move up stack pointer
     add sp, sp, EXCEPTION_FRAME_LENGTH
-    # load task_runtime in mepc
-    csrw mepc, t0
     # load mstatus value
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
     csrw	mstatus, t1
