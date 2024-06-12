@@ -27,14 +27,18 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # return address needs to be saved because ra register will 
-    # be overwritten with _ret_from_trap address
+    # move up stack pointer to save caller-saved stack frame
     add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
-    sd	    ra, CALLER_STACK_FRAME_RA(sp)
+
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     csrr    t0, mepc
     sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
+
+    # return address needs to be saved because ra register will 
+    # be overwritten with _ret_from_trap address
+    sd	    ra, CALLER_STACK_FRAME_RA(sp)
+
     # handle_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
