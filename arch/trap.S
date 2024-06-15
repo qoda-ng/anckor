@@ -123,8 +123,8 @@ _ret_from_trap:
     # restore caller-saved register
     RESTORE_CALLER_REGS
     add	    sp, sp, CALLER_STACK_FRAME_LENGTH
-    # the kernels returns in machine mode after mret
-    # execution
+    # the kernels returns in machine mode after mret execution
+    # re-enable interrupts when exiting kernel mode
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
     csrw	mstatus, t1
     # mret sets PC to MEPC, sets the hart mode to MPP
@@ -142,6 +142,10 @@ _ret_from_trap:
  */
 .local _dispatch_syscall
 _dispatch_syscall:
+    # re-enable interrupts before jumping in the syscall handler
+    # this enable re-entrant kernel as exceptions can be preempted
+    # by interrupts
+    csrs mstatus, MACHINE_INTERRUPT_ENABLE
     # trap has been triggered by an ecall instruction
     # as ecall is a 4-byte length instruction, mepc
     # register is updated with the next instruction
