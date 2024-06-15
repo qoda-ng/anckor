@@ -134,39 +134,10 @@ ax_task_exit:
     ecall
     ret
 
-/*
- * Syscall wrapper is used to call the syscall saved in the syscall table.
- * This routine is written in assembly left a[0-7] registers unchanged. This
- * avoid to pass arguments on the stack as all syscalls don't have the same 
- * prototype. 
- *
- * a7 contains the syscall number
- *
- */
-.global _syscall_wrapper
-_syscall_wrapper:
-    # trap has been triggered by an ecall instruction
-    # as ecall is a 4-byte length instruction, mepc
-    # register is updated with the next instruction
-    ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
-    addi    t0, t0, 0x04
-    sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
-    # compute the offset address in the syscall table
-    mv      t0, a7
-    slli    t0, t0, SHIFT_8_BYTES_ADDRESS
-    la      t1, _syscall_table
-    la      t2, _syscall_table_end
-    add     t0, t1, t0
-    bgeu    t0, t2, 1f
-    # load the syscall handler address from the syscall table
-    ld      t0, 0(t0)
-    # jump to the syscall
-    jr      t0
-1:
-    tail sys_default
-
 .section .rodata
 .align RISCV_PTR_LENGTH
+.global _syscall_table
+.global _syscall_table_end
 _syscall_table:
     .dword task_create
     .dword task_yield
