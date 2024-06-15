@@ -7,14 +7,15 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 ### r-0.1.0 / Minimal runtime
 
 - [x] thread creation
-- [ ] heap allocator (binary buddy system)
-- [ ] cooperative scheduling with min heap priority queue
 - [x] Qemu riscv 64 bits support
 - [x] Modular build system
 - [x] exception management
 - [x] syscalls
 - [ ] Interrupt management
-- [ ] User / Kernel modes
+- [ ] heap allocator (binary buddy system)
+- [ ] cooperative scheduling with min heap priority queue
+- [ ] User / Kernel modes protection
+- [ ] User / Kernel stacks
 
 ### r-0.2.0 / Tests and continous integration
 
