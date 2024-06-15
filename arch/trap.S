@@ -140,8 +140,8 @@ _ret_from_trap:
  * a7 contains the syscall number
  *
  */
-.local _syscall_wrapper
-_syscall_wrapper:
+.local _dispatch_syscall
+_dispatch_syscall:
     # trap has been triggered by an ecall instruction
     # as ecall is a 4-byte length instruction, mepc
     # register is updated with the next instruction
@@ -176,10 +176,10 @@ _exception_vector_table:
     .dword handle_unknown_exception
     .dword handle_unknown_exception
     .dword handle_unknown_exception
-    .dword _syscall_wrapper
-    .dword _syscall_wrapper
+    .dword _dispatch_syscall
+    .dword _dispatch_syscall
     .dword handle_unknown_exception
-    .dword _syscall_wrapper
+    .dword _dispatch_syscall
     .dword handle_unknown_exception
     .dword handle_unknown_exception
     .dword handle_unknown_exception
