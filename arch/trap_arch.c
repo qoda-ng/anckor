@@ -18,23 +18,32 @@
 #include "printk.h"
 
 /******************************************************************************
- * @brief handle exceptions
- * @param exception cause
- * @param syscall number
+ * @brief hang processor when a non recuperable fault is detected
  * @return none
  ******************************************************************************/
-void handle_unknown_exception() {
-  printk("exception not handled\n");
+static void hang_processor() {
+  for (;;);
 }
 
 /******************************************************************************
  * @brief handle exceptions
- * @param exception cause
+ * @return none
+ ******************************************************************************/
+void handle_unknown_exception() {
+  printk("exception not handled\n");
+
+  hang_processor();
+}
+
+/******************************************************************************
+ * @brief handle exceptions
  * @param syscall number
  * @return none
  ******************************************************************************/
 void sys_default(uint64_t syscall_number) {
   printk("syscall nb° %d\n", syscall_number);
+
+  hang_processor();
 }
 
 /******************************************************************************
@@ -43,4 +52,6 @@ void sys_default(uint64_t syscall_number) {
  ******************************************************************************/
 void handle_interrupt() {
   printk("interrupt has been detected !\n");
+
+  hang_processor();
 }
