@@ -14,19 +14,10 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef AX_SYSCALL_H
-#define AX_SYSCALL_H
+#ifndef TIMER_H
+#define TIMER_H
 
-#include "interrupts.h"
-#include "task.h"
-
-extern void ax_task_create(const char *, void (*)(void), stack_t *, uint8_t);
-extern void ax_task_yield(void);
-extern void ax_task_sleep(void);
-extern void ax_task_wakeup(task_t *);
-extern void ax_task_exit(void);
-extern void ax_interrupt_request(interrupt_id_t, void (*)(void));
-extern void ax_interrupt_release(interrupt_id_t);
-extern void ax_timer_set(uint64_t *);
+#define ONE_MS_IN_US     1000
+#define ONE_SECOND_IN_US 1000000
 
 #endif
