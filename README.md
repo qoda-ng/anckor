@@ -6,18 +6,22 @@ The main goal is to design a lightweight kernel with robust partitioning between
 
 All design choices are recorded following the [ADR](./doc/arch/README.md) framework.
 
-## Features
-
-* Preemptive, tickless scheduler with priorities
-* Riscv64 architecture support
-
 ## Getting started
 
-First install the **cross-toolchain** and **Qemu** for riscv. Then download the sources:
+First install the **cross-toolchain** and **Qemu** for riscv:
+
+```shell
+sudo apt-get update
+sudo apt install qemu-system-riscv64
+sudo apt install gcc-riscv64-unknown-elf
+```
+
+And download the project sources:
 
 ```shell
 git clone https://github.com/qoda-dev/anckor.git
 ```
+
 Then run the **setenv.sh** script: 
 
 ```shell
