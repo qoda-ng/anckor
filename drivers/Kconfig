@@ -1,5 +1,2 @@
-config module_drivers
-	bool "drivers module"
-	default y
-	help
-		drivers specific module
+rsource "uart/Kconfig"
+rsource "timer/Kconfig"

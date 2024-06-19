@@ -1,0 +1,5 @@
+config module_drivers_timer
+	bool "timer driver module"
+	default y
+	help
+		timer driver module
