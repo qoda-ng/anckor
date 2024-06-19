@@ -20,4 +20,6 @@
 #define ONE_MS_IN_US     1000
 #define ONE_SECOND_IN_US 1000000
 
+#define TIMER_TASK_PRIORITY 254
+
 #endif

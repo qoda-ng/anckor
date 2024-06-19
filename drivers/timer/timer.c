@@ -15,30 +15,22 @@
  * not, see https://www.gnu.org/licenses/
  */
 
-#include "interrupt.h"
+#include "timer.h"
 
-#include "test.h"
+#include "app.h"
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-stack_t interrupt_thread_stack;
-
-static uint8_t test_step = 0;
+stack_t timer_driver_stack;
 
 /******************************************************************************
- * @brief initalize interrupt handler and timer
+ * @brief Initialization of the uart peripheral
  * @param None
  * @return None
  ******************************************************************************/
-void interrupt_thread(void) {
-  // STEP 1
-  test_step += 1;
-  TEST_ASSERT(test_step >= 1)
-
-  // STEP 3
-  test_step += 1;
-  TEST_ASSERT(test_step >= 2)
+void timer_driver(void) {
 }
 
-REGISTER_TEST("interrupt_test", interrupt_thread, interrupt_thread_stack, 5)
+REGISTER_APP("timer_driver_task", timer_driver, timer_driver_stack,
+             TIMER_TASK_PRIORITY);

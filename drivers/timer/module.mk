@@ -14,6 +14,8 @@
 # not, see https://www.gnu.org/licenses/
 
 MODULE_ID := $(GET_MODULE_ID)
-MODULE_DEPS := lib/sys
+MODULE_DEPS := lib/sys \
+				kernel \
+				arch
 
 include tools/make/compile.mk
