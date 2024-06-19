@@ -18,6 +18,8 @@
 #include "timer.h"
 
 #include "app.h"
+#include "ax_syscall.h"
+#include "printf.h"
 
 /*******************************************************************************
  * Definitions
@@ -29,7 +31,17 @@ stack_t timer_driver_stack;
  * @param None
  * @return None
  ******************************************************************************/
-void timer_driver(void) {
+void timer_driver() {
+  // register this task to be wake up by timer interrupt
+  ax_interrupt_request(TIMER_INTERRUPT);
+
+  // set the timer
+
+  // get this task to sleep, it will be wake up by the interrupt
+  ax_task_sleep();
+
+  // when woke up, print a message
+  printf("Timer task - woke up by the timer interrupt");
 }
 
 REGISTER_APP("timer_driver_task", timer_driver, timer_driver_stack,
