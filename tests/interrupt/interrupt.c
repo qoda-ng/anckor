@@ -15,8 +15,9 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "interrupt.h"
+
 #include "ax_syscall.h"
-#include "interrupts.h"
 #include "printf.h"
 #include "test.h"
 #include "timer.h"

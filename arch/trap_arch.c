@@ -26,7 +26,7 @@ static void hang_processor() {
 }
 
 /******************************************************************************
- * @brief handle exceptions
+ * @brief handle unknown exceptions
  * @return none
  ******************************************************************************/
 void handle_unknown_exception() {
@@ -36,12 +36,14 @@ void handle_unknown_exception() {
 }
 
 /******************************************************************************
- * @brief handle exceptions
+ * @brief handle unused syscalls
  * @param syscall number
  * @return none
  ******************************************************************************/
-void sys_default(uint64_t syscall_number) {
-  printk("syscall nb° %d\n", syscall_number);
+void sys_default(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4,
+                 uint64_t arg5, uint64_t arg6, uint64_t arg7,
+                 uint64_t syscall_number) {
+  printk("syscall nb° %d is not implemented.\n ", syscall_number);
 
   hang_processor();
 }

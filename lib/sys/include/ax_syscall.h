@@ -17,7 +17,7 @@
 #ifndef AX_SYSCALL_H
 #define AX_SYSCALL_H
 
-#include "interrupts.h"
+#include "interrupt.h"
 #include "task.h"
 
 extern void ax_task_create(const char *, void (*)(void), stack_t *, uint8_t);
@@ -27,6 +27,6 @@ extern void ax_task_wakeup(task_t *);
 extern void ax_task_exit(void);
 extern void ax_interrupt_request(interrupt_id_t, void (*)(void));
 extern void ax_interrupt_release(interrupt_id_t);
-extern void ax_timer_set(uint64_t *);
+extern void ax_timer_set(uint64_t);
 
 #endif

@@ -56,7 +56,6 @@ ax_task_create:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_yield
 ax_task_yield:
     li a7, SYSCALL_TASK_YIELD
@@ -79,7 +78,6 @@ ax_task_yield:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_sleep
 ax_task_sleep:
     li a7, SYSCALL_TASK_SLEEP
@@ -102,7 +100,6 @@ ax_task_sleep:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_wakeup
 ax_task_wakeup:
     li a7, SYSCALL_TASK_WAKEUP
@@ -125,10 +122,75 @@ ax_task_wakeup:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_exit
 ax_task_exit:
     li a7, SYSCALL_TASK_EXIT
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_interrupt_request syscall
+ *
+ * a0: interrupt id
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_interrupt_request
+ax_interrupt_request:
+    li a7, SYSCALL_INTERRUPT_REQUEST
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_interrupt_release syscall
+ *
+ * a0: interrupt id
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_interrupt_release
+ax_interrupt_release:
+    li a7, SYSCALL_INTERRUPT_RELEASE
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_interrupt_release syscall
+ *
+ * a0: interrupt id
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_timer_set
+ax_timer_set:
+    li a7, SYSCALL_TIMER_SET
     # rise exception, this will update mepc register but left
     # the ra register unchanged
     ecall
