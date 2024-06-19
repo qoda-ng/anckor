@@ -19,6 +19,7 @@
 
 #include "app.h"
 #include "ax_syscall.h"
+#include "banner.h"
 #include "printk.h"
 #include "task.h"
 
@@ -42,6 +43,9 @@ void init_run(void) {
     // create a task for the app
     ax_task_create(app->name, app->entry, app->stack, app->prio);
   }
+
+  // display kernel banner at the end of the init stage
+  banner_display();
 }
 
 /******************************************************************************
