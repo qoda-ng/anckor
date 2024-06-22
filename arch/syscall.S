@@ -206,7 +206,7 @@ _syscall_table:
     .dword task_sleep
     .dword task_wakeup
     .dword task_exit
-    .dword sys_default
+    .dword interrupt_request
     .dword sys_default
     .dword sys_default
     .dword sys_default

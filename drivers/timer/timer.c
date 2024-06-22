@@ -21,6 +21,10 @@
 #include "ax_syscall.h"
 #include "printf.h"
 
+#define TIMER_BASE_ADDR 0x02004000
+
+#define ARCH_RISCV_TIMER_RATE 10000000
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -32,10 +36,12 @@ stack_t timer_driver_stack;
  * @return None
  ******************************************************************************/
 void timer_driver() {
-  // register this task to be wake up by timer interrupt
-  ax_interrupt_request(TIMER_INTERRUPT);
-
   // set the timer
+  uint64_t timer_period_in_s = 2 * ARCH_RISCV_TIMER_RATE;
+  reg_write_double_word(TIMER_BASE_ADDR, timer_period_in_s);
+
+  // enable the interrupt in csr register
+  ax_interrupt_request(TIMER_INTERRUPT);
 
   // get this task to sleep, it will be wake up by the interrupt
   ax_task_sleep();
