@@ -23,7 +23,9 @@
  * @return None
  ******************************************************************************/
 typedef enum interrupt_id {
-  TIMER_INTERRUPT = 0,
+  SOFTWARE_INTERRUPT = 0,
+  TIMER_INTERRUPT    = 1,
+  EXTERNAL_INTERRUPT = 2,
 } interrupt_id_t;
 
 #endif

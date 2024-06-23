@@ -19,9 +19,8 @@
 
 #include "app.h"
 #include "ax_syscall.h"
+#include "irq_arch.h"
 #include "printf.h"
-
-#define TIMER_BASE_ADDR 0x02004000
 
 #define ARCH_TIMER_RATE 10000000
 
@@ -38,7 +37,8 @@ stack_t timer_driver_stack;
 void timer_driver() {
   // set the timer
   uint64_t timer_period_in_s = 1;
-  reg_write_double_word(TIMER_BASE_ADDR, timer_period_in_s * ARCH_TIMER_RATE);
+  reg_write_double_word(TIMER_MTIMECMP_ADDR,
+                        timer_period_in_s * ARCH_TIMER_RATE);
 
   // enable the interrupt in csr register
   ax_interrupt_request(TIMER_INTERRUPT);

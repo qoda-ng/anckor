@@ -89,9 +89,6 @@ _trap_handler:
     # from interrupt or synchronous exception
     csrr	t0, mcause
     bgez    t0, 1f
-    # move mcasue to argument register as it 
-    # will be used by the handler
-    add a0, t0, 0
     # tail does not affect ra register
     tail    handle_interrupt
 1:
