@@ -14,16 +14,10 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#include "trap_arch.h"
+
 #include "common.h"
 #include "printk.h"
-
-/******************************************************************************
- * @brief hang processor when a non recuperable fault is detected
- * @return none
- ******************************************************************************/
-static void hang_processor() {
-  for (;;);
-}
 
 /******************************************************************************
  * @brief handle unknown exceptions
@@ -44,16 +38,6 @@ void sys_default(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4,
                  uint64_t arg5, uint64_t arg6, uint64_t arg7,
                  uint64_t syscall_number) {
   printk("syscall nb° %d is not implemented.\n ", syscall_number);
-
-  hang_processor();
-}
-
-/******************************************************************************
- * @brief handle interruptions
- * @return none
- ******************************************************************************/
-void handle_interrupt() {
-  printk("interrupt has been detected !\n");
 
   hang_processor();
 }

@@ -14,9 +14,13 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#include "irq_arch.h"
+
 #include "common.h"
 #include "interrupt.h"
+#include "printk.h"
 #include "registers.h"
+#include "trap_arch.h"
 
 /******************************************************************************
  * @brief enable the interrupt in IE register
@@ -37,4 +41,26 @@ void interrupt_request(interrupt_id_t interrupt_id) {
 
   // configure interrupt enable register
   csr_write(CSR_MIE, reg_value);
+}
+
+/******************************************************************************
+ * @brief handle interruptions
+ * @return none
+ ******************************************************************************/
+void handle_interrupt(uint64_t cause) {
+  printk("interrupt n° %d has been detected !\n", cause);
+
+  switch (cause) {
+    case RISCV_INTERRUPT_MACHINE_SOFTWARE:
+      hang_processor();
+      break;
+    case RISCV_INTERRUPT_MACHINE_TIMER:
+      break;
+    case RISCV_INTERRUPT_MACHINE_EXTERNAL:
+      hang_processor();
+      break;
+    default:
+      hang_processor();
+      break;
+  }
 }

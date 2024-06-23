@@ -14,26 +14,15 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-
-#include "common.h"
-#include "interrupt.h"
-
-#define csr_write(val)                        \
-  ({                                          \
-    unsigned long __v = (unsigned long)(val); \
-    __asm__ volatile(                         \
-        "csrw mie"                            \
-        ", %0"                                \
-        :                                     \
-        : "rK"(__v)                           \
-        : "memory");                          \
-  })
+#ifndef TRAP_ARCH_H
+#define TRAP_ARCH_H
 
 /******************************************************************************
- * @brief enable the interrupt in IE register
- * @param interrupt identifier
- * @return None
+ * @brief hang processor when a non recuperable fault is detected
+ * @return none
  ******************************************************************************/
-void interrupt_request(interrupt_id_t interrupt_id) {
-  csr_write(0x0000000000000080);
+static inline void hang_processor() {
+  for (;;);
 }
+
+#endif
