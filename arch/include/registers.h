@@ -37,7 +37,25 @@
 #define MACHINE_EXTERNAL_INTERRUPT_ENABLE  (0x1 << 11)
 #define MACHINE_EXTERNAL_INTERRUPT_DISABLE (0x0 << 11)
 
+#define MIE_TIE_OFFSET 7
+
 #define RISCV_PTR_LENGTH      4
 #define SHIFT_8_BYTES_ADDRESS 3
+
+#define CSR_MIE mie
+
+#define STRINGIFY(x) #x
+
+/******************************************************************************
+ * @brief write a 64bits value to the csr register
+ * @param csr register identifier
+ * @param value to write to registers
+ * @return None
+ ******************************************************************************/
+#define csr_write(csr, val)                                                   \
+  ({                                                                          \
+    unsigned long __v = (unsigned long)(val);                                 \
+    __asm__ volatile("csrw " STRINGIFY(csr) ", %0" : : "rK"(__v) : "memory"); \
+  })
 
 #endif
