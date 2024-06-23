@@ -74,7 +74,8 @@ void handle_interrupt() {
       // in the run queue and run the scheduler
       // it will immediatly jump to the task if it
       // has the highest priority
-      task_wakeup((task_t *)irq_table[TIMER_INTERRUPT]);
+      if (irq_table[TIMER_INTERRUPT])
+        task_wakeup((task_t *)irq_table[TIMER_INTERRUPT]);
       break;
     case RISCV_INTERRUPT_MACHINE_EXTERNAL:
       printk("interrupt machine external n°%d not handled\n", cause);
