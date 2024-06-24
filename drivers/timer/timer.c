@@ -47,7 +47,7 @@ void timer_driver() {
   ax_task_sleep();
 
   // when woke up, print a message
-  printf("Timer task - woke up by the timer interrupt");
+  printf("Timer task - woke up by the timer interrupt\n");
 }
 
 REGISTER_APP("timer_driver_task", timer_driver, timer_driver_stack,

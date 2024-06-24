@@ -60,6 +60,19 @@
  * @param bit to clear in the registers
  * @return none
  ******************************************************************************/
+#define csr_set(csr, bits)                                         \
+  ({                                                               \
+    unsigned long __val = bits;                                    \
+    __asm__ volatile("csrs   " STRINGIFY(csr) ", %0" ::"rK"(__val) \
+                     : "memory");                                  \
+  })
+
+/******************************************************************************
+ * @brief clear a bit in the csr register
+ * @param csr register identifier
+ * @param bit to clear in the registers
+ * @return none
+ ******************************************************************************/
 #define csr_clear(csr, bits)                                                  \
   ({                                                                          \
     unsigned long __val = bits;                                               \
