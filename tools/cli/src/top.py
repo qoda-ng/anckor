@@ -17,6 +17,7 @@ import argparse
 import sys
 import os
 from datetime import datetime
+import git
 
 __version__ = "x.x.x"
 
@@ -143,30 +144,13 @@ def get_root_dir():
     return root_dir
 
 # *******************************************************************************
-# @brief update global __version__ from a version.h file
+# @brief update version and date in a version.h file
 # @param None
 # @return None
 # *******************************************************************************
-def update_version():
-    global __version__
+def update_config():
     root_dir = get_root_dir()
-    version_file_name = os.path.join(root_dir, 'version.h')
-    version_file = open(version_file_name)
-    lines = version_file.readlines()
-    for line in lines:
-        if line.find("BUILD_VERSION") != -1:
-            index = line.rfind(" ")
-            __version__ = line[index+2:-1]
-    version_file.close()
-
-# *******************************************************************************
-# @brief update global __version__ from a version.h file
-# @param None
-# @return None
-# *******************************************************************************
-def update_build_date():
-    root_dir = get_root_dir()
-    version_file_name = os.path.join(root_dir, 'date.h')
+    version_file_name = os.path.join(root_dir, 'config.h')
     # open the file in 'append' mode
     version_file = open(version_file_name, 'w')
     # add a new line 
@@ -183,6 +167,18 @@ def update_build_date():
     hour = datetime.today().strftime('%H:%M:%S')
     version_file.write('"')
     version_file.write(hour)
+    version_file.write('"')
+    version_file.write("\n")
+
+    global __version__
+    version_file.write("#define BUILD_VERSION ")
+    repo = git.Repo(root_dir)
+    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    # get the last element of a list
+    latest_tag = tags[-1]
+    __version__ = str(latest_tag)
+    version_file.write('"')
+    version_file.write(str(latest_tag))
     version_file.write('"')
 
 
@@ -240,9 +236,8 @@ def options():
 # @return None
 # *******************************************************************************
 def main():
-    # update project version
-    update_version()
-    update_build_date()
+    # update build version and date
+    update_config()
 
     # declare options of the CLI
     parser = options()

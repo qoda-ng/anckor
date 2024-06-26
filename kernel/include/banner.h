@@ -18,8 +18,7 @@
 #ifndef BANNER_H
 #define BANNER_H
 
-#include "../../date.h"
-#include "../../version.h"
+#include "../../config.h"
 #include "printk.h"
 
 /**

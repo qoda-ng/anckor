@@ -16,4 +16,4 @@ tools/generated
 .config.old
 
 # generated file
-date.h
+config.h
