@@ -16,9 +16,56 @@
  */
 
 #include "registers.h"
+#include "offsets.h"
 
  /*
- * trap handler is called by an exception or an interrupt
+ * macro to save all callee-saved registers
+ * we need this as the trap can be asynchronous
+ */
+.macro SAVE_CALLER_REGS
+    sd	    ra, CALLER_STACK_FRAME_RA(sp)
+    sd      t0, CALLER_STACK_FRAME_T0(sp)
+    sd      t1, CALLER_STACK_FRAME_T1(sp)
+    sd      t2, CALLER_STACK_FRAME_T2(sp)
+    sd      t3, CALLER_STACK_FRAME_T3(sp)
+    sd      t4, CALLER_STACK_FRAME_T4(sp)
+    sd      t5, CALLER_STACK_FRAME_T5(sp)
+    sd      t6, CALLER_STACK_FRAME_T6(sp)
+    sd      a0, CALLER_STACK_FRAME_A0(sp)
+    sd      a1, CALLER_STACK_FRAME_A1(sp)
+    sd      a2, CALLER_STACK_FRAME_A2(sp)
+    sd      a3, CALLER_STACK_FRAME_A3(sp)
+    sd      a4, CALLER_STACK_FRAME_A4(sp)
+    sd      a5, CALLER_STACK_FRAME_A5(sp)
+    sd      a6, CALLER_STACK_FRAME_A6(sp)
+    sd      a7, CALLER_STACK_FRAME_A7(sp)
+.endm
+
+ /*
+ * macro to restore all callee-saved registers
+ */
+.macro RESTORE_CALLER_REGS
+    ld	    ra, CALLER_STACK_FRAME_RA(sp)
+    ld      t0, CALLER_STACK_FRAME_T0(sp)
+    ld      t1, CALLER_STACK_FRAME_T1(sp)
+    ld      t2, CALLER_STACK_FRAME_T2(sp)
+    ld      t3, CALLER_STACK_FRAME_T3(sp)
+    ld      t4, CALLER_STACK_FRAME_T4(sp)
+    ld      t5, CALLER_STACK_FRAME_T5(sp)
+    ld      t6, CALLER_STACK_FRAME_T6(sp)
+    ld      a0, CALLER_STACK_FRAME_A0(sp)
+    ld      a1, CALLER_STACK_FRAME_A1(sp)
+    ld      a2, CALLER_STACK_FRAME_A2(sp)
+    ld      a3, CALLER_STACK_FRAME_A3(sp)
+    ld      a4, CALLER_STACK_FRAME_A4(sp)
+    ld      a5, CALLER_STACK_FRAME_A5(sp)
+    ld      a6, CALLER_STACK_FRAME_A6(sp)
+    ld      a7, CALLER_STACK_FRAME_A7(sp)
+.endm
+
+ /*
+ * trap handler is the top level entry triggered 
+ * by an exception or an interrupt
  */
 .section .text
 # trap_handler will be stored in mtvec register and mtvec base address
@@ -26,15 +73,16 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # return address needs to be saved because ra register will 
-    # be overwritten with _ret_from_trap address
-    add	    sp,sp,-16
-    sd	    ra,8(sp)
+    # store caller-saved registers as this trap can be triggered
+    # by an interrupt, not an exception
+    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
+    SAVE_CALLER_REGS
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
+    add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
     csrr    t0, mepc
-    sd      t0, 0(sp)
-    # handle_interrupt and exceptions handlers
+    sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
+    # dispatch_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
     # get the exception cause and dispatch
@@ -42,7 +90,7 @@ _trap_handler:
     csrr	t0, mcause
     bgez    t0, 1f
     # tail does not affect ra register
-    tail    handle_interrupt
+    tail    dispatch_interrupt
 1:
     # compute the exception vector offset
     slli    t0, t0, SHIFT_8_BYTES_ADDRESS
@@ -61,27 +109,62 @@ _trap_handler:
     tail    handle_unknown_exception
 
  /*
- * _ret_from_trap is called when handle_interrupt or
+ * _ret_from_trap is called when dispatch_interrupt or
  * the exception handler returns as its address is stored
  * in ra register
  */
-.local _ret_from_trap
+.global _ret_from_trap
 _ret_from_trap:
-    # once the exception or interrupt has been processed, 
-    # get the return address from the stack
-    ld	    ra,8(sp)
     # get the instruction address which asserts the exception
     # to resume execution
-    ld      t0, 0(sp)
+    ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
-    add	    sp,sp,16
-    # the kernels returns in machine mode after mret
-    # execution
+    add	    sp, sp, KERNEL_STACK_FRAME_LENGTH
+    # restore caller-saved register
+    RESTORE_CALLER_REGS
+    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
+    # the kernels returns in machine mode after mret execution
+    # re-enable interrupts when exiting kernel mode
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
     csrw	mstatus, t1
     # mret sets PC to MEPC, sets the hart mode to MPP
     # and sets MPP to USER mode
     mret
+
+/*
+ * Syscall wrapper is used to call the syscall saved in the syscall table.
+ * This routine is written in assembly left a[0-7] registers unchanged. This
+ * avoid to pass arguments on the stack as all syscalls don't have the same 
+ * prototype. 
+ *
+ * a7 contains the syscall number
+ *
+ */
+.local _dispatch_syscall
+_dispatch_syscall:
+    # re-enable interrupts before jumping in the syscall handler
+    # this enable re-entrant kernel as exceptions can be preempted
+    # by interrupts
+    csrs mstatus, MACHINE_INTERRUPT_ENABLE
+    # trap has been triggered by an ecall instruction
+    # as ecall is a 4-byte length instruction, mepc
+    # register is updated with the next instruction
+    ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
+    addi    t0, t0, 0x04
+    sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
+    # compute the offset address in the syscall table
+    mv      t0, a7
+    slli    t0, t0, SHIFT_8_BYTES_ADDRESS
+    la      t1, _syscall_table
+    la      t2, _syscall_table_end
+    add     t0, t1, t0
+    bgeu    t0, t2, 1f
+    # load the syscall handler address from the syscall table
+    ld      t0, 0(t0)
+    # jump to the syscall
+    jr      t0
+1:
+    tail sys_default
 
 .section .rodata
 # this table contains all exception handlers
@@ -97,10 +180,10 @@ _exception_vector_table:
     .dword handle_unknown_exception
     .dword handle_unknown_exception
     .dword handle_unknown_exception
-    .dword _syscall_wrapper
-    .dword _syscall_wrapper
+    .dword _dispatch_syscall
+    .dword _dispatch_syscall
     .dword handle_unknown_exception
-    .dword _syscall_wrapper
+    .dword _dispatch_syscall
     .dword handle_unknown_exception
     .dword handle_unknown_exception
     .dword handle_unknown_exception

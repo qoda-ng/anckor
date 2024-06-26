@@ -44,7 +44,7 @@ typedef struct {
   const char *name;
   stack_t    *stack;
   uint8_t     prio;
-  void        (*entry)(void);
+  void (*entry)(void);
 } test_info_t;
 
 /*******************************************************************************

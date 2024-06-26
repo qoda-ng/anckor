@@ -37,7 +37,70 @@
 #define MACHINE_EXTERNAL_INTERRUPT_ENABLE  (0x1 << 11)
 #define MACHINE_EXTERNAL_INTERRUPT_DISABLE (0x0 << 11)
 
-#define RISCV_PTR_LENGTH        4
+#define RISCV_PTR_LENGTH      4
 #define SHIFT_8_BYTES_ADDRESS 3
+
+#define MIE_SIE_OFFSET 3
+#define MIE_TIE_OFFSET 7
+#define MIE_EIE_OFFSET 11
+
+#define MIE_TIE 1 << MIE_TIE_OFFSET
+
+#define CSR_MIP    mip
+#define CSR_MIE    mie
+#define CSR_MCAUSE mcause
+
+#define CSR_MCAUSE_INTERRUPT_MASK 0xFF
+
+#define STRINGIFY(x) #x
+
+/******************************************************************************
+ * @brief clear a bit in the csr register
+ * @param csr register identifier
+ * @param bit to clear in the registers
+ * @return none
+ ******************************************************************************/
+#define csr_set(csr, bits)                                         \
+  ({                                                               \
+    unsigned long __val = bits;                                    \
+    __asm__ volatile("csrs   " STRINGIFY(csr) ", %0" ::"rK"(__val) \
+                     : "memory");                                  \
+  })
+
+/******************************************************************************
+ * @brief clear a bit in the csr register
+ * @param csr register identifier
+ * @param bit to clear in the registers
+ * @return none
+ ******************************************************************************/
+#define csr_clear(csr, bits)                                                  \
+  ({                                                                          \
+    unsigned long __val = bits;                                               \
+    __asm__ volatile("csrc " STRINGIFY(csr) ", %0" ::"rK"(__val) : "memory"); \
+  })
+
+/******************************************************************************
+ * @brief write a 64bits value to the csr register
+ * @param csr register identifier
+ * @param value to write to registers
+ * @return None
+ ******************************************************************************/
+#define csr_write(csr, val)                                                   \
+  ({                                                                          \
+    unsigned long __v = (unsigned long)(val);                                 \
+    __asm__ volatile("csrw " STRINGIFY(csr) ", %0" : : "rK"(__v) : "memory"); \
+  })
+
+/******************************************************************************
+ * @brief read a 64bits value from the csr register
+ * @param csr register identifier
+ * @return value
+ ******************************************************************************/
+#define csr_read(csr)                                                       \
+  ({                                                                        \
+    unsigned long __val;                                                    \
+    __asm__ volatile("csrr   %0, " STRINGIFY(csr) : "=r"(__val)::"memory"); \
+    __val;                                                                  \
+  })
 
 #endif

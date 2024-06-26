@@ -15,6 +15,6 @@
 
 MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := lib/sys \
-			drivers
+			drivers/uart
 
 include tools/make/compile.mk

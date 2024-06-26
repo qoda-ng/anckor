@@ -14,18 +14,12 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef SYSCALL_H
-#define SYSCALL_H
+#ifndef TIMER_H
+#define TIMER_H
 
-#define SYSCALL_MAX_NB 32
+#define ONE_MS_IN_US     1000
+#define ONE_SECOND_IN_US 1000000
 
-#define SYSCALL_TASK_CREATE       0
-#define SYSCALL_TASK_YIELD        1
-#define SYSCALL_TASK_SLEEP        2
-#define SYSCALL_TASK_WAKEUP       3
-#define SYSCALL_TASK_EXIT         4
-#define SYSCALL_INTERRUPT_REQUEST 5
-#define SYSCALL_INTERRUPT_RELEASE 6
-#define SYSCALL_TIMER_SET         7
+#define TIMER_TASK_PRIORITY 254
 
 #endif

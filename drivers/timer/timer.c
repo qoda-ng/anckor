@@ -15,33 +15,40 @@
  * not, see https://www.gnu.org/licenses/
  */
 
+#include "timer.h"
+
+#include "app.h"
 #include "ax_syscall.h"
-#include "common.h"
-#include "init.h"
-#include "sched.h"
-#include "task.h"
-#include "uart.h"
+#include "irq_arch.h"
+#include "printf.h"
+
+#define ARCH_TIMER_RATE 10000000
+
+/*******************************************************************************
+ * Definitions
+ ******************************************************************************/
+stack_t timer_driver_stack;
 
 /******************************************************************************
- * @brief Idle routine runned when no other tasks are ready
+ * @brief Initialization of the uart peripheral
  * @param None
  * @return None
  ******************************************************************************/
-void idle_run(void) {
-  while (1) {
-    ax_task_yield();
-  }
+void timer_driver() {
+  // set the timer
+  uint64_t timer_period_in_s = 1;
+  reg_write_double_word(TIMER_MTIMECMP_ADDR,
+                        timer_period_in_s * ARCH_TIMER_RATE);
+
+  // enable the interrupt in csr register
+  ax_interrupt_request(TIMER_INTERRUPT);
+
+  // get this task to sleep, it will be wake up by the interrupt
+  ax_task_sleep();
+
+  // when woke up, print a message
+  printf("Timer task - woke up by the timer interrupt\n");
 }
 
-/******************************************************************************
- * @brief initialisation of kernel structures and launch the first task
- * @param None
- * @return None
- ******************************************************************************/
-void kernel_init() {
-  sched_init();
-
-  init_create();
-
-  idle_run();
-}
+REGISTER_APP("timer_driver_task", timer_driver, timer_driver_stack,
+             TIMER_TASK_PRIORITY);

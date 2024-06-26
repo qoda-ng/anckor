@@ -14,45 +14,30 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#ifndef PANIC_H
+#define PANIC_H
 
-#include "init.h"
-
-#include "app.h"
-#include "ax_syscall.h"
-#include "banner.h"
 #include "printk.h"
-#include "task.h"
-
-#define INIT_PRIO 1
-
-stack_t init_stack;
-
-extern uint64_t _apps_start;
-extern uint64_t _apps_end;
 
 /******************************************************************************
- * @brief Init task will launch all registered tasks in the system
- * @param None
- * @return None
+ * @brief hang processor when a non recuperable fault is detected
+ * @return none
  ******************************************************************************/
-void init_run(void) {
-  // iterate over all app descriptors saved in the section(.data.apps)
-  for (uint64_t *app_pt = &_apps_start; app_pt < &_apps_end; app_pt += 1) {
-    // get the app descriptor from the current pointer
-    app_info_t *app = (app_info_t *)*app_pt;
-    // create a task for the app
-    ax_task_create(app->name, app->entry, app->stack, app->prio);
-  }
-
-  // display kernel banner at the end of the init stage
-  banner_display();
+static inline void hang_processor() {
+  for (;;);
 }
 
 /******************************************************************************
- * @brief create the init task
- * @param None
- * @return None
+ * @brief print debug message ang hang processor
+ * @param string to print
+ * @return none
  ******************************************************************************/
-void init_create(void) {
-  ax_task_create("init_task", init_run, &init_stack, INIT_PRIO);
+static inline void panic(const char* format, ...) {
+  va_list va;
+  va_start(va, format);
+  printk(format, va);
+  va_end(va);
+  hang_processor();
 }
+
+#endif

@@ -14,29 +14,31 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#include "common.h"
-#include "panic.h"
-#include "printk.h"
+
+#include "interrupt.h"
+
+#include "test.h"
+
+/*******************************************************************************
+ * Definitions
+ ******************************************************************************/
+stack_t interrupt_thread_stack;
+
+static uint8_t test_step = 0;
 
 /******************************************************************************
- * @brief handle unknown exceptions
- * @return none
+ * @brief initalize interrupt handler and timer
+ * @param None
+ * @return None
  ******************************************************************************/
-void handle_unknown_exception() {
-  printk("exception not handled\n");
+void interrupt_thread(void) {
+  // STEP 1
+  test_step += 1;
+  TEST_ASSERT(test_step >= 1)
 
-  hang_processor();
+  // STEP 3
+  test_step += 1;
+  TEST_ASSERT(test_step >= 2)
 }
 
-/******************************************************************************
- * @brief handle unused syscalls
- * @param syscall number
- * @return none
- ******************************************************************************/
-void sys_default(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4,
-                 uint64_t arg5, uint64_t arg6, uint64_t arg7,
-                 uint64_t syscall_number) {
-  printk("syscall nb° %d is not implemented.\n ", syscall_number);
-
-  hang_processor();
-}
+REGISTER_TEST("interrupt_test", interrupt_thread, interrupt_thread_stack, 5)

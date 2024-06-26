@@ -16,6 +16,7 @@
  */
 
 #include "registers.h"
+#include "offsets.h"
 #include "syscall.h"
 
  /*
@@ -55,7 +56,6 @@ ax_task_create:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_yield
 ax_task_yield:
     li a7, SYSCALL_TASK_YIELD
@@ -78,7 +78,6 @@ ax_task_yield:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_sleep
 ax_task_sleep:
     li a7, SYSCALL_TASK_SLEEP
@@ -101,7 +100,6 @@ ax_task_sleep:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_wakeup
 ax_task_wakeup:
     li a7, SYSCALL_TASK_WAKEUP
@@ -124,7 +122,6 @@ ax_task_wakeup:
  *
  */
 
-# use .global keyworkd makes the symbol visible to the linker
 .global ax_task_exit
 ax_task_exit:
     li a7, SYSCALL_TASK_EXIT
@@ -133,46 +130,83 @@ ax_task_exit:
     ecall
     ret
 
-/*
- * Syscall wrapper is used to call the syscall saved in the syscall table.
- * This routine is written in assembly left a[0-7] registers unchanged. This
- * avoid to pass arguments on the stack as all syscalls don't have the same 
- * prototype. 
+ /*
+ * ax_interrupt_request syscall
  *
- * a7 contains the syscall number
+ * a0: interrupt id
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
  *
  */
-.global _syscall_wrapper
-_syscall_wrapper:
-    # trap has been triggered by an ecall instruction
-    # as ecall is a 4-byte length instruction, mepc
-    # register is updated with the next instruction
-    ld      t0, 0(sp)
-    addi    t0, t0, 0x04
-    sd      t0, 0(sp)
-    # compute the offset address in the syscall table
-    mv      t0, a7
-    slli    t0, t0, SHIFT_8_BYTES_ADDRESS
-    la      t1, _syscall_table
-    la      t2, _syscall_table_end
-    add     t0, t1, t0
-    bgeu    t0, t2, 1f
-    # load the syscall handler address from the syscall table
-    ld      t0, 0(t0)
-    # jump to the syscall
-    jr      t0
-1:
-    tail sys_default
+
+.global ax_interrupt_request
+ax_interrupt_request:
+    li a7, SYSCALL_INTERRUPT_REQUEST
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_interrupt_release syscall
+ *
+ * a0: interrupt id
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_interrupt_release
+ax_interrupt_release:
+    li a7, SYSCALL_INTERRUPT_RELEASE
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_interrupt_release syscall
+ *
+ * a0: interrupt id
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_timer_set
+ax_timer_set:
+    li a7, SYSCALL_TIMER_SET
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
 
 .section .rodata
 .align RISCV_PTR_LENGTH
+.global _syscall_table
+.global _syscall_table_end
 _syscall_table:
     .dword task_create
     .dword task_yield
     .dword task_sleep
     .dword task_wakeup
     .dword task_exit
-    .dword sys_default
+    .dword interrupt_request
     .dword sys_default
     .dword sys_default
     .dword sys_default

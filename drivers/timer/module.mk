@@ -15,8 +15,8 @@
 
 MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := lib/sys \
-			drivers/uart \
-			arch \
-			lib/libc \
+				lib/libc \
+				kernel \
+				arch
 
 include tools/make/compile.mk
