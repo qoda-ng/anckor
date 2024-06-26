@@ -14,8 +14,10 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef TRAP_ARCH_H
-#define TRAP_ARCH_H
+#ifndef PANIC_H
+#define PANIC_H
+
+#include "printk.h"
 
 /******************************************************************************
  * @brief hang processor when a non recuperable fault is detected
@@ -23,6 +25,18 @@
  ******************************************************************************/
 static inline void hang_processor() {
   for (;;);
+}
+
+/******************************************************************************
+ * @brief hang processor when a non recuperable fault is detected
+ * @return none
+ ******************************************************************************/
+static inline void panic(const char* format, ...) {
+  va_list va;
+  va_start(va, format);
+  printk(format, va);
+  va_end(va);
+  hang_processor();
 }
 
 #endif

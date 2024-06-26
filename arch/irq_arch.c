@@ -18,11 +18,11 @@
 
 #include "common.h"
 #include "interrupt.h"
+#include "panic.h"
 #include "printk.h"
 #include "registers.h"
 #include "sched.h"
 #include "task.h"
-#include "trap_arch.h"
 
 #define NB_INTERRUPT 3
 
@@ -54,47 +54,50 @@ void interrupt_request(interrupt_id_t interrupt_id) {
 }
 
 /******************************************************************************
- * @brief handle interruptions
+ * @brief dispatch interrupt according to its source
+ * @param none
  * @return none
  ******************************************************************************/
-void handle_interrupt() {
-  task_t *interrupt_task = NULL;
+static inline void handle_timer_interrupt() {
+  // disable timer interrupt
+  csr_clear(CSR_MIE, MIE_TIE);
+
+  if (irq_table[TIMER_INTERRUPT]) {
+    // wake up registered interrupt handler
+    // this will add the interrupt handler
+    // in the run queue and run the scheduler
+    // it will immediatly jump to the task if it
+    // has the highest priority
+    task_wakeup(irq_table[TIMER_INTERRUPT]);
+  } else {
+    panic("Timer interrupt handler not defined\n");
+  }
+}
+
+/******************************************************************************
+ * @brief dispatch interrupt according to its source
+ * @param none
+ * @return none
+ ******************************************************************************/
+void dispatch_interrupt() {
   // get the interrupt cause from registers
   uint64_t cause = csr_read(CSR_MCAUSE) & CSR_MCAUSE_INTERRUPT_MASK;
 
   switch (cause) {
     case RISCV_INTERRUPT_MACHINE_SOFTWARE:
-      printk("interrupt machine software n°%d not handled\n", cause);
-      hang_processor();
+      panic("interrupt machine software n°%d not handled\n", cause);
       break;
 
     case RISCV_INTERRUPT_MACHINE_TIMER:
-      // disable timer interrupt
-      csr_clear(CSR_MIE, MIE_TIE);
-
-      if (irq_table[TIMER_INTERRUPT]) {
-        interrupt_task = irq_table[TIMER_INTERRUPT];
-      } else {
-        printk("Timer interrupt handler not defined\n");
-        hang_processor();
-      }
+      handle_timer_interrupt();
       break;
 
     case RISCV_INTERRUPT_MACHINE_EXTERNAL:
-      printk("interrupt machine external n°%d not handled\n", cause);
-      hang_processor();
+      panic("interrupt machine external n°%d not handled\n", cause);
       break;
 
     default:
-      printk("interrupt n°%d not handled\n", cause);
-      hang_processor();
+      panic("interrupt n°%d not handled\n", cause);
       break;
   }
-
-  // wake up registered interrupt handler
-  // this will add the interrupt handler
-  // in the run queue and run the scheduler
-  // it will immediatly jump to the task if it
-  // has the highest priority
-  task_wakeup(interrupt_task);
 }

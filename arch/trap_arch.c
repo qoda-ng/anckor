@@ -14,9 +14,8 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#include "trap_arch.h"
-
 #include "common.h"
+#include "panic.h"
 #include "printk.h"
 
 /******************************************************************************

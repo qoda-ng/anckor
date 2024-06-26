@@ -82,7 +82,7 @@ _trap_handler:
     add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
     csrr    t0, mepc
     sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
-    # handle_interrupt and exceptions handlers
+    # dispatch_interrupt and exceptions handlers
     # will exit to _ret_from_trap
     la	    ra, _ret_from_trap
     # get the exception cause and dispatch
@@ -90,7 +90,7 @@ _trap_handler:
     csrr	t0, mcause
     bgez    t0, 1f
     # tail does not affect ra register
-    tail    handle_interrupt
+    tail    dispatch_interrupt
 1:
     # compute the exception vector offset
     slli    t0, t0, SHIFT_8_BYTES_ADDRESS
@@ -109,7 +109,7 @@ _trap_handler:
     tail    handle_unknown_exception
 
  /*
- * _ret_from_trap is called when handle_interrupt or
+ * _ret_from_trap is called when dispatch_interrupt or
  * the exception handler returns as its address is stored
  * in ra register
  */
