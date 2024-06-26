@@ -16,6 +16,7 @@
 import argparse
 import sys
 import os
+from datetime import datetime
 
 __version__ = "x.x.x"
 
@@ -156,6 +157,34 @@ def update_version():
         if line.find("BUILD_VERSION") != -1:
             index = line.rfind(" ")
             __version__ = line[index+2:-1]
+    version_file.close()
+
+# *******************************************************************************
+# @brief update global __version__ from a version.h file
+# @param None
+# @return None
+# *******************************************************************************
+def update_build_date():
+    root_dir = get_root_dir()
+    version_file_name = os.path.join(root_dir, 'date.h')
+    # open the file in 'append' mode
+    version_file = open(version_file_name, 'w')
+    # add a new line 
+    version_file.write("\n")
+    version_file.write("#define BUILD_DATE ")
+
+    # get the date and write it to the file
+    date = datetime.today().strftime('%Y-%m-%d')
+    version_file.write('"')
+    version_file.write(date)
+    version_file.write('"')
+    version_file.write("\n")
+    version_file.write("#define BUILD_HOUR ")
+    hour = datetime.today().strftime('%H:%M:%S')
+    version_file.write('"')
+    version_file.write(hour)
+    version_file.write('"')
+
 
 # *******************************************************************************
 # @brief manage all subcommands
@@ -213,6 +242,7 @@ def options():
 def main():
     # update project version
     update_version()
+    update_build_date()
 
     # declare options of the CLI
     parser = options()

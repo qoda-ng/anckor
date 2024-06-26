@@ -18,6 +18,7 @@
 #ifndef BANNER_H
 #define BANNER_H
 
+#include "../../date.h"
 #include "../../version.h"
 #include "printk.h"
 
@@ -27,7 +28,8 @@
  * @return None
  */
 void banner_display(void) {
-  printk("Anckor OS build " BUILD_VERSION "\r\n");
+  printk("Anckor OS build " BUILD_VERSION " - " BUILD_DATE " " BUILD_HOUR
+         "\r\n");
 }
 
 #endif
