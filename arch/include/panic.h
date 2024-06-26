@@ -28,7 +28,8 @@ static inline void hang_processor() {
 }
 
 /******************************************************************************
- * @brief hang processor when a non recuperable fault is detected
+ * @brief print debug message ang hang processor
+ * @param string to print
  * @return none
  ******************************************************************************/
 static inline void panic(const char* format, ...) {
