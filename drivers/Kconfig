@@ -1,2 +1,0 @@
-rsource "uart/Kconfig"
-rsource "timer/Kconfig"

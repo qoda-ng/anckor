@@ -1,5 +1,0 @@
-config module_drivers_uart
-	bool "uart driver module"
-	default y
-	help
-		uart driver module
