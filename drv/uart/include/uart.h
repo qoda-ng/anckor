@@ -14,19 +14,29 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef SYS_OUT_H
-#define SYS_OUT_H
 
-#include "../../../drv/uart/include/uart.h"
+#include "common.h"
 
 /******************************************************************************
- * @brief send char for printf routine
- * @param character to send
- * @param data to write
+ * Definitions
+ ******************************************************************************/
+#define UART_BASE_ADDR     0x10000000
+#define UART_LCR_OFFSET    3
+#define UART_FIFO_OFFSET   2
+#define UART_RCV_IT_OFFSET 1
+#define UART_RX_TX_OFFSET  0
+
+/******************************************************************************
+ * @brief Initialization of the uart peripheral
+ * @param None
  * @return None
  ******************************************************************************/
-inline void _putchar(char character) {
-  uart_send((const uint8_t *)&character, 1);
-}
+void uart_init();
 
-#endif
+/******************************************************************************
+ * @brief send data through the uart
+ * @param pointer to data to send
+ * @param size of the data to send
+ * @return None
+ ******************************************************************************/
+void uart_send(const uint8_t *data, const uint64_t size);

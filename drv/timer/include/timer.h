@@ -14,19 +14,12 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef SYS_OUT_H
-#define SYS_OUT_H
+#ifndef TIMER_H
+#define TIMER_H
 
-#include "../../../drv/uart/include/uart.h"
+#define ONE_MS_IN_US     1000
+#define ONE_SECOND_IN_US 1000000
 
-/******************************************************************************
- * @brief send char for printf routine
- * @param character to send
- * @param data to write
- * @return None
- ******************************************************************************/
-inline void _putchar(char character) {
-  uart_send((const uint8_t *)&character, 1);
-}
+#define TIMER_TASK_PRIORITY 254
 
 #endif
