@@ -175,27 +175,9 @@ ax_interrupt_release:
     ret
 
  /*
- * ax_interrupt_release syscall
- *
- * a0: interrupt id
- * a1: not used
- * a2: not used
- * a3: not used
- * a4: not used
- * a5: not used
- * a6: not used
- * a7: syscall number
+ * table to save all syscall handlers
  *
  */
-
-.global ax_timer_set
-ax_timer_set:
-    li a7, SYSCALL_TIMER_SET
-    # rise exception, this will update mepc register but left
-    # the ra register unchanged
-    ecall
-    ret
-
 .section .rodata
 .align RISCV_PTR_LENGTH
 .global _syscall_table
@@ -207,7 +189,7 @@ _syscall_table:
     .dword task_wakeup
     .dword task_exit
     .dword interrupt_request
-    .dword sys_default
+    .dword interrupt_release
     .dword sys_default
     .dword sys_default
     .dword sys_default
