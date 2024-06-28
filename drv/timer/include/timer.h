@@ -22,4 +22,6 @@
 
 #define TIMER_TASK_PRIORITY 254
 
+#define time_t uint64_t
+
 #endif

@@ -52,10 +52,10 @@ void timer_driver() {
 
 /******************************************************************************
  * @brief set a timer
- * @param None
+ * @param time duration before the timer will fire
  * @return None
  ******************************************************************************/
-void timer_set() {
+void timer_set(time_t time) {
 }
 
 /******************************************************************************
@@ -63,7 +63,7 @@ void timer_set() {
  * @param None
  * @return monotonic clock in us
  ******************************************************************************/
-uint64_t clock_get() {
+time_t clock_get() {
   uint64_t clock_in_s =
       reg_read_double_word(TIMER_MTIME_ADDR) / ARCH_TIMER_RATE;
   return clock_in_s * ONE_SECOND_IN_US;
