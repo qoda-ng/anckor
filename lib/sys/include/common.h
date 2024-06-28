@@ -55,7 +55,7 @@ inline void reg_write_double_word(const uint64_t addr, const uint64_t data) {
  * @param addr of the register
  * @return data in the register
  ******************************************************************************/
-inline uint8_t reg_read_double_word(const uint64_t addr) {
+inline uint64_t reg_read_double_word(const uint64_t addr) {
   volatile uint64_t *reg_addr = (uint64_t *)addr;
   return (uint64_t)*reg_addr;
 }

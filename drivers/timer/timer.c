@@ -50,5 +50,24 @@ void timer_driver() {
   printf("Timer task - woke up by the timer interrupt\n");
 }
 
+/******************************************************************************
+ * @brief set a timer
+ * @param None
+ * @return None
+ ******************************************************************************/
+void timer_set() {
+}
+
+/******************************************************************************
+ * @brief read the monotonic clock from the processor
+ * @param None
+ * @return monotonic clock in us
+ ******************************************************************************/
+uint64_t clock_get() {
+  uint64_t clock_in_s =
+      reg_read_double_word(TIMER_MTIME_ADDR) / ARCH_TIMER_RATE;
+  return clock_in_s * ONE_SECOND_IN_US;
+}
+
 REGISTER_APP("timer_driver_task", timer_driver, timer_driver_stack,
              TIMER_TASK_PRIORITY);
