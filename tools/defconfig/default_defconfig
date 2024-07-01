@@ -27,7 +27,7 @@ CONFIG_module_arch=y
 # drv
 #
 CONFIG_module_drv_uart=y
-CONFIG_module_drv_timer=y
+# CONFIG_module_drv_timer is not set
 # end of drv
 
 #
