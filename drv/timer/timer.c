@@ -21,6 +21,8 @@
 #include "ax_syscall.h"
 #include "irq_arch.h"
 #include "printf.h"
+#include "sched.h"
+#include "task.h"
 
 #define ARCH_TIMER_RATE 10000000
 
@@ -28,26 +30,20 @@
  * Definitions
  ******************************************************************************/
 stack_t timer_driver_stack;
+task_t* task_handler;
 
 /******************************************************************************
  * @brief Initialization of the uart peripheral
  * @param None
  * @return None
  ******************************************************************************/
-void timer_driver() {
-  // set the timer
-  uint64_t timer_period_in_s = 1;
-  reg_write_double_word(TIMER_MTIMECMP_ADDR,
-                        timer_period_in_s * ARCH_TIMER_RATE);
+void timer_driver_handler() {
+  while (1) {
+    // get this task to sleep, it will be wake up by the interrupt
+    ax_task_sleep();
 
-  // enable the interrupt in csr register
-  ax_interrupt_request(TIMER_INTERRUPT);
-
-  // get this task to sleep, it will be wake up by the interrupt
-  ax_task_sleep();
-
-  // when woke up, print a message
-  printf("Timer task - woke up by the timer interrupt\n");
+    ax_task_wakeup(task_handler);
+  }
 }
 
 /******************************************************************************
@@ -55,7 +51,16 @@ void timer_driver() {
  * @param time duration before the timer will fire
  * @return None
  ******************************************************************************/
-void timer_set(time_t time) {
+void timer_set(time_t time_in_us) {
+  // register the task to wake up with the timer
+  task_handler = sched_get_current_task();
+
+  // set the timer
+  uint64_t timer_period_in_s = 1;
+  reg_write_double_word(TIMER_MTIMECMP_ADDR, time_in_us * ARCH_TIMER_RATE);
+
+  // enable the interrupt in csr register
+  ax_interrupt_request(TIMER_INTERRUPT);
 }
 
 /******************************************************************************
@@ -69,5 +74,5 @@ time_t clock_get() {
   return clock_in_s * ONE_SECOND_IN_US;
 }
 
-REGISTER_APP("timer_driver_task", timer_driver, timer_driver_stack,
+REGISTER_APP("timer_driver_task", timer_driver_handler, timer_driver_stack,
              TIMER_TASK_PRIORITY);

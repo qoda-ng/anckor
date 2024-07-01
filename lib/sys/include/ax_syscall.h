@@ -27,6 +27,5 @@ extern void ax_task_wakeup(task_t *);
 extern void ax_task_exit(void);
 extern void ax_interrupt_request(interrupt_id_t);
 extern void ax_interrupt_release(interrupt_id_t);
-extern void ax_timer_set(uint64_t);
 
 #endif
