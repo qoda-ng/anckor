@@ -17,10 +17,12 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#define ONE_MS_IN_US     1000
-#define ONE_SECOND_IN_US 1000000
+#define ONE_MS_IN_US     1000UL
+#define ONE_SECOND_IN_US 1000000UL
 
 #define TIMER_TASK_PRIORITY 254
+
+#define ARCH_TIMER_RATE 10000000UL
 
 #define time_t uint64_t
 
