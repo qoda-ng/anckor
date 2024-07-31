@@ -173,9 +173,9 @@ def update_config():
     global __version__
     version_file.write("#define BUILD_VERSION ")
     repo = git.Repo(root_dir)
-    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    tag_list=repo.git.ls_remote("--tags", "origin")
     # get the last element of a list
-    latest_tag = tags[-1]
+    latest_tag = tag_list.split('\n')[-1].split('/')[-1]
     __version__ = str(latest_tag)
     version_file.write('"')
     version_file.write(str(latest_tag))
