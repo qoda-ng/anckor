@@ -136,7 +136,7 @@ void task_wakeup(task_t *task) {
 }
 
 /******************************************************************************
- * @brief task destroy
+ * @brief task exit
  *
  * This function cleans all memory used to save task information, this
  * comprises all stacks and associated structures. It also deletes the task from

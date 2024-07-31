@@ -77,7 +77,7 @@ void interrupt_thread(void) {
   if ((duration_in_us > (time_t)TIMER_LO_LIMIT_IN_US) &&
       (duration_in_us < (time_t)TIMER_HI_LIMIT_IN_US)) {
     test_step += 1;
-    printk("TEST OK");
+    printk("TEST OK\r\n");
   }
 
   // STEP 3
