@@ -175,10 +175,13 @@ def update_config():
     print(root_dir)
     repo = git.Repo(root_dir)
     print(repo)
-    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    # print(repo.tags)
+    tags = repo.tags
+    # tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
     # get the last element of a list
     print(tags)
     latest_tag = tags[-1]
+    print(latest_tag)
     __version__ = str(latest_tag)
     version_file.write('"')
     version_file.write(str(latest_tag))
