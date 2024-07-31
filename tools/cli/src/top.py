@@ -172,7 +172,9 @@ def update_config():
 
     global __version__
     version_file.write("#define BUILD_VERSION ")
+    print(root_dir)
     repo = git.Repo(root_dir)
+    print(repo)
     tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
     # get the last element of a list
     print(tags)
