@@ -24,11 +24,11 @@ CONFIG_module_arch=y
 # end of arch
 
 #
-# drivers
+# drv
 #
-CONFIG_module_drivers_uart=y
-CONFIG_module_drivers_timer=y
-# end of drivers
+CONFIG_module_drv_uart=y
+# CONFIG_module_drv_timer is not set
+# end of drv
 
 #
 # lib

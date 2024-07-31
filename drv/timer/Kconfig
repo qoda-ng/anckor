@@ -1,4 +1,4 @@
-config module_drivers_timer
+config module_drv_timer
 	bool "timer driver module"
 	default y
 	help

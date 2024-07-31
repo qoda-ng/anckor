@@ -14,7 +14,6 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 - [x] exception management
 - [x] syscalls
 - [x] Interrupt management
-- [ ] Timer driver
 - [ ] heap allocator (binary buddy system)
 - [ ] cooperative scheduling with min heap priority queue
 - [ ] User / Kernel modes protection
@@ -59,6 +58,7 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 
 ## Backlog / Post r-1.0.0
 
+- [ ] Timer driver
 - [ ] a convenient way to declare drivers for a platform (device tree ?)
 - [ ] IDL support for inter-processes communication
 - [ ] network stack

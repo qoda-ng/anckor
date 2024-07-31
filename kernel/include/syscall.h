@@ -26,6 +26,5 @@
 #define SYSCALL_TASK_EXIT         4
 #define SYSCALL_INTERRUPT_REQUEST 5
 #define SYSCALL_INTERRUPT_RELEASE 6
-#define SYSCALL_TIMER_SET         7
 
 #endif

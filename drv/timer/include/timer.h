@@ -14,5 +14,16 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#ifndef TIMER_H
+#define TIMER_H
 
-#define BUILD_VERSION "0.0.1"
+#define ONE_MS_IN_US     1000UL
+#define ONE_SECOND_IN_US 1000000UL
+
+#define TIMER_TASK_PRIORITY 254
+
+#define ARCH_TIMER_RATE 10000000UL
+
+#define time_t uint64_t
+
+#endif

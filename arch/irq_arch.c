@@ -54,6 +54,30 @@ void interrupt_request(interrupt_id_t interrupt_id) {
 }
 
 /******************************************************************************
+ * @brief disable the interrupt in IE register
+ * @param interrupt identifier
+ * @return None
+ ******************************************************************************/
+void interrupt_release(interrupt_id_t interrupt_id) {
+  uint64_t reg_value;
+
+  // translate kernel interrupt number to riscv arch interrupt register offset
+  switch (interrupt_id) {
+    case TIMER_INTERRUPT:
+      reg_value = 1 << MIE_TIE_OFFSET;
+      break;
+    default:
+      break;
+  }
+
+  // reset interrupt enable register
+  csr_clear(CSR_MIE, reg_value);
+
+  // clear the interrupt handler pointer
+  irq_table[interrupt_id] = NULL;
+}
+
+/******************************************************************************
  * @brief dispatch interrupt according to its source
  * @param none
  * @return none

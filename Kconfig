@@ -28,9 +28,9 @@ rsource "arch/Kconfig"
 
 endmenu
 
-menu "drivers"
+menu "drv"
 
-rsource "drivers/Kconfig"
+rsource "drv/Kconfig"
 
 endmenu
 
