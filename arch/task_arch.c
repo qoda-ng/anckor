@@ -75,11 +75,16 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // and 16-bytes align it
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
 
+  // initialize kernel stack frame
+  // task_runtime will be loaded in pc register by _ret_from_interrupt
+  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
+      (uint64_t)task_runtime;
+
   // initialize caller-saved stack frame
   // a0 is loaded by _ret_from_interrupt and is used as first
   // argument of task_runtime
   task->thread.sp -= CALLER_STACK_FRAME_LENGTH;
-  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_RA) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T0) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T1) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T2) = 0;
@@ -95,12 +100,6 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A5) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A6) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A7) = 0;
-
-  // initialize kernel stack frame
-  // task_runtime will be loaded in pc register by _ret_from_interrupt
-  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
-  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
-      (uint64_t)task_runtime;
 
   // move up sp and save _ret_from_interrupt
   task->thread.sp -= LWORD_SIZE;

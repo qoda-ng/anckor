@@ -23,7 +23,6 @@
  * we need this as the trap can be asynchronous
  */
 .macro SAVE_CALLER_REGS
-    sd	    ra, CALLER_STACK_FRAME_RA(sp)
     sd      t0, CALLER_STACK_FRAME_T0(sp)
     sd      t1, CALLER_STACK_FRAME_T1(sp)
     sd      t2, CALLER_STACK_FRAME_T2(sp)
@@ -45,7 +44,6 @@
  * macro to restore all callee-saved registers
  */
 .macro RESTORE_CALLER_REGS
-    ld	    ra, CALLER_STACK_FRAME_RA(sp)
     ld      t0, CALLER_STACK_FRAME_T0(sp)
     ld      t1, CALLER_STACK_FRAME_T1(sp)
     ld      t2, CALLER_STACK_FRAME_T2(sp)
@@ -73,19 +71,22 @@
 .align RISCV_PTR_LENGTH
 .global _trap_handler
 _trap_handler:
-    # store caller-saved registers as this trap can be triggered
-    # by an interrupt, not an exception
-    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
-    SAVE_CALLER_REGS
     # save mepc as the kernel can switch context and return by an 
     # another function from which it enters in _trap_handler 
     add	    sp, sp, -KERNEL_STACK_FRAME_LENGTH
     csrr    t0, mepc
     sd      t0, KERNEL_STACK_FRAME_MEPC(sp)
+    # we need to save ra as it's overwritten by _ret_from_interrupt
+    # or _ret_from_exception
+    sd	    ra, KERNEL_STACK_FRAME_RA(sp)
     # get the exception cause and dispatch
     # from interrupt or synchronous exception
     csrr	t0, mcause
     bgez    t0, 1f
+    # store caller-saved registers as this trap is triggered
+    # by an interrupt
+    add	    sp, sp, -CALLER_STACK_FRAME_LENGTH
+    SAVE_CALLER_REGS
     # dispatch_interrupt will exit to _ret_from_interrupt
     la	    ra, _ret_from_interrupt
     # tail does not affect ra register
@@ -115,19 +116,20 @@ _trap_handler:
  */
 .global _ret_from_interrupt
 _ret_from_interrupt:
+    # restore caller-saved register
+    RESTORE_CALLER_REGS
+    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
  /*
  * _ret_from_exception is called when the exception handler
  * returns as its address is stored in ra register
  */
 _ret_from_exception:
-    # get the instruction address which asserts the exception
-    # to resume execution
+    # get the instruction address which asserts the exception and
+    # overwride _ret_from interrupt/exception to resume execution
+    ld	    ra, KERNEL_STACK_FRAME_RA(sp)
     ld      t0, KERNEL_STACK_FRAME_MEPC(sp)
     csrw    mepc, t0
     add	    sp, sp, KERNEL_STACK_FRAME_LENGTH
-    # restore caller-saved register
-    RESTORE_CALLER_REGS
-    add	    sp, sp, CALLER_STACK_FRAME_LENGTH
     # the kernels returns in machine mode after mret execution
     # re-enable interrupts when exiting kernel mode
     li		t1, MACHINE_PREVIOUS_MODE | MACHINE_PREVIOUS_INTERRUPT_ENABLE | MACHINE_INTERRUPT_ENABLE
