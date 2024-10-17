@@ -22,7 +22,7 @@
 /******************************************************************************
  * @brief used to switch from kernel mode to user mode at task startup
  ******************************************************************************/
-extern void (*_ret_from_trap)(void);
+extern void (*_ret_from_interrupt)(void);
 
 /******************************************************************************
  * @brief initialize task stack
@@ -47,10 +47,8 @@ extern void (*_ret_from_trap)(void);
  * s10
  * s11
  * -----------
- * _ret_from_trap
- * task_runtime
+ * _ret_from_interrupt
  * -----------
- * ra
  * t0
  * ...
  * t6
@@ -58,6 +56,8 @@ extern void (*_ret_from_trap)(void);
  * ...
  * a6
  * a7
+ * task_runtime
+ * ra
  * -----------
  * ----------------------- stack_end
  *
@@ -75,11 +75,17 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // and 16-bytes align it
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
 
+  // initialize kernel stack frame
+  // task_runtime will be loaded in pc register by _ret_from_interrupt
+  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
+      (uint64_t)task_runtime;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_RA) = 0;
+
   // initialize caller-saved stack frame
-  // a0 is loaded by _ret_from_trap and is used as first
+  // a0 is loaded by _ret_from_interrupt and is used as first
   // argument of task_runtime
   task->thread.sp -= CALLER_STACK_FRAME_LENGTH;
-  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_RA) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T0) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T1) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T2) = 0;
@@ -96,15 +102,9 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A6) = 0;
   *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A7) = 0;
 
-  // initialize kernel stack frame
-  // task_runtime will be loaded in pc register by _ret_from_trap
-  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
-  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
-      (uint64_t)task_runtime;
-
-  // move up sp and save _ret_from_trap
+  // move up sp and save _ret_from_interrupt
   task->thread.sp -= LWORD_SIZE;
-  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_ret_from_trap;
+  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_ret_from_interrupt;
 
   // move up sp to initialize callee-saved registers
   task->thread.sp -= CALLEE_STACK_FRAME_LENGTH;

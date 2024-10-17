@@ -1,5 +1,5 @@
 # IDE specific directory
-.vscode/
+.vscode/settings.json
 
 # directory to store all build artifacts
 build/
