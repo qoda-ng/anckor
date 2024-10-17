@@ -143,7 +143,7 @@ _ret_from_trap:
 .local _dispatch_syscall
 _dispatch_syscall:
     # re-enable interrupts before jumping in the syscall handler
-    # this enable re-entrant kernel as exceptions can be preempted
+    # this enables re-entrant kernel as exceptions can be preempted
     # by interrupts
     csrs mstatus, MACHINE_INTERRUPT_ENABLE
     # trap has been triggered by an ecall instruction
