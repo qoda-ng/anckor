@@ -48,9 +48,7 @@ extern void (*_ret_from_interrupt)(void);
  * s11
  * -----------
  * _ret_from_interrupt
- * task_runtime
  * -----------
- * ra
  * t0
  * ...
  * t6
@@ -58,6 +56,8 @@ extern void (*_ret_from_interrupt)(void);
  * ...
  * a6
  * a7
+ * task_runtime
+ * ra
  * -----------
  * ----------------------- stack_end
  *
