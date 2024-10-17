@@ -80,6 +80,7 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
   *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
       (uint64_t)task_runtime;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_RA) = 0;
 
   // initialize caller-saved stack frame
   // a0 is loaded by _ret_from_interrupt and is used as first
