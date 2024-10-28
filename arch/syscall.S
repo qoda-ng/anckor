@@ -175,6 +175,72 @@ ax_interrupt_release:
     ret
 
  /*
+ * ax_channel_create syscall
+ *
+ * a0: channel handler pointer
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_create
+ax_channel_create:
+    li a7, SYSCALL_CHANNEL_CREATE
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_channel_snd syscall
+ *
+ * a0: channel handler pointer
+ * a1: data pointer
+ * a2: data length
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_snd
+ax_channel_snd:
+    li a7, SYSCALL_CHANNEL_SND
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_channel_rcv syscall
+ *
+ * a0: channel handler pointer
+ * a1: data pointer
+ * a2: data length
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_rcv
+ax_channel_rcv:
+    li a7, SYSCALL_CHANNEL_RCV
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
  * table to save all syscall handlers
  *
  */

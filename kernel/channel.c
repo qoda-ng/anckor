@@ -14,21 +14,10 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
-#ifndef AX_SYSCALL_H
-#define AX_SYSCALL_H
+#include "channel.h"
 
-#include "interrupt.h"
-#include "task.h"
-
-extern void ax_task_create(const char *, void (*)(void), stack_t *, uint8_t);
-extern void ax_task_yield(void);
-extern void ax_task_sleep(void);
-extern void ax_task_wakeup(task_t *);
-extern void ax_task_exit(void);
-extern void ax_interrupt_request(interrupt_id_t);
-extern void ax_interrupt_release(interrupt_id_t);
-extern void ax_channel_create(uint64_t *);
-extern void ax_channel_snd(const uint64_t *, const uint64_t *, uint64_t);
-extern void ax_channel_rcv(const uint64_t *, const uint64_t *, uint64_t);
-
-#endif
+void channel_create(uint64_t *channel_handler);
+void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
+                 uint64_t msg_len);
+void channel_rcv(const uint64_t *channel_handler, const uint64_t *msg,
+                 uint64_t msg_len);
