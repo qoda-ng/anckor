@@ -76,6 +76,9 @@ task_t *sched_get_next_task() {
  * modified without careful attention: the task stack design heavily relies on
  * how this function saves parameters on the stack.
  *
+ * The main use of sched_switch is saving RA before jumping to _switch_to and
+ * restore the same register at the output
+ *
  * @param previous_task address pointer
  * @param next_task address pointer
  * @return none

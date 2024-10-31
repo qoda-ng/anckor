@@ -27,9 +27,9 @@
 stack_t snd_messages_thread_stack;
 stack_t rcv_messages_thread_stack;
 
-uint64_t channel_handler = NULL;
-uint64_t data_to_send    = NULL;
-uint64_t data_to_receive = NULL;
+uint64_t channel_handler = 0;
+uint64_t data_to_send    = 0;
+uint64_t data_to_receive = 0;
 
 static uint8_t test_step = 0;
 

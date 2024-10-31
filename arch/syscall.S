@@ -256,9 +256,9 @@ _syscall_table:
     .dword task_exit
     .dword interrupt_request
     .dword interrupt_release
-    .dword sys_default
-    .dword sys_default
-    .dword sys_default
+    .dword channel_create
+    .dword channel_snd
+    .dword channel_rcv
     .dword sys_default
     .dword sys_default
     .dword sys_default
