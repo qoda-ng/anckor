@@ -101,7 +101,7 @@ void task_create(const char *name, void (*task_entry)(void), stack_t *stack,
 void task_yield() {
   task_t *current_task = sched_get_current_task();
 
-  task_set_state(current_task, BLOCKED);
+  task_set_state(current_task, READY);
 
   sched_run();
 }
