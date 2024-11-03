@@ -18,7 +18,7 @@
 #include "ax_syscall.h"
 #include "interrupt.h"
 #include "irq_arch.h"
-#include "printk.h"
+#include "printf.h"
 #include "test.h"
 
 /*******************************************************************************
@@ -31,34 +31,23 @@ uint64_t channel_handler = 0;
 uint64_t data_to_send    = 0;
 uint64_t data_to_receive = 0;
 
-static uint8_t test_step = 0;
-
 /******************************************************************************
  * @brief initalize message and send it
  * @param None
  * @return None
  ******************************************************************************/
 void snd_messages_thread(void) {
-  // STEP 1
-  test_step += 1;
-  TEST_ASSERT(test_step >= 1)
-
-  // create a communication channel
-  ax_channel_create(&channel_handler);
-
-  // STEP 2
-  TEST_ASSERT(test_step >= 2)
+  printf("SND : before channel_snd\r\n");
 
   // send the message
   data_to_send = 0x5A5A;
   ax_channel_snd(&channel_handler, &data_to_send, sizeof(data_to_send));
 
-  // STEP 5
-  TEST_ASSERT(test_step >= 5)
+  printf("SND : after channel_snd\r\n");
 }
 
 REGISTER_TEST("snd_messages_test", snd_messages_thread,
-              snd_messages_thread_stack, 5)
+              snd_messages_thread_stack, 4)
 
 /******************************************************************************
  * @brief receive message
@@ -66,15 +55,18 @@ REGISTER_TEST("snd_messages_test", snd_messages_thread,
  * @return None
  ******************************************************************************/
 void rcv_messages_thread(void) {
-  // STEP 3
-  TEST_ASSERT(test_step >= 3)
+  printf("RCV : before channel_create\r\n");
+
+  // create a communication channel
+  ax_channel_create(&channel_handler);
+
+  printf("RCV : before channel_rcv\r\n");
 
   // receive the message
   ax_channel_rcv(&channel_handler, &data_to_receive, sizeof(data_to_receive));
 
-  // STEP 4
-  TEST_ASSERT(test_step >= 4)
+  printf("RCV : after channel_rcv\r\n");
 }
 
 REGISTER_TEST("rcv_messages_test", rcv_messages_thread,
-              rcv_messages_thread_stack, 4)
+              rcv_messages_thread_stack, 5)

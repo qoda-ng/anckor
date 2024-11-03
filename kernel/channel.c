@@ -27,6 +27,14 @@ typedef struct channel_t {
 channel_t channel;
 
 /******************************************************************************
+ * channel snd / rcv procedures
+ ******************************************************************************/
+extern void _channel_snd(thread_t *prev_thread, thread_t *next_thread,
+                         const uint64_t *msg);
+extern void _channel_rcv(thread_t *prev_thread, thread_t *next_thread,
+                         const uint64_t *msg);
+
+/******************************************************************************
  * @brief create a communication channel between two tasks
  * @param channel handler
  * @return none
@@ -54,7 +62,8 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
   channel->in = sched_get_current_task();
 
   // block until a task is waiting for receiving
-  if (!channel->out) {
+  // while loop is here to
+  while (!channel->out) {
     // there is no waiting task, go to BLOCKED state and
     // release the cpu
     task_set_state(channel->in, BLOCKED);
@@ -64,10 +73,14 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
     sched_run();
   }
 
-  // there is a waiting task, switch
+  // there is a waiting task so add it in the run queue
+  task_set_state(channel->out, READY);
+  // add the task to the run queue
+  sched_add_task(channel->out);
+  // eventualy do the switch
   // !!! CAUTION !!! this implementation is an early alpha version
   // channel messages can only contain 8-bytes (1 register) of data
-  _channel_snd(channel->in->thread, channel->out->thread, *msg);
+  _channel_snd(&channel->in->thread, &channel->out->thread, msg);
 };
 
 /******************************************************************************
@@ -85,16 +98,11 @@ void channel_rcv(const uint64_t *channel_handler, const uint64_t *msg,
   // register the rcv task
   channel->out = sched_get_current_task();
 
-  // block until a task is waiting for receiving
-  if (!channel->in) {
-    // there is no waiting task, go to BLOCKED state and
-    // release the cpu
-    task_set_state(channel->in, BLOCKED);
+  // release the cpu
+  task_set_state(channel->out, BLOCKED);
 
-    _channel_rcv(channel->in->thread, channel->out->thread, *msg);
+  // remove it from the run queue
+  sched_remove_task(channel->out);
 
-    task_yield();
-  };
-
-  // there is a waiting task, switch
+  _channel_rcv(&channel->in->thread, &channel->out->thread, msg);
 };

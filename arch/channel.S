@@ -17,14 +17,24 @@
 
 .global _channel_snd
 _channel_snd:
-
-    
+    // save ra as we call a subroutine
+    add	    sp, sp, -16
+    sd      ra, 8(sp)
+    // release the cpu
+    call sched_run
+    // restore ra
+    ld	    ra, 8(sp)
+    add	    sp, sp, 16
     ret
 
 .global _channel_rcv
 _channel_rcv:
+    // save ra as we call a subroutine
+    add	    sp, sp, -16
+    sd      ra, 8(sp)
     // release the cpu
-    call task_yield
-    // 
-    
+    call sched_run
+    // restore ra
+    ld	    ra, 8(sp)
+    add	    sp, sp, 16
     ret
