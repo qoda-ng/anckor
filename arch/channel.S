@@ -14,27 +14,30 @@
  * the GNU Lesser General Public License along with this program.  If
  * not, see https://www.gnu.org/licenses/
  */
+#include "offsets.h"
 
 .global _channel_snd
 _channel_snd:
-    // save ra as we call a subroutine
+    # save ra on stack
     add	    sp, sp, -16
     sd      ra, 8(sp)
-    // release the cpu
-    call sched_run
-    // restore ra
+    
+    # switch from snd to rcv task
+    call sched_run_ext
+
+    # restore ra from stack
     ld	    ra, 8(sp)
     add	    sp, sp, 16
     ret
 
 .global _channel_rcv
 _channel_rcv:
-    // save ra as we call a subroutine
+    # save ra as we call a subroutine
     add	    sp, sp, -16
     sd      ra, 8(sp)
-    // release the cpu
+    # release the cpu
     call sched_run
-    // restore ra
+    # restore ra
     ld	    ra, 8(sp)
     add	    sp, sp, 16
     ret

@@ -109,6 +109,15 @@ void sched_run() {
   sched_switch(prev_task, new_task);
 }
 
+void sched_run_ext(task_t *prev_task, task_t *new_task) {
+  task_set_state(new_task, RUNNING);
+
+  // update the current task
+  current_task = new_task;
+
+  sched_switch(prev_task, new_task);
+}
+
 /******************************************************************************
  * @brief add a new task to the run queue
  * @param task to add in the run queue

@@ -34,6 +34,8 @@ void sched_init();
  ******************************************************************************/
 void sched_run();
 
+void sched_run_ext(task_t *, task_t *);
+
 /******************************************************************************
  * @brief add a new task to the run queue
  * @param task to add in the run queue
