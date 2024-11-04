@@ -26,6 +26,7 @@
  ******************************************************************************/
 stack_t snd_messages_thread_stack;
 stack_t rcv_messages_thread_stack;
+stack_t messages_thread_stack;
 
 uint64_t channel_handler = 0;
 uint64_t data_to_send    = 0;
@@ -46,20 +47,12 @@ void snd_messages_thread(void) {
   printf("SND : after channel_snd\r\n");
 }
 
-REGISTER_TEST("snd_messages_test", snd_messages_thread,
-              snd_messages_thread_stack, 4)
-
 /******************************************************************************
  * @brief receive message
  * @param None
  * @return None
  ******************************************************************************/
 void rcv_messages_thread(void) {
-  printf("RCV : before channel_create\r\n");
-
-  // create a communication channel
-  ax_channel_create(&channel_handler);
-
   printf("RCV : before channel_rcv\r\n");
 
   // receive the message
@@ -68,5 +61,22 @@ void rcv_messages_thread(void) {
   printf("RCV : after channel_rcv\r\n");
 }
 
-REGISTER_TEST("rcv_messages_test", rcv_messages_thread,
-              rcv_messages_thread_stack, 5)
+/******************************************************************************
+ * @brief create the channel and the send / rcv threads
+ * @param None
+ * @return None
+ ******************************************************************************/
+void messages_thread(void) {
+  // create a communication channel
+  ax_channel_create(&channel_handler);
+
+  // create the send thread
+  ax_task_create("snd_messages_test", snd_messages_thread,
+                 &snd_messages_thread_stack, 4);
+
+  // create the rcv thread
+  ax_task_create("rcv_messages_test", rcv_messages_thread,
+                 &rcv_messages_thread_stack, 5);
+}
+
+REGISTER_TEST("messages_thread", messages_thread, messages_thread_stack, 3)
