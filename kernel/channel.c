@@ -31,8 +31,7 @@ channel_t channel;
  ******************************************************************************/
 extern void _channel_snd(thread_t *prev_thread, thread_t *next_thread,
                          const uint64_t *msg);
-extern void _channel_rcv(thread_t *prev_thread, thread_t *next_thread,
-                         const uint64_t *msg);
+extern void _channel_rcv(const uint64_t *msg);
 
 /******************************************************************************
  * @brief create a communication channel between two tasks
@@ -104,5 +103,5 @@ void channel_rcv(const uint64_t *channel_handler, const uint64_t *msg,
   // remove it from the run queue
   sched_remove_task(channel->out);
 
-  _channel_rcv(&channel->in->thread, &channel->out->thread, msg);
+  _channel_rcv(msg);
 };
