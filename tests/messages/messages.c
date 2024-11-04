@@ -77,6 +77,8 @@ void messages_thread(void) {
   // create the rcv thread
   ax_task_create("rcv_messages_test", rcv_messages_thread,
                  &rcv_messages_thread_stack, 5);
+
+  ax_task_yield();
 }
 
 REGISTER_TEST("messages_thread", messages_thread, messages_thread_stack, 3)
