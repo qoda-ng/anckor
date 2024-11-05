@@ -42,6 +42,7 @@ void snd_messages_thread(void) {
 
   // send the message
   data_to_send = 0x5A5A;
+  printf("SND : data %x\r\n", data_to_send);
   ax_channel_snd(&channel_handler, &data_to_send, sizeof(data_to_send));
 
   printf("SND : after channel_snd\r\n");
@@ -59,6 +60,7 @@ void rcv_messages_thread(void) {
   ax_channel_rcv(&channel_handler, &data_to_receive, sizeof(data_to_receive));
 
   printf("RCV : after channel_rcv\r\n");
+  printf("RCV : data %x\r\n", data_to_receive);
 }
 
 /******************************************************************************
