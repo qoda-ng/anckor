@@ -21,6 +21,10 @@ _channel_snd:
     # save ra on stack
     add	    sp, sp, -16
     sd      ra, 8(sp)
+
+    # load the data in a2 register
+    mv      t0, a2
+    ld      a2, 0(t0)
     
     # switch from snd to rcv task
     call sched_run_ext
@@ -35,8 +39,19 @@ _channel_rcv:
     # save ra as we call a subroutine
     add	    sp, sp, -16
     sd      ra, 8(sp)
+    # save data address on stack
+    sd      a0, 0(sp)
+
     # release the cpu
     call sched_run
+
+    # we receive the data address in a2 register
+    mv a0, a2
+
+    # load data address
+    ld      t0, 0(sp)
+    sd      a2, 0(t0)
+
     # restore ra
     ld	    ra, 8(sp)
     add	    sp, sp, 16
