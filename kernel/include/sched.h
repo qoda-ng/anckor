@@ -21,6 +21,13 @@
 #include "task.h"
 
 /******************************************************************************
+ * @brief find the next task to run
+ * @param none
+ * @return task to run
+ ******************************************************************************/
+task_t *sched_get_next_task();
+
+/******************************************************************************
  * @brief initiliaze scheduler parameters
  * @param none
  * @return none

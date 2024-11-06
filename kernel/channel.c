@@ -53,6 +53,7 @@ void channel_create(uint64_t *channel_handler) {
  ******************************************************************************/
 void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
                  uint64_t msg_len) {
+  task_t *next_task;
   // get the channel pointer
   channel_t *channel = (channel_t *)channel_handler;
 
@@ -71,16 +72,28 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
     sched_run();
   }
 
+  // snd task goes from RUNNING state to READY state
+  task_set_state(channel->in, READY);
+
   // there is a waiting task so add it in the run queue
   task_set_state(channel->out, READY);
   // add the task to the run queue
   sched_add_task(channel->out);
-  // snd task goes from RUNNING state to READY state
-  task_set_state(channel->in, READY);
-  // eventualy do the switch
-  // !!! CAUTION !!! this implementation is an early alpha version
-  // channel messages can only contain 8-bytes (1 register) of data
-  _channel_snd(channel->in, channel->out, msg);
+
+  next_task = sched_get_next_task();
+
+  if (next_task == channel->out) {
+    sched_set_current_task(channel->out);
+
+    // eventualy do the switch
+    // !!! CAUTION !!! this implementation is an early alpha version
+    // channel messages can only contain 8-bytes (1 register) of data
+    _channel_snd(channel->in, channel->out, msg);
+  } else {
+    sched_set_current_task(next_task);
+
+    sched_run_ext(channel->in, next_task);
+  }
 };
 
 /******************************************************************************
