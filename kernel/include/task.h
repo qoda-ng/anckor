@@ -129,6 +129,15 @@ inline void task_set_state(task_t *task, task_state_t state) {
 }
 
 /******************************************************************************
+ * @brief get the state of the given task
+ * @param
+ * @return task state
+ ******************************************************************************/
+inline task_state_t task_get_state(task_t *task) {
+  return task->state;
+}
+
+/******************************************************************************
  * @brief get the unique ID of a task
  * @param task from the id is read
  * @return task id

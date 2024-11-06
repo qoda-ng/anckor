@@ -60,8 +60,8 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
   // register the sender task
   channel->in = sched_get_current_task();
 
-  // block until a task is waiting for receiving
-  // while loop is here to
+  // block until a rcv task is waiting
+  // we may be awaken up by another task
   while (!channel->out) {
     // there is no waiting task, go to BLOCKED state and
     // release the cpu
@@ -72,17 +72,20 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
     sched_run();
   }
 
-  // snd task goes from RUNNING state to READY state
+  // if the sender was blocked, add in to the run queue
+  if (task_get_state(channel->in) == BLOCKED) sched_add_task(channel->in);
+
+  // snd task goes from RUNNING / BLOCKED state to READY state
   task_set_state(channel->in, READY);
 
   // there is a waiting task so add it in the run queue
   task_set_state(channel->out, READY);
-  // add the task to the run queue
   sched_add_task(channel->out);
 
-  // run the scheduler
+  // run the scheduler as the rcv task might not has the highest priority
   next_task = sched_get_next_task();
 
+  // rcv task has the highest priority
   if (next_task == channel->out) {
     task_set_state(channel->out, RUNNING);
     sched_set_current_task(channel->out);
