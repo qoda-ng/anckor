@@ -27,7 +27,7 @@ _channel_snd:
     ld      a2, 0(t0)
     
     # switch from snd to rcv task
-    call sched_run_ext
+    call sched_switch
 
     # restore ra from stack
     ld	    ra, 8(sp)

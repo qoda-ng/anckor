@@ -20,12 +20,35 @@
 #include "common.h"
 #include "task.h"
 
+#define __no_inline __attribute__((noinline))
+
+/******************************************************************************
+ * context switch procedure
+ ******************************************************************************/
+extern void _switch_to(thread_t *prev_thread, thread_t *next_thread);
+
 /******************************************************************************
  * @brief find the next task to run
  * @param none
  * @return task to run
  ******************************************************************************/
 task_t *sched_get_next_task();
+
+/******************************************************************************
+ * @brief context switch from the scheduler
+ *
+ * This function is used to switch between two task contexts. It should not be
+ * modified without careful attention: the task stack design heavily relies on
+ * how this function saves parameters on the stack.
+ *
+ * The main use of sched_switch is saving RA before jumping to _switch_to and
+ * restore the same register at the output
+ *
+ * @param previous_task address pointer
+ * @param next_task address pointer
+ * @return none
+ ******************************************************************************/
+__no_inline void sched_switch(task_t *prev_task, task_t *new_task);
 
 /******************************************************************************
  * @brief initiliaze scheduler parameters
@@ -40,8 +63,6 @@ void sched_init();
  * @return none
  ******************************************************************************/
 void sched_run();
-
-void sched_run_ext(task_t *, task_t *);
 
 /******************************************************************************
  * @brief add a new task to the run queue

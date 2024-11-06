@@ -95,7 +95,7 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
     task_set_state(channel->out, RUNNING);
     sched_set_current_task(next_task);
 
-    sched_run_ext(channel->in, next_task);
+    sched_switch(channel->in, next_task);
   }
 };
 
