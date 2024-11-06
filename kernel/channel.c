@@ -80,9 +80,11 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
   // add the task to the run queue
   sched_add_task(channel->out);
 
+  // run the scheduler
   next_task = sched_get_next_task();
 
   if (next_task == channel->out) {
+    task_set_state(channel->out, RUNNING);
     sched_set_current_task(channel->out);
 
     // eventualy do the switch
@@ -90,6 +92,7 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
     // channel messages can only contain 8-bytes (1 register) of data
     _channel_snd(channel->in, channel->out, msg);
   } else {
+    task_set_state(channel->out, RUNNING);
     sched_set_current_task(next_task);
 
     sched_run_ext(channel->in, next_task);
