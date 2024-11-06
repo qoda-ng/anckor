@@ -57,4 +57,11 @@ void sched_remove_task(task_t *);
  ******************************************************************************/
 task_t *sched_get_current_task();
 
+/******************************************************************************
+ * @brief set the current running task
+ * @param current_task address pointer
+ * @return none
+ ******************************************************************************/
+void sched_set_current_task(task_t *);
+
 #endif

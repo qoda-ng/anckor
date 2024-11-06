@@ -75,6 +75,8 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
   task_set_state(channel->out, READY);
   // add the task to the run queue
   sched_add_task(channel->out);
+  // snd task goes from RUNNING state to READY state
+  task_set_state(channel->in, READY);
   // eventualy do the switch
   // !!! CAUTION !!! this implementation is an early alpha version
   // channel messages can only contain 8-bytes (1 register) of data

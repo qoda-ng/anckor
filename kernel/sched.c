@@ -109,7 +109,7 @@ void sched_run_ext(task_t *prev_task, task_t *new_task) {
   task_set_state(new_task, RUNNING);
 
   // update the current task
-  current_task = new_task;
+  sched_set_current_task(new_task);
 
   sched_switch(prev_task, new_task);
 }
@@ -139,6 +139,15 @@ void sched_remove_task(task_t *task) {
  ******************************************************************************/
 task_t *sched_get_current_task() {
   return current_task;
+}
+
+/******************************************************************************
+ * @brief set the current running task
+ * @param current_task address pointer
+ * @return none
+ ******************************************************************************/
+void sched_set_current_task(task_t *task) {
+  current_task = task;
 }
 
 /******************************************************************************
