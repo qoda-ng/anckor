@@ -17,6 +17,7 @@
 #include "channel.h"
 
 #include "sched.h"
+#include "stddef.h"
 #include "task.h"
 
 typedef struct channel_t {
@@ -38,8 +39,8 @@ extern void _channel_rcv(const uint64_t *);
  * @return none
  ******************************************************************************/
 void channel_create(uint64_t *channel_handler) {
-  channel.in  = 0;
-  channel.out = 0;
+  channel.in  = NULL;
+  channel.out = NULL;
 
   channel_handler = (uint64_t *)&channel;
 };
@@ -124,4 +125,8 @@ void channel_rcv(const uint64_t *channel_handler, const uint64_t *msg,
   sched_remove_task(channel->out);
 
   _channel_rcv(msg);
+
+  // once message has been consumed, release the channel. This prevents
+  // to re-send a message in the rcv task is not waiting for it
+  channel->out = NULL;
 };
