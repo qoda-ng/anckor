@@ -21,6 +21,8 @@
 #include "printf.h"
 #include "test.h"
 
+#define MAGIC_WORD 0x5DA9CAB3
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -30,21 +32,18 @@ stack_t messages_thread_stack;
 
 uint64_t channel_handler = 0;
 
+uint64_t data_to_send    = 0;
+uint64_t data_to_receive = 0;
+
 /******************************************************************************
  * @brief initalize message and send it
  * @param None
  * @return None
  ******************************************************************************/
 void snd_messages_thread(void) {
-  uint64_t data_to_send = 0;
-  printf("SND : before channel_snd\r\n");
-
   // send the message
-  data_to_send = 0x5A5A;
-  printf("SND : data %x\r\n", data_to_send);
+  data_to_send = MAGIC_WORD;
   ax_channel_snd(&channel_handler, &data_to_send, sizeof(data_to_send));
-
-  printf("SND : after channel_snd\r\n");
 }
 
 /******************************************************************************
@@ -52,16 +51,14 @@ void snd_messages_thread(void) {
  * @param None
  * @return None
  ******************************************************************************/
-uint64_t data_to_receive = 0;
-
 void rcv_messages_thread(void) {
-  printf("RCV : before channel_rcv\r\n");
-
   // receive the message
   ax_channel_rcv(&channel_handler, &data_to_receive, sizeof(data_to_receive));
 
-  printf("RCV : after channel_rcv\r\n");
-  printf("RCV : addr %x / data %x\r\n", &data_to_receive, data_to_receive);
+  if (data_to_receive != MAGIC_WORD)
+    printf("TEST KO : %x\r\n", data_to_receive);
+  else
+    printf("TEST OK\r\n");
 }
 
 /******************************************************************************
