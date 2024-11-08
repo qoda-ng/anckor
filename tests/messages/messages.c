@@ -29,8 +29,6 @@ stack_t rcv_messages_thread_stack;
 stack_t messages_thread_stack;
 
 uint64_t channel_handler = 0;
-uint64_t data_to_send    = 0;
-uint64_t data_to_receive = 0;
 
 /******************************************************************************
  * @brief initalize message and send it
@@ -38,6 +36,7 @@ uint64_t data_to_receive = 0;
  * @return None
  ******************************************************************************/
 void snd_messages_thread(void) {
+  uint64_t data_to_send = 0;
   printf("SND : before channel_snd\r\n");
 
   // send the message
@@ -53,6 +52,8 @@ void snd_messages_thread(void) {
  * @param None
  * @return None
  ******************************************************************************/
+uint64_t data_to_receive = 0;
+
 void rcv_messages_thread(void) {
   printf("RCV : before channel_rcv\r\n");
 
@@ -60,7 +61,7 @@ void rcv_messages_thread(void) {
   ax_channel_rcv(&channel_handler, &data_to_receive, sizeof(data_to_receive));
 
   printf("RCV : after channel_rcv\r\n");
-  printf("RCV : data %x\r\n", data_to_receive);
+  printf("RCV : addr %x / data %x\r\n", &data_to_receive, data_to_receive);
 }
 
 /******************************************************************************
