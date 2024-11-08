@@ -45,9 +45,6 @@ _channel_rcv:
     # release the cpu
     call sched_run
 
-    # we receive the data address in a2 register
-    mv a0, a2
-
     # load data address
     ld      t0, 0(sp)
     sd      a2, 0(t0)
