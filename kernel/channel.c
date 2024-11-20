@@ -65,8 +65,6 @@ void channel_create(uint64_t *channel_handler) {
  ******************************************************************************/
 void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
                  uint64_t msg_len) {
-  // !!!! check if we need to schedule an another task than rcv task
-  task_t *next_task;
   // find channel from handler ID
   channel_t channel = channel_get_from_handler(channel_handler);
 
@@ -91,28 +89,15 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
   // snd task goes from RUNNING / BLOCKED state to READY state
   task_set_state(channel.in, READY);
 
-  // there is a waiting task so add it in the run queue
-  task_set_state(channel.out, READY);
+  // there is a waiting task so switch to it
   sched_add_task(channel.out);
+  task_set_state(channel.out, RUNNING);
+  sched_set_current_task(channel.out);
 
-  // run the scheduler as the rcv task might not has the highest priority
-  next_task = sched_get_next_task();
-
-  // rcv task has the highest priority
-  if (next_task == channel.out) {
-    task_set_state(channel.out, RUNNING);
-    sched_set_current_task(channel.out);
-
-    // eventualy do the switch
-    // !!! CAUTION !!! this implementation is an early alpha version
-    // channel messages can only contain 8-bytes (1 register) of data
-    _channel_snd(channel.in, channel.out, msg);
-  } else {
-    task_set_state(channel.out, RUNNING);
-    sched_set_current_task(next_task);
-
-    sched_switch(channel.in, next_task);
-  }
+  // eventualy do the switch
+  // !!! CAUTION !!! this implementation is an early alpha version
+  // channel messages can only contain 8-bytes (1 register) of data
+  _channel_snd(channel.in, channel.out, msg);
 };
 
 /******************************************************************************
