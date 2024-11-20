@@ -32,15 +32,13 @@ stack_t messages_thread_stack;
 
 uint64_t channel_handler = 0;
 
-uint64_t data_to_send    = 0;
-uint64_t data_to_receive = 0;
-
 /******************************************************************************
  * @brief initalize message and send it
  * @param None
  * @return None
  ******************************************************************************/
 void snd_messages_thread(void) {
+  uint64_t data_to_send = 0;
   // send the message
   data_to_send = MAGIC_WORD;
   ax_channel_snd(&channel_handler, &data_to_send, sizeof(data_to_send));
@@ -52,6 +50,7 @@ void snd_messages_thread(void) {
  * @return None
  ******************************************************************************/
 void rcv_messages_thread(void) {
+  uint64_t data_to_receive = 0;
   // receive the message
   ax_channel_rcv(&channel_handler, &data_to_receive, sizeof(data_to_receive));
 
