@@ -98,6 +98,9 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
   // !!! CAUTION !!! this implementation is an early alpha version
   // channel messages can only contain 8-bytes (1 register) of data
   _channel_snd(channel.in, channel.out, msg);
+
+  // release the channel endpoint
+  channel.in = (task_t *)NULL;
 };
 
 /******************************************************************************
