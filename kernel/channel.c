@@ -35,7 +35,7 @@ extern void _channel_snd(task_t *, task_t *, const uint64_t *);
 extern void _channel_rcv(const uint64_t *);
 
 /******************************************************************************
- * @brief create a communication channel between two tasks
+ * @brief get the channel struct from the channel handler
  * @param channel handler
  * @return none
  ******************************************************************************/
