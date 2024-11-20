@@ -39,6 +39,16 @@ extern void _channel_rcv(const uint64_t *);
  * @param channel handler
  * @return none
  ******************************************************************************/
+static inline channel_t channel_get_from_handler(
+    const uint64_t *channel_handler) {
+  return channel;
+}
+
+/******************************************************************************
+ * @brief create a communication channel between two tasks
+ * @param channel handler
+ * @return none
+ ******************************************************************************/
 void channel_create(uint64_t *channel_handler) {
   channel.in  = NULL;
   channel.out = NULL;
@@ -55,7 +65,10 @@ void channel_create(uint64_t *channel_handler) {
  ******************************************************************************/
 void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
                  uint64_t msg_len) {
+  // !!!! check if we need to schedule an another task than rcv task
   task_t *next_task;
+  // find channel from handler ID
+  channel_t channel = channel_get_from_handler(channel_handler);
 
   // register the sender task
   channel.in = sched_get_current_task();
@@ -111,9 +124,11 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
  ******************************************************************************/
 void channel_rcv(const uint64_t *channel_handler, const uint64_t *msg,
                  uint64_t msg_len) {
+  // find channel from handler ID
+  channel_t channel = channel_get_from_handler(channel_handler);
+
   // register the rcv task
   channel.out = sched_get_current_task();
-  printk("channel->out : addr %x / data %x\r\n", &channel.out, channel.out);
 
   // release the cpu
   task_set_state(channel.out, BLOCKED);
