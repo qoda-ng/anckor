@@ -24,7 +24,7 @@ ax_return task_create(task_id *task_id, task_attr VM_SHARE)
 Create a task and place it on the run queue. If the task attribute is equal to VM_SHARE, the created task shares the existing memory space (such as **tasks**). If not, the task is running in its own memory space (similar to a **process**).
 
 ```C
-ax_return task_exit(task_id *task_id)
+ax_return task_delete(task_id *task_id)
 ```
 
 Kill a task, release its associated memory and kernel objects.
