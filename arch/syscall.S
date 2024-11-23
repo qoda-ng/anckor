@@ -199,7 +199,7 @@ ax_channel_create:
  /*
  * ax_channel_snd syscall
  *
- * a0: channel handler pointer
+ * a0: channel handler
  * a1: data pointer
  * a2: data length
  * a3: not used
