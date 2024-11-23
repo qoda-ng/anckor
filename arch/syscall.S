@@ -124,7 +124,7 @@ ax_task_wakeup:
 
 .global ax_task_delete
 ax_task_delete:
-    li a7, SYSCALL_task_delete
+    li a7, SYSCALL_TASK_DELETE
     # rise exception, this will update mepc register but left
     # the ra register unchanged
     ecall
