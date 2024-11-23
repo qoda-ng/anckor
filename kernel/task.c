@@ -52,7 +52,8 @@ __no_return void task_runtime(void (*task_entry)(void)) {
   task_entry();
 
   // clean the task if ever it returns
-  ax_task_delete();
+  task_t *current_task = sched_get_current_task();
+  ax_task_delete(current_task);
 
   // tell the compiler we will never reach this point
   __builtin_unreachable();
@@ -145,11 +146,9 @@ void task_wakeup(task_t *task) {
  * @param none
  * @return none
  ******************************************************************************/
-__no_return void task_delete() {
-  // get the current_task task
-  task_t *current_task = sched_get_current_task();
+__no_return void task_delete(task_t *task) {
   // remove it from the run queue
-  sched_remove_task(current_task);
+  sched_remove_task(task);
   // call the scheduler
   sched_run();
   // this place should never be reached as the kernel should at least run
