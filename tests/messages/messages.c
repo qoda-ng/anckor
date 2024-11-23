@@ -42,11 +42,7 @@ void snd_messages_thread(void) {
   // send the message
   data_to_send = MAGIC_WORD;
 
-  printf("ici 2 %x\r\n", data_to_send);
-
   ax_channel_snd(channel_handler, &data_to_send, sizeof(data_to_send));
-
-  printf("ici 4 %x\r\n", data_to_send);
 }
 
 /******************************************************************************
@@ -57,11 +53,8 @@ void snd_messages_thread(void) {
 void rcv_messages_thread(void) {
   uint64_t data_to_receive = 0;
 
-  printf("ici 1 %x\r\n", data_to_receive);
   // receive the message
   ax_channel_rcv(channel_handler, &data_to_receive, sizeof(data_to_receive));
-
-  printf("ici 3 %x\r\n", data_to_receive);
 
   if (data_to_receive != MAGIC_WORD)
     printf("TEST KO : %x\r\n", data_to_receive);
