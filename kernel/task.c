@@ -52,8 +52,7 @@ __no_return void task_runtime(void (*task_entry)(void)) {
   task_entry();
 
   // clean the task if ever it returns
-  task_t *current_task = sched_get_current_task();
-  ax_task_delete(current_task);
+  ax_task_delete(sched_get_current_task());
 
   // tell the compiler we will never reach this point
   __builtin_unreachable();
