@@ -21,12 +21,15 @@
 #include "stddef.h"
 #include "task.h"
 
+#define MAX_NB_CHANNEL 10
+
 typedef struct channel_t {
+  bool_t  available;
   task_t *in;
   task_t *out;
 } channel_t;
 
-channel_t channel;
+channel_t channel[MAX_NB_CHANNEL];
 
 /******************************************************************************
  * channel snd / rcv procedures
@@ -40,8 +43,8 @@ extern void _channel_rcv(const uint64_t *);
  * @return none
  ******************************************************************************/
 static inline channel_t channel_get_from_handler(
-    const uint64_t *channel_handler) {
-  return channel;
+    const uint64_t channel_handler) {
+  return channel[channel_handler];
 }
 
 /******************************************************************************
@@ -50,10 +53,10 @@ static inline channel_t channel_get_from_handler(
  * @return none
  ******************************************************************************/
 void channel_create(uint64_t *channel_handler) {
-  channel.in  = NULL;
-  channel.out = NULL;
+  channel[0].in  = NULL;
+  channel[0].out = NULL;
 
-  channel_handler = (uint64_t *)&channel;
+  *channel_handler = 0;
 };
 
 /******************************************************************************
@@ -63,7 +66,7 @@ void channel_create(uint64_t *channel_handler) {
  * @param length of message to send
  * @return none
  ******************************************************************************/
-void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
+void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
                  uint64_t msg_len) {
   // find channel from handler ID
   channel_t channel = channel_get_from_handler(channel_handler);
@@ -110,7 +113,7 @@ void channel_snd(const uint64_t *channel_handler, const uint64_t *msg,
  * @param length of message to send
  * @return none
  ******************************************************************************/
-void channel_rcv(const uint64_t *channel_handler, const uint64_t *msg,
+void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
                  uint64_t msg_len) {
   // find channel from handler ID
   channel_t channel = channel_get_from_handler(channel_handler);

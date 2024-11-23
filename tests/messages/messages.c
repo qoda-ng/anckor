@@ -30,7 +30,7 @@ stack_t snd_messages_thread_stack;
 stack_t rcv_messages_thread_stack;
 stack_t messages_thread_stack;
 
-uint64_t channel_handler = 0;
+uint64_t channel_handler;
 
 /******************************************************************************
  * @brief initalize message and send it
@@ -41,7 +41,12 @@ void snd_messages_thread(void) {
   uint64_t data_to_send = 0;
   // send the message
   data_to_send = MAGIC_WORD;
-  ax_channel_snd(&channel_handler, &data_to_send, sizeof(data_to_send));
+
+  printf("ici 2 %x\r\n", data_to_send);
+
+  ax_channel_snd(channel_handler, &data_to_send, sizeof(data_to_send));
+
+  printf("ici 4 %x\r\n", data_to_send);
 }
 
 /******************************************************************************
@@ -51,8 +56,12 @@ void snd_messages_thread(void) {
  ******************************************************************************/
 void rcv_messages_thread(void) {
   uint64_t data_to_receive = 0;
+
+  printf("ici 1 %x\r\n", data_to_receive);
   // receive the message
-  ax_channel_rcv(&channel_handler, &data_to_receive, sizeof(data_to_receive));
+  ax_channel_rcv(channel_handler, &data_to_receive, sizeof(data_to_receive));
+
+  printf("ici 3 %x\r\n", data_to_receive);
 
   if (data_to_receive != MAGIC_WORD)
     printf("TEST KO : %x\r\n", data_to_receive);

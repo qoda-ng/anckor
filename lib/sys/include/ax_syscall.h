@@ -28,7 +28,7 @@ extern void ax_task_delete(task_t *);
 extern void ax_interrupt_request(interrupt_id_t);
 extern void ax_interrupt_release(interrupt_id_t);
 extern void ax_channel_create(uint64_t *);
-extern void ax_channel_snd(const uint64_t *, const uint64_t *, uint64_t);
-extern void ax_channel_rcv(const uint64_t *, const uint64_t *, uint64_t);
+extern void ax_channel_snd(const uint64_t, const uint64_t *, uint64_t);
+extern void ax_channel_rcv(const uint64_t, const uint64_t *, uint64_t);
 
 #endif

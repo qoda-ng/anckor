@@ -34,7 +34,7 @@ void channel_create(uint64_t *);
  * @param length of message to send
  * @return none
  ******************************************************************************/
-void channel_snd(const uint64_t *, const uint64_t *, uint64_t);
+void channel_snd(const uint64_t, const uint64_t *, uint64_t);
 
 /******************************************************************************
  * @brief receive a message through a communication channel
@@ -43,6 +43,6 @@ void channel_snd(const uint64_t *, const uint64_t *, uint64_t);
  * @param length of message to send
  * @return none
  ******************************************************************************/
-void channel_rcv(const uint64_t *, const uint64_t *, uint64_t);
+void channel_rcv(const uint64_t, const uint64_t *, uint64_t);
 
 #endif
