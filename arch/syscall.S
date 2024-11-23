@@ -111,7 +111,7 @@ ax_task_wakeup:
  /*
  * ax_task_delete syscall
  *
- * a0: not used
+ * a0: task to delete
  * a1: not used
  * a2: not used
  * a3: not used
