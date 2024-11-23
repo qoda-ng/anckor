@@ -25,7 +25,7 @@
  * @param channel handler
  * @return none
  ******************************************************************************/
-void channel_create(uint64_t *);
+k_return_t channel_create(uint64_t *);
 
 /******************************************************************************
  * @brief send a message through a communication channel

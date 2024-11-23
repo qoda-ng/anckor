@@ -24,12 +24,12 @@
 #define MAX_NB_CHANNEL 10
 
 typedef struct channel_t {
-  bool_t  available;
   task_t *in;
   task_t *out;
 } channel_t;
 
 channel_t channel[MAX_NB_CHANNEL];
+uint64_t  channel_index = 0;
 
 /******************************************************************************
  * channel snd / rcv procedures
@@ -52,11 +52,23 @@ static inline channel_t *channel_get_from_handler(
  * @param channel handler
  * @return none
  ******************************************************************************/
-void channel_create(uint64_t *channel_handler) {
-  channel[0].in  = NULL;
-  channel[0].out = NULL;
+k_return_t channel_create(uint64_t *channel_handler) {
+  if (channel_index >= MAX_NB_CHANNEL) {
+    // we reached the maximum number of available channel
+    return K_ERROR;
+  }
 
-  *channel_handler = 0;
+  // create a channel
+  channel[channel_index].in  = NULL;
+  channel[channel_index].out = NULL;
+
+  // return the channel ID to the calling thread
+  *channel_handler = channel_index;
+
+  // update next available channel index
+  channel_index += 1;
+
+  return K_OK;
 };
 
 /******************************************************************************
