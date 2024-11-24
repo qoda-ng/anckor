@@ -19,6 +19,8 @@
 
 #include "common.h"
 
-uint64_t strlen(char const *s);
+uint64_t strlen(char const *);
+char    *strcpy(char *, char const *);
+int      strcmp(char const *, char const *);
 
 #endif

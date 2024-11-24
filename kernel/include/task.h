@@ -65,6 +65,17 @@ typedef struct task_t {
 void task_create(const char *, void (*)(void), stack_t *, uint8_t);
 
 /******************************************************************************
+ * @brief task destroy
+ *
+ * This function deletes the task passed in argument from the system. It does
+ * not call the scheduler
+ *
+ * @param task to destroy
+ * @return none
+ ******************************************************************************/
+void task_destroy();
+
+/******************************************************************************
  * @brief task runtinme
  *
  * This function is used to run task_entry in a controlled environment. It cans
@@ -108,7 +119,7 @@ void task_sleep();
 void task_wakeup(task_t *);
 
 /******************************************************************************
- * @brief task destroy
+ * @brief task exit
  *
  * This function cleans all memory used to save task informations, this
  * comprises all stacks and associated structures. It also delete the task from
@@ -126,6 +137,15 @@ void task_exit();
  ******************************************************************************/
 inline void task_set_state(task_t *task, task_state_t state) {
   task->state = state;
+}
+
+/******************************************************************************
+ * @brief get the state of the given task
+ * @param
+ * @return task state
+ ******************************************************************************/
+inline task_state_t task_get_state(task_t *task) {
+  return task->state;
 }
 
 /******************************************************************************

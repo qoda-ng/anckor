@@ -43,6 +43,30 @@ ax_task_create:
     ret
 
  /*
+ * ax_task_destroy syscall
+ *
+ * a0: task to delete
+ * a1: not used
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+# use .global keyworkd makes the symbol visible to the linker
+.global ax_task_destroy
+ax_task_destroy:
+    li a7, SYSCALL_TASK_DESTROY
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+
+ /*
  * ax_task_yield syscall
  *
  * a0: not used
@@ -175,6 +199,94 @@ ax_interrupt_release:
     ret
 
  /*
+ * ax_channel_create syscall
+ *
+ * a0: channel handler pointer
+ * a1: channel name pointer
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_create
+ax_channel_create:
+    li a7, SYSCALL_CHANNEL_CREATE
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_channel_get syscall
+ *
+ * a0: channel handler pointer
+ * a1: channel name pointer
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_get
+ax_channel_get:
+    li a7, SYSCALL_CHANNEL_GET
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_channel_snd syscall
+ *
+ * a0: channel handler
+ * a1: data pointer
+ * a2: data length
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_snd
+ax_channel_snd:
+    li a7, SYSCALL_CHANNEL_SND
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_channel_rcv syscall
+ *
+ * a0: channel handler
+ * a1: data pointer
+ * a2: data length
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_rcv
+ax_channel_rcv:
+    li a7, SYSCALL_CHANNEL_RCV
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
  * table to save all syscall handlers
  *
  */
@@ -184,17 +296,17 @@ ax_interrupt_release:
 .global _syscall_table_end
 _syscall_table:
     .dword task_create
+    .dword task_delete
     .dword task_yield
     .dword task_sleep
     .dword task_wakeup
     .dword task_exit
     .dword interrupt_request
     .dword interrupt_release
-    .dword sys_default
-    .dword sys_default
-    .dword sys_default
-    .dword sys_default
-    .dword sys_default
+    .dword channel_create
+    .dword channel_get
+    .dword channel_snd
+    .dword channel_rcv
     .dword sys_default
     .dword sys_default
     .dword sys_default

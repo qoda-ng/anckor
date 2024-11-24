@@ -24,7 +24,6 @@
 #define IDLE_PRIO 0
 
 #define __idle_task_data __attribute__((section(".data.idle_task")))
-#define __no_inline      __attribute__((noinline))
 
 /******************************************************************************
  * context switch procedure
@@ -76,11 +75,14 @@ task_t *sched_get_next_task() {
  * modified without careful attention: the task stack design heavily relies on
  * how this function saves parameters on the stack.
  *
+ * The main use of sched_switch is saving RA before jumping to _switch_to and
+ * restore the same register at the output
+ *
  * @param previous_task address pointer
  * @param next_task address pointer
  * @return none
  ******************************************************************************/
-__no_inline static void sched_switch(task_t *prev_task, task_t *new_task) {
+void sched_switch(task_t *prev_task, task_t *new_task) {
   _switch_to(&prev_task->thread, &new_task->thread);
 }
 
@@ -94,14 +96,14 @@ void sched_run() {
   task_t *prev_task;
 
   // save the current task
-  prev_task = current_task;
+  prev_task = sched_get_current_task();
 
   // get the new task to run
   new_task = sched_get_next_task();
   task_set_state(new_task, RUNNING);
 
   // update the current task
-  current_task = new_task;
+  sched_set_current_task(new_task);
 
   sched_switch(prev_task, new_task);
 }
@@ -131,6 +133,15 @@ void sched_remove_task(task_t *task) {
  ******************************************************************************/
 task_t *sched_get_current_task() {
   return current_task;
+}
+
+/******************************************************************************
+ * @brief set the current running task
+ * @param current_task address pointer
+ * @return none
+ ******************************************************************************/
+void sched_set_current_task(task_t *task) {
+  current_task = task;
 }
 
 /******************************************************************************
