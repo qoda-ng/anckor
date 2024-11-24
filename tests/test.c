@@ -61,7 +61,7 @@ void test_engine(void) {
 
     // clean up the thread
     task_t *task_to_delete = (task_t *)test->stack;
-    ax_task_delete(task_to_delete);
+    ax_task_exit(task_to_delete);
 
     // when the test returns, display its result
     if (test_error) {

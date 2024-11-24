@@ -109,7 +109,7 @@ ax_task_wakeup:
     ret
 
  /*
- * ax_task_delete syscall
+ * ax_task_exit syscall
  *
  * a0: task to delete
  * a1: not used
@@ -122,9 +122,9 @@ ax_task_wakeup:
  *
  */
 
-.global ax_task_delete
-ax_task_delete:
-    li a7, SYSCALL_TASK_DELETE
+.global ax_task_exit
+ax_task_exit:
+    li a7, SYSCALL_TASK_EXIT
     # rise exception, this will update mepc register but left
     # the ra register unchanged
     ecall
@@ -275,7 +275,7 @@ _syscall_table:
     .dword task_yield
     .dword task_sleep
     .dword task_wakeup
-    .dword task_delete
+    .dword task_exit
     .dword interrupt_request
     .dword interrupt_release
     .dword channel_create

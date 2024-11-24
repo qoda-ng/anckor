@@ -117,7 +117,7 @@ void task_wakeup(task_t *);
  * @param none
  * @return none
  ******************************************************************************/
-void task_delete(task_t *);
+void task_exit(task_t *);
 
 /******************************************************************************
  * @brief modify the state of the given task
