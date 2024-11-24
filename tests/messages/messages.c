@@ -42,10 +42,13 @@ void snd_messages_thread(void) {
   data_to_send = MAGIC_WORD;
 
   // looking for the channel
-  ax_channel_find(&snd_chan_handler, "my_first_channel");
-
-  // send data through the channel
-  ax_channel_snd(snd_chan_handler, &data_to_send, sizeof(data_to_send));
+  if (ax_channel_find(&snd_chan_handler, "data_channel") < 0) {
+    // we didn't find the channel
+    TEST_ASSERT(false);
+  } else {
+    // send data through the channel
+    ax_channel_snd(snd_chan_handler, &data_to_send, sizeof(data_to_send));
+  }
 }
 
 /******************************************************************************
@@ -58,7 +61,7 @@ void rcv_messages_thread(void) {
   uint64_t rcv_chan_handler;
 
   // create a communication channel
-  ax_channel_create(&rcv_chan_handler, "my_first_channel");
+  ax_channel_create(&rcv_chan_handler, "data_channel");
 
   // receive the message
   ax_channel_rcv(rcv_chan_handler, &data_to_receive, sizeof(data_to_receive));
@@ -84,6 +87,8 @@ void messages_thread(void) {
                  &rcv_messages_thread_stack, 5);
 
   ax_task_yield();
+
+  // end of test, return to ATE engine
 }
 
 REGISTER_TEST("messages_thread", messages_thread, messages_thread_stack, 3)
