@@ -16,6 +16,14 @@
  */
 #include "offsets.h"
 
+ /*
+ * channel_snd routine
+ *
+ * a0: channel input
+ * a1: channel output
+ * a2: msg address
+ *
+ */
 .global _channel_snd
 _channel_snd:
     # save ra on stack
@@ -34,6 +42,12 @@ _channel_snd:
     add	    sp, sp, 16
     ret
 
+ /*
+ * channel_rcv routine
+ *
+ * a0: msg address
+ *
+ */
 .global _channel_rcv
 _channel_rcv:
     # save ra as we call a subroutine
@@ -45,8 +59,9 @@ _channel_rcv:
     # release the cpu
     call sched_run
 
-    # load data address
+    # load data address from stack
     ld      t0, 0(sp)
+    # save transmitted data in receiver address space
     sd      a2, 0(t0)
 
     # restore ra
