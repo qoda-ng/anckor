@@ -18,8 +18,8 @@
 #ifndef TEST_H
 #define TEST_H
 
+#include "ax_syscall.h"
 #include "common.h"
-#include "task.h"
 
 #define _test_section __attribute__((section(".data.tests")))
 

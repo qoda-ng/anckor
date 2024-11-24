@@ -18,7 +18,6 @@
 #include "include/test.h"
 
 #include "app.h"
-#include "ax_syscall.h"
 #include "printf.h"
 
 /*******************************************************************************

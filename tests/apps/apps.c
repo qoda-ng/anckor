@@ -34,6 +34,8 @@ static uint8_t test_step = 0;
 void apps_test_thread(void) {
   test_step += 1;
   TEST_ASSERT(test_step >= 1)
+
+  TEST_END()
 }
 
 REGISTER_TEST("apps_test", apps_test_thread, apps_test_stack, 3)

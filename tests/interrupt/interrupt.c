@@ -72,16 +72,14 @@ void interrupt_thread(void) {
   stop_date_in_us = reg_read_double_word(TIMER_MTIME_ADDR) / 10UL;
 
   duration_in_us = stop_date_in_us - start_date_in_us;
-  printk("Duration : %d\r\n", duration_in_us);
 
   if ((duration_in_us > (time_t)TIMER_LO_LIMIT_IN_US) &&
       (duration_in_us < (time_t)TIMER_HI_LIMIT_IN_US)) {
     test_step += 1;
-    printk("TEST OK\r\n");
+    TEST_ASSERT(test_step >= 3)
   }
 
-  // STEP 3
-  TEST_ASSERT(test_step >= 3)
+  TEST_END()
 }
 
 REGISTER_TEST("interrupt_test", interrupt_thread, interrupt_thread_stack, 5)
