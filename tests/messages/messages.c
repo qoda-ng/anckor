@@ -58,13 +58,14 @@ void snd_messages_thread(void) {
  ******************************************************************************/
 void rcv_messages_thread(void) {
   uint64_t data_to_receive = 0;
+  uint64_t data_len        = 0;
   uint64_t rcv_chan_handler;
 
   // create a communication channel
   ax_channel_create(&rcv_chan_handler, "data_channel");
 
   // receive the message
-  ax_channel_rcv(rcv_chan_handler, &data_to_receive, sizeof(data_to_receive));
+  ax_channel_rcv(rcv_chan_handler, &data_to_receive, &data_len);
 
   TEST_ASSERT(data_to_receive == MAGIC_WORD);
 }

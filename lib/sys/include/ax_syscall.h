@@ -30,6 +30,6 @@ extern void ax_interrupt_release(interrupt_id_t);
 extern k_return_t ax_channel_create(uint64_t *, const char *);
 extern k_return_t ax_channel_get(uint64_t *, const char *);
 extern void       ax_channel_snd(const uint64_t, const uint64_t *, uint64_t);
-extern void       ax_channel_rcv(const uint64_t, const uint64_t *, uint64_t);
+extern void       ax_channel_rcv(const uint64_t, const uint64_t *, uint64_t *);
 
 #endif

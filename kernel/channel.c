@@ -159,7 +159,7 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
  * @return none
  ******************************************************************************/
 void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
-                 uint64_t msg_len) {
+                 uint64_t *msg_len) {
   // find channel from handler ID
   channel_t *channel = channel_get_from_handler(channel_handler);
 
