@@ -30,8 +30,6 @@ stack_t snd_messages_thread_stack;
 stack_t rcv_messages_thread_stack;
 stack_t messages_thread_stack;
 
-uint64_t channel_handler;
-
 /******************************************************************************
  * @brief initalize message and send it
  * @param None
@@ -39,10 +37,15 @@ uint64_t channel_handler;
  ******************************************************************************/
 void snd_messages_thread(void) {
   uint64_t data_to_send = 0;
+  uint64_t snd_chan_handler;
   // send the message
   data_to_send = MAGIC_WORD;
 
-  ax_channel_snd(channel_handler, &data_to_send, sizeof(data_to_send));
+  // looking for the channel
+  ax_channel_find(&snd_chan_handler, "my_first_channel");
+
+  // send data through the channel
+  ax_channel_snd(snd_chan_handler, &data_to_send, sizeof(data_to_send));
 }
 
 /******************************************************************************
@@ -52,9 +55,13 @@ void snd_messages_thread(void) {
  ******************************************************************************/
 void rcv_messages_thread(void) {
   uint64_t data_to_receive = 0;
+  uint64_t rcv_chan_handler;
+
+  // create a communication channel
+  ax_channel_create(&rcv_chan_handler, "my_first_channel");
 
   // receive the message
-  ax_channel_rcv(channel_handler, &data_to_receive, sizeof(data_to_receive));
+  ax_channel_rcv(rcv_chan_handler, &data_to_receive, sizeof(data_to_receive));
 
   if (data_to_receive != MAGIC_WORD)
     printf("TEST KO : %x\r\n", data_to_receive);
@@ -68,9 +75,6 @@ void rcv_messages_thread(void) {
  * @return None
  ******************************************************************************/
 void messages_thread(void) {
-  // create a communication channel
-  ax_channel_create(&channel_handler, "my_first_channel");
-
   // create the send thread
   ax_task_create("snd_messages_test", snd_messages_thread,
                  &snd_messages_thread_stack, 4);
