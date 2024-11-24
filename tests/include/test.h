@@ -23,6 +23,8 @@
 
 #define _test_section __attribute__((section(".data.tests")))
 
+#define TEST_END_WORD 0x55ABBA55
+
 /*******************************************************************************
  * macros to register test applications and run them with the ATE
  ******************************************************************************/
@@ -56,5 +58,11 @@ void test_set_error(bool_t);
   if (!(_expr)) {          \
     test_set_error(true);  \
   }
+
+#define TEST_END()                                    \
+  uint64_t test_data = TEST_END_WORD;                 \
+  uint64_t test_chan_handler;                         \
+  ax_channel_get(&test_chan_handler, "test_channel"); \
+  ax_channel_snd(test_chan_handler, &test_data, sizeof(test_data));
 
 #endif

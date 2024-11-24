@@ -36,10 +36,8 @@ stack_t messages_thread_stack;
  * @return None
  ******************************************************************************/
 void snd_messages_thread(void) {
-  uint64_t data_to_send = 0;
+  uint64_t data_to_send = MAGIC_WORD;
   uint64_t snd_chan_handler;
-  // send the message
-  data_to_send = MAGIC_WORD;
 
   // looking for the channel
   if (ax_channel_get(&snd_chan_handler, "data_channel") < 0) {
@@ -87,6 +85,7 @@ void messages_thread(void) {
   ax_task_yield();
 
   // end of test, return to ATE engine
+  TEST_END();
 }
 
 REGISTER_TEST("messages_thread", messages_thread, messages_thread_stack, 3)
