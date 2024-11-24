@@ -59,9 +59,8 @@ void test_engine(void) {
 
     if (test_data != TEST_END_WORD) test_error = true;
 
-    // clean up the thread
-    task_t *task_to_delete = (task_t *)test->stack;
-    ax_task_exit(task_to_delete);
+    // clean up the task
+    ax_task_destroy((task_t *)test->stack);
 
     // when the test returns, display its result
     if (test_error) {

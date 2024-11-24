@@ -52,7 +52,7 @@ __no_return void task_runtime(void (*task_entry)(void)) {
   task_entry();
 
   // clean the task if ever it returns
-  ax_task_exit(sched_get_current_task());
+  ax_task_exit();
 
   // tell the compiler we will never reach this point as the kernel should
   // at least run the init task
@@ -143,14 +143,36 @@ void task_wakeup(task_t *task) {
  * comprises all stacks and associated structures. It also deletes the task from
  * the scheduler runqueue.
  *
+ * It is used when task_entry returns to clean up thread's memory
+ *
  * @param none
  * @return none
  ******************************************************************************/
-void task_exit(task_t *task) {
+void task_exit() {
+  task_t *task = sched_get_current_task();
   // tag the deleted task as blocked
   task_set_state(task, BLOCKED);
   // remove it from the run queue
   sched_remove_task(task);
   // call the scheduler
   sched_run();
+}
+
+/******************************************************************************
+ * @brief task delete
+ *
+ * This function cleans all memory used to save task information, this
+ * comprises all stacks and associated structures. It also deletes the task from
+ * the scheduler runqueue.
+ *
+ * Instead of task_exit, it's used to delete a task from an another task
+ *
+ * @param task to delete
+ * @return none
+ ******************************************************************************/
+void task_delete(task_t *task) {
+  // tag the deleted task as blocked
+  task_set_state(task, BLOCKED);
+  // remove it from the run queue
+  sched_remove_task(task);
 }

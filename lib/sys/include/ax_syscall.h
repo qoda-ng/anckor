@@ -21,10 +21,11 @@
 #include "task.h"
 
 extern void ax_task_create(const char *, void (*)(void), stack_t *, uint8_t);
+extern void ax_task_destroy(task_t *);
 extern void ax_task_yield(void);
 extern void ax_task_sleep(void);
 extern void ax_task_wakeup(task_t *);
-extern void ax_task_exit(task_t *);
+extern void ax_task_exit(void);
 extern void ax_interrupt_request(interrupt_id_t);
 extern void ax_interrupt_release(interrupt_id_t);
 extern k_return_t ax_channel_create(uint64_t *, const char *);
