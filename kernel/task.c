@@ -146,6 +146,8 @@ void task_wakeup(task_t *task) {
  * @return none
  ******************************************************************************/
 __no_return void task_delete(task_t *task) {
+  // tag the deleted task as blocked
+  task_set_state(task, BLOCKED);
   // remove it from the run queue
   sched_remove_task(task);
   // call the scheduler
