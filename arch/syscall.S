@@ -197,7 +197,7 @@ ax_channel_create:
     ret
 
  /*
- * ax_channel_find syscall
+ * ax_channel_get syscall
  *
  * a0: channel handler pointer
  * a1: channel name pointer
@@ -210,9 +210,9 @@ ax_channel_create:
  *
  */
 
-.global ax_channel_find
-ax_channel_find:
-    li a7, SYSCALL_CHANNEL_FIND
+.global ax_channel_get
+ax_channel_get:
+    li a7, SYSCALL_CHANNEL_GET
     # rise exception, this will update mepc register but left
     # the ra register unchanged
     ecall
@@ -279,7 +279,7 @@ _syscall_table:
     .dword interrupt_request
     .dword interrupt_release
     .dword channel_create
-    .dword channel_find
+    .dword channel_get
     .dword channel_snd
     .dword channel_rcv
     .dword sys_default

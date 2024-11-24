@@ -42,7 +42,7 @@ void snd_messages_thread(void) {
   data_to_send = MAGIC_WORD;
 
   // looking for the channel
-  if (ax_channel_find(&snd_chan_handler, "data_channel") < 0) {
+  if (ax_channel_get(&snd_chan_handler, "data_channel") < 0) {
     // we didn't find the channel
     TEST_ASSERT(false);
   } else {
