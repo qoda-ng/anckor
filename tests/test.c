@@ -59,11 +59,9 @@ void test_engine(void) {
 
     if (test_data != TEST_END_WORD) test_error = true;
 
-    // ax_task_yield();
-
     // clean up the thread
-    // task_t *task_to_delete = (task_t *)test->stack;
-    // ax_task_delete(task_to_delete);
+    task_t *task_to_delete = (task_t *)test->stack;
+    ax_task_delete(task_to_delete);
 
     // when the test returns, display its result
     if (test_error) {
@@ -73,7 +71,6 @@ void test_engine(void) {
       tests_passed += 1;
       printf("ATE - %s - passed\r\n", test->name);
     }
-    // create a thread for the next test and go on
   }
 
   // all registered tests have been runned
