@@ -61,7 +61,7 @@ void test_engine(void) {
   }
 
   // all registered tests have been runned
-  if (test_error) {
+  if (tests_failed) {
     printf("ATE - FAILED - %d passed - %d failed\r\n", tests_passed,
            tests_failed);
   } else {

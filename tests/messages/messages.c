@@ -66,10 +66,7 @@ void rcv_messages_thread(void) {
   // receive the message
   ax_channel_rcv(rcv_chan_handler, &data_to_receive, sizeof(data_to_receive));
 
-  if (data_to_receive != MAGIC_WORD)
-    printf("TEST KO : %x\r\n", data_to_receive);
-  else
-    printf("TEST OK\r\n");
+  TEST_ASSERT(data_to_receive == MAGIC_WORD);
 }
 
 /******************************************************************************
