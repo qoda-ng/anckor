@@ -55,8 +55,6 @@ void test_set_error(bool_t);
 #define TEST_ASSERT(_expr) \
   if (!(_expr)) {          \
     test_set_error(true);  \
-  } else {                 \
-    test_set_error(false); \
   }
 
 #endif
