@@ -178,7 +178,7 @@ ax_interrupt_release:
  * ax_channel_create syscall
  *
  * a0: channel handler pointer
- * a1: not used
+ * a1: channel name pointer
  * a2: not used
  * a3: not used
  * a4: not used
@@ -191,6 +191,28 @@ ax_interrupt_release:
 .global ax_channel_create
 ax_channel_create:
     li a7, SYSCALL_CHANNEL_CREATE
+    # rise exception, this will update mepc register but left
+    # the ra register unchanged
+    ecall
+    ret
+
+ /*
+ * ax_channel_find syscall
+ *
+ * a0: channel handler pointer
+ * a1: channel name pointer
+ * a2: not used
+ * a3: not used
+ * a4: not used
+ * a5: not used
+ * a6: not used
+ * a7: syscall number
+ *
+ */
+
+.global ax_channel_find
+ax_channel_find:
+    li a7, SYSCALL_CHANNEL_FIND
     # rise exception, this will update mepc register but left
     # the ra register unchanged
     ecall
@@ -257,9 +279,9 @@ _syscall_table:
     .dword interrupt_request
     .dword interrupt_release
     .dword channel_create
+    .dword channel_find
     .dword channel_snd
     .dword channel_rcv
-    .dword sys_default
     .dword sys_default
     .dword sys_default
     .dword sys_default

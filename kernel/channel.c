@@ -19,11 +19,14 @@
 #include "printk.h"
 #include "sched.h"
 #include "stddef.h"
+#include "string.h"
 #include "task.h"
 
-#define MAX_NB_CHANNEL 10
+#define MAX_NB_CHANNEL          10
+#define MAX_CHANNEL_NAME_LENGTH 20
 
 typedef struct channel_t {
+  char    name[MAX_CHANNEL_NAME_LENGTH];
   task_t *in;
   task_t *out;
 } channel_t;
@@ -50,11 +53,19 @@ static inline channel_t *channel_get_from_handler(
 /******************************************************************************
  * @brief create a communication channel between two tasks
  * @param channel handler
+ * @param channel name
  * @return none
  ******************************************************************************/
-k_return_t channel_create(uint64_t *channel_handler) {
+k_return_t channel_create(uint64_t *channel_handler, const char *name) {
   if (channel_index >= MAX_NB_CHANNEL) {
     // we reached the maximum number of available channel
+    return K_ERROR;
+  }
+
+  // register the channel name
+  if (strlen(name) < MAX_CHANNEL_NAME_LENGTH) {
+    strcpy(channel[channel_index].name, name);
+  } else {
     return K_ERROR;
   }
 
@@ -69,6 +80,28 @@ k_return_t channel_create(uint64_t *channel_handler) {
   channel_index += 1;
 
   return K_OK;
+};
+
+/******************************************************************************
+ * @brief return the channel handler corresponding to the given name if any
+ * @param channel handler
+ * @param channel name
+ * @return none
+ ******************************************************************************/
+k_return_t channel_find(uint64_t *channel_handler, const char *name) {
+  uint64_t chan_index = 0;
+  while (chan_index <= MAX_NB_CHANNEL) {
+    if (strcmp(channel[chan_index].name, name) == 0) {
+      // we found the channel corresponding to the given name
+      *channel_handler = chan_index;
+
+      return K_OK;
+    } else {
+      chan_index += 1;
+    }
+  }
+
+  return K_ERROR;
 };
 
 /******************************************************************************

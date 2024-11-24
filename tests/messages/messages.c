@@ -69,7 +69,7 @@ void rcv_messages_thread(void) {
  ******************************************************************************/
 void messages_thread(void) {
   // create a communication channel
-  ax_channel_create(&channel_handler);
+  ax_channel_create(&channel_handler, "my_first_channel");
 
   // create the send thread
   ax_task_create("snd_messages_test", snd_messages_thread,

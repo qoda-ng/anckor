@@ -25,7 +25,15 @@
  * @param channel handler
  * @return none
  ******************************************************************************/
-k_return_t channel_create(uint64_t *);
+k_return_t channel_create(uint64_t *, const char *);
+
+/******************************************************************************
+ * @brief return the channel handler corresponding to the given name if any
+ * @param channel handler
+ * @param channel name
+ * @return none
+ ******************************************************************************/
+k_return_t channel_find(uint64_t *channel_handler, const char *name);
 
 /******************************************************************************
  * @brief send a message through a communication channel
