@@ -55,7 +55,7 @@ ATE - Anckor test engine
 ATE - PASSED - 4 passed - 0 failed
 ```
 
-With the default configuration, the kernel builds and runs the [tests](./tests/). if all tes
+With the default configuration, the kernel builds and runs the [tests](./tests/).
 
 ## Getting started
 
