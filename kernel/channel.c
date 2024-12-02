@@ -29,6 +29,8 @@ typedef struct channel_t {
   char    name[MAX_CHANNEL_NAME_LENGTH];
   task_t *in;
   task_t *out;
+  bool    rcv_rdy;
+  bool    snd_rdy;
 } channel_t;
 
 channel_t channel[MAX_NB_CHANNEL];
@@ -72,6 +74,10 @@ k_return_t channel_create(uint64_t *channel_handler, const char *name) {
   // create a channel
   channel[channel_index].in  = NULL;
   channel[channel_index].out = NULL;
+
+  // initialize channel access flags
+  channel[channel_index].rcv_rdy = false;
+  channel[channel_index].snd_rdy = false;
 
   // return the channel ID to the calling thread
   *channel_handler = channel_index;
@@ -119,9 +125,12 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   // register the sender task
   channel->in = sched_get_current_task();
 
+  // set the task as ready to snd
+  channel->snd_rdy = true;
+
   // block until a rcv task is waiting
   // we may be awaken up by another task
-  while (!channel->out) {
+  while (!channel->rcv_rdy) {
     // there is no waiting task, go to BLOCKED state and
     // release the cpu
     task_set_state(channel->in, BLOCKED);
@@ -142,13 +151,13 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   task_set_state(channel->out, RUNNING);
   sched_set_current_task(channel->out);
 
-  // eventualy do the switch
+  // direct switch without calling the scheduler
   // !!! CAUTION !!! this implementation is an early alpha version
   // channel messages can only contain 8-bytes (1 register) of data
   _channel_snd(channel->in, channel->out, msg);
 
   // release the channel endpoint
-  channel->in = (task_t *)NULL;
+  channel->snd_rdy = false;
 };
 
 /******************************************************************************
@@ -166,6 +175,9 @@ void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
   // register the rcv task
   channel->out = sched_get_current_task();
 
+  // set the task as ready to receive
+  channel->rcv_rdy = true;
+
   // release the cpu
   task_set_state(channel->out, BLOCKED);
 
@@ -176,5 +188,5 @@ void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
 
   // once message has been consumed, release the channel. This prevents
   // to re-send a message if the rcv task is not waiting for it
-  channel->out = (task_t *)NULL;
+  channel->rcv_rdy = false;
 };
