@@ -57,6 +57,8 @@ void test_engine(void) {
     ax_channel_rcv(test_chan_handler, &test_data, &test_data_len);
 
     if (test_data != TEST_END_WORD) test_error = true;
+    // reset trigger word
+    test_data = 0;
 
     // clean up the task
     ax_task_destroy((task_t *)test->stack);
