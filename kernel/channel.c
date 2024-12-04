@@ -30,6 +30,7 @@ typedef struct channel_t {
   task_t *in;
   task_t *out;
   bool    rcv_rdy;
+  bool    snd_rdy;
 } channel_t;
 
 channel_t channel[MAX_NB_CHANNEL];
@@ -76,6 +77,7 @@ k_return_t channel_create(uint64_t *channel_handler, const char *name) {
 
   // initialize channel access flag
   channel[channel_index].rcv_rdy = false;
+  channel[channel_index].snd_rdy = false;
 
   // return the channel ID to the calling thread
   *channel_handler = channel_index;
@@ -123,17 +125,12 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   // register the sender task
   channel->in = sched_get_current_task();
 
+  // set the task as ready to send
+  channel->snd_rdy = true;
+
   // block until a rcv task is ready
   // we may be awaken up by another task
-  while (!channel->rcv_rdy) {
-    // there is no waiting task, go to BLOCKED state and
-    // release the cpu
-    task_set_state(channel->in, BLOCKED);
-    // remove it from the run queue
-    sched_remove_task(channel->in);
-
-    sched_run();
-  }
+  while (!channel->rcv_rdy) task_sleep();
 
   // if the sender was blocked, add in to the run queue
   if (task_get_state(channel->in) == BLOCKED) sched_add_task(channel->in);
@@ -154,6 +151,9 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
     // slow path
     // need to be implemented
   }
+
+  // set the task as ready to send
+  channel->snd_rdy = false;
 };
 
 /******************************************************************************
@@ -173,6 +173,8 @@ void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
 
   // set the task as ready to receive
   channel->rcv_rdy = true;
+
+  if (channel->snd_rdy) task_wakeup(channel->in);
 
   // release the cpu
   task_set_state(channel->out, BLOCKED);
