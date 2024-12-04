@@ -30,7 +30,6 @@ typedef struct channel_t {
   task_t *in;
   task_t *out;
   bool    rcv_rdy;
-  bool    snd_rdy;
 } channel_t;
 
 channel_t channel[MAX_NB_CHANNEL];
@@ -75,9 +74,8 @@ k_return_t channel_create(uint64_t *channel_handler, const char *name) {
   channel[channel_index].in  = NULL;
   channel[channel_index].out = NULL;
 
-  // initialize channel access flags
+  // initialize channel access flag
   channel[channel_index].rcv_rdy = false;
-  channel[channel_index].snd_rdy = false;
 
   // return the channel ID to the calling thread
   *channel_handler = channel_index;
@@ -125,9 +123,6 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   // register the sender task
   channel->in = sched_get_current_task();
 
-  // set the task as ready to snd
-  channel->snd_rdy = true;
-
   // block until a rcv task is ready
   // we may be awaken up by another task
   while (!channel->rcv_rdy) {
@@ -155,9 +150,6 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   // !!! CAUTION !!! this implementation is an early alpha version
   // channel messages can only contain 8-bytes (1 register) of data
   _channel_snd(channel->in, channel->out, msg);
-
-  // release the channel endpoint
-  channel->snd_rdy = false;
 };
 
 /******************************************************************************
