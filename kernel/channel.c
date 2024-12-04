@@ -128,7 +128,7 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   // set the task as ready to snd
   channel->snd_rdy = true;
 
-  // block until a rcv task is waiting
+  // block until a rcv task is ready
   // we may be awaken up by another task
   while (!channel->rcv_rdy) {
     // there is no waiting task, go to BLOCKED state and
@@ -186,7 +186,10 @@ void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
 
   _channel_rcv(msg);
 
-  // once message has been consumed, release the channel. This prevents
-  // to re-send a message if the rcv task is not waiting for it
+  // the message has been copied but not consumed. We can unblock
+  // the snd thread but we uncheck the rcv_rdy flag to avoid the snd thread
+  // to re-send a message.
   channel->rcv_rdy = false;
+
+  // !!! unlock snd task here !!!
 };
