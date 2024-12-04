@@ -179,8 +179,8 @@ void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
   // set the task as ready to receive
   channel->rcv_rdy = true;
 
-  // snd task is blocked, waiting to send its message
   if (channel->snd_rdy) {
+    // snd task is blocked, waiting to send its message
     task_set_state(channel->in, READY);
     // add it to the run queue
     sched_add_task(channel->in);
