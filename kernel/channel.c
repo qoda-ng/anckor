@@ -146,10 +146,15 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
   task_set_state(channel->out, RUNNING);
   sched_set_current_task(channel->out);
 
-  // direct switch without calling the scheduler
-  // !!! CAUTION !!! this implementation is an early alpha version
-  // channel messages can only contain 8-bytes (1 register) of data
-  _channel_snd(channel->in, channel->out, msg);
+  if (msg_len <= DOUBLE_WORD_SIZE) {
+    // fast path for short messages
+    // direct switch without calling the scheduler
+    _channel_snd(channel->in, channel->out, msg);
+  }
+  {
+    // slow path
+    // need to be implemented
+  }
 };
 
 /******************************************************************************

@@ -28,6 +28,8 @@
 #define uint8_t  unsigned char
 #define bool_t   bool
 
+#define DOUBLE_WORD_SIZE sizeof(uint64_t)
+
 /******************************************************************************
  * @struct k_return_t
  * @brief general kernel error return code
