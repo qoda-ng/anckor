@@ -29,6 +29,8 @@
  ******************************************************************************/
 stack_t snd_messages_thread_stack;
 stack_t rcv_messages_thread_stack;
+stack_t snd_messages_thread_stack_2;
+stack_t rcv_messages_thread_stack_2;
 stack_t messages_thread_stack;
 
 /******************************************************************************
@@ -129,11 +131,11 @@ void messages_thread(void) {
 
   // create the send thread
   ax_task_create("snd_messages_test_2", snd_messages_thread_2,
-                 &snd_messages_thread_stack, 5);
+                 &snd_messages_thread_stack_2, 5);
 
   // create the rcv thread
   ax_task_create("rcv_messages_test_2", rcv_messages_thread_2,
-                 &rcv_messages_thread_stack, 4);
+                 &rcv_messages_thread_stack_2, 4);
 
   ax_task_yield();
 

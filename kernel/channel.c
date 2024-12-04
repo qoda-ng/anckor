@@ -130,12 +130,17 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
 
   // block until a rcv task is ready
   // we may be awaken up by another task
-  while (!channel->rcv_rdy) task_sleep();
+  while (!channel->rcv_rdy) {
+    // there is no waiting task, go to BLOCKED state and
+    // release the cpu
+    task_set_state(channel->in, BLOCKED);
+    // remove it from the run queue
+    sched_remove_task(channel->in);
 
-  // if the sender was blocked, add in to the run queue
-  if (task_get_state(channel->in) == BLOCKED) sched_add_task(channel->in);
+    sched_run();
+  }
 
-  // snd task goes from RUNNING / BLOCKED state to READY state
+  // snd task is in RUNNING state, set it to READY state
   task_set_state(channel->in, READY);
 
   // there is a waiting task so switch to it
@@ -174,7 +179,12 @@ void channel_rcv(const uint64_t channel_handler, const uint64_t *msg,
   // set the task as ready to receive
   channel->rcv_rdy = true;
 
-  if (channel->snd_rdy) task_wakeup(channel->in);
+  // snd task is blocked, waiting to send its message
+  if (channel->snd_rdy) {
+    task_set_state(channel->in, READY);
+    // add it to the run queue
+    sched_add_task(channel->in);
+  }
 
   // release the cpu
   task_set_state(channel->out, BLOCKED);
