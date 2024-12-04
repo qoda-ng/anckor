@@ -150,8 +150,7 @@ void channel_snd(const uint64_t channel_handler, const uint64_t *msg,
     // fast path for short messages
     // direct switch without calling the scheduler
     _channel_snd(channel->in, channel->out, msg);
-  }
-  {
+  } else {
     // slow path
     // need to be implemented
   }
