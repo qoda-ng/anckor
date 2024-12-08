@@ -46,3 +46,8 @@ rsource "tests/Kconfig"
 
 endmenu
 
+menu "examples"
+
+rsource "examples/Kconfig"
+
+endmenu
