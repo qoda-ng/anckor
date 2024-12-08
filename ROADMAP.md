@@ -14,7 +14,6 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 - [x] exception management
 - [x] syscalls
 - [x] Interrupt management
-- [x] synchronous message-based IPC
 - [ ] heap allocator (binary buddy system)
 - [ ] cooperative scheduling with min heap priority queue
 - [ ] User / Kernel modes protection
@@ -31,6 +30,7 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 
 ### r-0.4.0 / Inter-Process Communication
 
+- [x] synchronous message-based IPC
 - [ ] asynchronous signal-based IPC
 
 ### r-0.5.0 / Drivers support
