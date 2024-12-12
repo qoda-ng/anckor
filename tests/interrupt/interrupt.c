@@ -25,8 +25,10 @@
 
 #define TIMER_PERIOD_IN_S 0.3
 
-#define TIMER_LO_LIMIT_IN_US (TIMER_PERIOD_IN_S * ARCH_TIMER_RATE * 0.8 / 10UL)
-#define TIMER_HI_LIMIT_IN_US (TIMER_PERIOD_IN_S * ARCH_TIMER_RATE * 1.2 / 10UL)
+#define NB_INTERRUPT_LOOP 5
+
+#define TIMER_LO_LIMIT_IN_US (TIMER_PERIOD_IN_S * ARCH_TIMER_RATE * 0.99 / 10UL)
+#define TIMER_HI_LIMIT_IN_US (TIMER_PERIOD_IN_S * ARCH_TIMER_RATE * 1.01 / 10UL)
 
 /*******************************************************************************
  * Definitions
@@ -46,38 +48,33 @@ void interrupt_thread(void) {
   time_t stop_date_in_us  = 0;
   time_t duration_in_us   = 0;
 
-  // STEP 1
-  test_step += 1;
-  TEST_ASSERT(test_step >= 1)
+  while (test_step <= NB_INTERRUPT_LOOP) {
+    // get the current time
+    start_date_in_us = reg_read_double_word(TIMER_MTIME_ADDR) / 10UL;
 
-  // get the current time
-  start_date_in_us = reg_read_double_word(TIMER_MTIME_ADDR) / 10UL;
+    // set the timer to wait TIMER_PERIOD_IN_S
+    raw_timer_value = reg_read_double_word(TIMER_MTIME_ADDR);
+    raw_timer_value += (time_t)(TIMER_PERIOD_IN_S * ARCH_TIMER_RATE);
+    reg_write_double_word(TIMER_MTIMECMP_ADDR, raw_timer_value);
 
-  // set the timer to wait 1 s
-  raw_timer_value = reg_read_double_word(TIMER_MTIME_ADDR);
-  raw_timer_value += (time_t)(TIMER_PERIOD_IN_S * ARCH_TIMER_RATE);
-  reg_write_double_word(TIMER_MTIMECMP_ADDR, raw_timer_value);
+    // enable the interrupt in csr register
+    ax_interrupt_request(TIMER_INTERRUPT);
 
-  // enable the interrupt in csr register
-  ax_interrupt_request(TIMER_INTERRUPT);
+    // go to sleep, the interrupt will wake up the task in 1s
+    ax_task_sleep();
 
-  // go to sleep, the interrupt will wake up the task in 1s
-  ax_task_sleep();
+    // get the current time
+    stop_date_in_us = reg_read_double_word(TIMER_MTIME_ADDR) / 10UL;
 
-  // STEP 2
-  test_step += 1;
-  TEST_ASSERT(test_step >= 2)
+    duration_in_us = stop_date_in_us - start_date_in_us;
 
-  // get the current time
-  stop_date_in_us = reg_read_double_word(TIMER_MTIME_ADDR) / 10UL;
-
-  duration_in_us = stop_date_in_us - start_date_in_us;
-
-  if ((duration_in_us > (time_t)TIMER_LO_LIMIT_IN_US) &&
-      (duration_in_us < (time_t)TIMER_HI_LIMIT_IN_US)) {
-    test_step += 1;
-    TEST_ASSERT(test_step >= 3)
+    if ((duration_in_us > (time_t)TIMER_LO_LIMIT_IN_US) &&
+        (duration_in_us < (time_t)TIMER_HI_LIMIT_IN_US)) {
+      test_step += 1;
+    }
   }
+
+  TEST_ASSERT(test_step >= NB_INTERRUPT_LOOP)
 
   TEST_END()
 }

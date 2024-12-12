@@ -132,8 +132,6 @@ void task_wakeup(task_t *task) {
   task_set_state(task, READY);
   // add the task to the run queue
   sched_add_task(task);
-  // call the scheduler
-  sched_run();
 }
 
 /******************************************************************************
@@ -170,7 +168,7 @@ void task_exit() {
  * @param task to delete
  * @return none
  ******************************************************************************/
-void task_delete(task_t *task) {
+void task_destroy(task_t *task) {
   // tag the deleted task as blocked
   task_set_state(task, BLOCKED);
   // remove it from the run queue

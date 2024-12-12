@@ -296,7 +296,7 @@ ax_channel_rcv:
 .global _syscall_table_end
 _syscall_table:
     .dword task_create
-    .dword task_delete
+    .dword task_destroy
     .dword task_yield
     .dword task_sleep
     .dword task_wakeup

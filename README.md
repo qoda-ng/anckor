@@ -62,7 +62,14 @@ With the default configuration, the kernel builds and runs the [tests](./tests/)
 The kernel has an example you can use as a basis for your own application : 
 
 ```shell
-$ anckor configure hello_defconfig
+$ anckor configure --config helloworld_defconfig
+
+$ anckor build
+
+$ anckor run
+...
+Anckor OS build r-0.0.2 - 2024-12-08 14:53:21
+Hello world !
 ```
 
 This configuration automatically disables tests and builds the code saved in [examples](./examples/). Modify it to suit your needs.

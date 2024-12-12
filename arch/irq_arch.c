@@ -93,6 +93,11 @@ static inline void handle_timer_interrupt() {
     // it will immediatly jump to the task if it
     // has the highest priority
     task_wakeup(irq_table[TIMER_INTERRUPT]);
+    // re-enable global interrupts after having
+    // woke up the driver task but before switching to it
+    csr_set(CSR_MSTATUS, MACHINE_INTERRUPT_ENABLE);
+    // switch to the interrupt handler task
+    task_yield();
   } else {
     panic("Timer interrupt handler not defined\n");
   }
