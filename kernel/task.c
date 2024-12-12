@@ -132,8 +132,6 @@ void task_wakeup(task_t *task) {
   task_set_state(task, READY);
   // add the task to the run queue
   sched_add_task(task);
-  // call the scheduler
-  sched_run();
 }
 
 /******************************************************************************

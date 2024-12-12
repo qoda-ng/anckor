@@ -46,9 +46,10 @@
 
 #define MIE_TIE 1 << MIE_TIE_OFFSET
 
-#define CSR_MIP    mip
-#define CSR_MIE    mie
-#define CSR_MCAUSE mcause
+#define CSR_MIP     mip
+#define CSR_MIE     mie
+#define CSR_MCAUSE  mcause
+#define CSR_MSTATUS mstatus
 
 #define CSR_MCAUSE_INTERRUPT_MASK 0xFF
 
