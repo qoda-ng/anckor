@@ -17,7 +17,7 @@
 #ifndef SYS_OUT_H
 #define SYS_OUT_H
 
-#include "../../../drivers/include/uart.h"
+#include "../../../drv/uart/include/uart.h"
 
 /******************************************************************************
  * @brief send char for printf routine

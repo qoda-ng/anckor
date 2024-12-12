@@ -15,32 +15,31 @@
  * not, see https://www.gnu.org/licenses/
  */
 #include "common.h"
+#include "panic.h"
 #include "printk.h"
+#include "registers.h"
 
 /******************************************************************************
- * @brief handle exceptions
- * @param exception cause
- * @param syscall number
+ * @brief handle unknown exceptions
  * @return none
  ******************************************************************************/
 void handle_unknown_exception() {
-  printk("exception not handled\n");
+  uint64_t cause = csr_read(CSR_MCAUSE) & CSR_MCAUSE_INTERRUPT_MASK;
+  // get the cause of the exception
+  printk("exception not handled / mcause : %d\r\n", cause);
+
+  hang_processor();
 }
 
 /******************************************************************************
- * @brief handle exceptions
- * @param exception cause
+ * @brief handle unused syscalls
  * @param syscall number
  * @return none
  ******************************************************************************/
-void sys_default(uint64_t syscall_number) {
-  printk("syscall nb° %d\n", syscall_number);
-}
+void sys_default(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4,
+                 uint64_t arg5, uint64_t arg6, uint64_t arg7,
+                 uint64_t syscall_number) {
+  printk("syscall nb° %d is not implemented.\n ", syscall_number);
 
-/******************************************************************************
- * @brief handle interruptions
- * @return none
- ******************************************************************************/
-void handle_interrupt() {
-  printk("interrupt has been detected !\n");
+  hang_processor();
 }

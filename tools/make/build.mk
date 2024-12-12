@@ -61,8 +61,6 @@ MODULE_CFLAGS :=
 
 GLOBAL_OBJECTS_LIST :=
 
-
-
 include tools/make/collect.mk
 
 # MODULE_TARGET_LIST contains all modules to build before linking
@@ -75,8 +73,8 @@ build: setup_build_dir $(MODULE_TARGET_LIST)
 
 run:
 	$(info run [release] build)
-	qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
+	@qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
 
 debug:
 	$(info run [debug] build)
-	qemu-system-riscv64 -s -S -machine virt -cpu rv64 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf
+	@qemu-system-riscv64 -s -S -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.elf

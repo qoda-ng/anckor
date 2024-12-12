@@ -16,7 +16,6 @@
  */
 
 #include "ax_syscall.h"
-#include "banner.h"
 #include "common.h"
 #include "init.h"
 #include "sched.h"
@@ -40,8 +39,6 @@ void idle_run(void) {
  * @return None
  ******************************************************************************/
 void kernel_init() {
-  banner_display();
-
   sched_init();
 
   init_create();

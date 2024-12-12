@@ -15,7 +15,7 @@
 
 MODULE_ID := $(GET_MODULE_ID)
 MODULE_DEPS := lib/sys \
-			drivers \
+			drv \
 			arch \
 			lib/libc \
 			kernel \

@@ -20,3 +20,5 @@ As a remainder, these **records** contain the following fields:
 - [Exceptions](./adr-007.md)
 - [syscalls](./adr-008.md)
 - [Prevent tasks to run in kernel mode](./adr-009.md)
+- [Interrupts](./adr-010.md)
+- [Synchronous message passing](./adr-011.md)

@@ -28,9 +28,9 @@ rsource "arch/Kconfig"
 
 endmenu
 
-menu "drivers"
+menu "drv"
 
-rsource "drivers/Kconfig"
+rsource "drv/Kconfig"
 
 endmenu
 
@@ -46,3 +46,8 @@ rsource "tests/Kconfig"
 
 endmenu
 
+menu "examples"
+
+rsource "examples/Kconfig"
+
+endmenu

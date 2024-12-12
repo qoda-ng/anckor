@@ -48,6 +48,8 @@ void second_thread(void) {
   // return from the second thread
   ax_task_wakeup((task_t *)main_thread_stack);
 
+  ax_task_yield();
+
   // STEP 5
   test_step += 1;
   TEST_ASSERT(test_step >= 5)
@@ -72,6 +74,8 @@ void threads_test_thread(void) {
   // STEP 4
   test_step += 1;
   TEST_ASSERT(test_step >= 4)
+
+  TEST_END()
 }
 
 REGISTER_TEST("threads_test", threads_test_thread, main_thread_stack, 5)

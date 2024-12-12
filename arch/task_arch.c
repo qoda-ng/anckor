@@ -19,7 +19,10 @@
 #include "processor.h"
 #include "task.h"
 
-extern void (*_task_start)(void);
+/******************************************************************************
+ * @brief used to switch from kernel mode to user mode at task startup
+ ******************************************************************************/
+extern void (*_ret_from_interrupt)(void);
 
 /******************************************************************************
  * @brief initialize task stack
@@ -36,23 +39,25 @@ extern void (*_task_start)(void);
  * task_t end
  * -----------------------
  * ...
- * s11
- * s10
- * s9
- * s8
- * s7
- * s6
- * s5
- * s4
- * s3
- * s2
+ * ...
+ * ...
+ * s0 <--- SP
  * s1
- * s0
- * ----------- <--- SP
- * _task_start
- * task_entry
- * task_runtime
+ * ...
+ * s10
+ * s11
  * -----------
+ * _ret_from_interrupt
+ * -----------
+ * t0
+ * ...
+ * t6
+ * a0
+ * ...
+ * a6
+ * a7
+ * task_runtime
+ * ra
  * -----------
  * ----------------------- stack_end
  *
@@ -70,27 +75,49 @@ void task_stack_init(stack_t *stack, uint64_t stack_size,
   // and 16-bytes align it
   task->thread.sp = (uint64_t)stack + stack_size - LWORD_SIZE;
 
-  // move up sp and save task_runtime / task_entry
-  // these two pointers will be used by _task_start
-  task->thread.sp -= LWORD_SIZE;
-  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)task_runtime;
-  *(uint64_t *)(task->thread.sp)              = (uint64_t)task_entry;
+  // initialize kernel stack frame
+  // task_runtime will be loaded in pc register by _ret_from_interrupt
+  task->thread.sp -= KERNEL_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_MEPC) =
+      (uint64_t)task_runtime;
+  *(uint64_t *)(task->thread.sp + KERNEL_STACK_FRAME_RA) = 0;
 
-  // move up sp and save _task_start
-  task->thread.sp -= LWORD_SIZE;
-  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_task_start;
+  // initialize caller-saved stack frame
+  // a0 is loaded by _ret_from_interrupt and is used as first
+  // argument of task_runtime
+  task->thread.sp -= CALLER_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T0) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T1) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T2) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T3) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T4) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T5) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_T6) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A0) = (uint64_t)task_entry;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A1) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A2) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A3) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A4) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A5) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A6) = 0;
+  *(uint64_t *)(task->thread.sp + CALLER_STACK_FRAME_A7) = 0;
 
-  // zeroied callee-saved registers with are saved on top of the stack
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S0)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S1)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S2)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S3)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S4)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S5)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S6)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S7)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S8)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S9)  = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S10) = 0;
-  *(uint64_t *)(task->thread.sp + TASK_STACK_FRAME_S11) = 0;
+  // move up sp and save _ret_from_interrupt
+  task->thread.sp -= LWORD_SIZE;
+  *(uint64_t *)(task->thread.sp + DWORD_SIZE) = (uint64_t)&_ret_from_interrupt;
+
+  // move up sp to initialize callee-saved registers
+  task->thread.sp -= CALLEE_STACK_FRAME_LENGTH;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S0)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S1)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S2)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S3)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S4)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S5)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S6)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S7)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S8)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S9)  = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S10) = 0;
+  *(uint64_t *)(task->thread.sp + CALLEE_STACK_FRAME_S11) = 0;
 }

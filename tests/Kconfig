@@ -6,3 +6,5 @@ config module_tests
 
 rsource "threads/Kconfig"
 rsource "apps/Kconfig"
+rsource "interrupt/Kconfig"
+rsource "messages/Kconfig"

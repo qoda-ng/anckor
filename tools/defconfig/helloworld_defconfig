@@ -1,0 +1,49 @@
+
+#
+# build type
+#
+# CONFIG_build_debug is not set
+# end of build type
+
+#
+# kernel
+#
+CONFIG_module_kernel=y
+# end of kernel
+
+#
+# platform
+#
+CONFIG_module_platform=y
+# end of platform
+
+#
+# arch
+#
+CONFIG_module_arch=y
+# end of arch
+
+#
+# drv
+#
+CONFIG_module_drv_uart=y
+# CONFIG_module_drv_timer is not set
+# end of drv
+
+#
+# lib
+#
+CONFIG_module_lib_libc=y
+# end of lib
+
+#
+# tests
+#
+# CONFIG_module_tests is not set
+# end of tests
+
+#
+# examples
+#
+CONFIG_module_examples_helloworld=y
+# end of examples

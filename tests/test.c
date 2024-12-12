@@ -18,7 +18,6 @@
 #include "include/test.h"
 
 #include "app.h"
-#include "ax_syscall.h"
 #include "printf.h"
 
 /*******************************************************************************
@@ -38,7 +37,14 @@ extern uint64_t _tests_end;
  * @return None
  ******************************************************************************/
 void test_engine(void) {
+  uint64_t test_chan_handler;
+  uint64_t test_data     = 0;
+  uint64_t test_data_len = 0;
+
   printf("ATE - Anckor test engine\r\n");
+
+  // create a channel to receive tests end messages
+  ax_channel_create(&test_chan_handler, "test_channel");
 
   // iterate over all tests descriptors saved in the section(.data.tests)
   for (uint64_t *test_pt = &_tests_start; test_pt < &_tests_end; test_pt += 1) {
@@ -47,8 +53,16 @@ void test_engine(void) {
     // create a task for the test
     ax_task_create(test->name, test->entry, test->stack, test->prio);
 
-    // jump into the freshly created thread
-    ax_task_yield();
+    // block until the thread sends us the TEST_END_WORD
+    ax_channel_rcv(test_chan_handler, &test_data, &test_data_len);
+
+    if (test_data != TEST_END_WORD) test_error = true;
+    // reset trigger word
+    test_data = 0;
+
+    // clean up the task
+    ax_task_destroy((task_t *)test->stack);
+
     // when the test returns, display its result
     if (test_error) {
       tests_failed += 1;
@@ -57,11 +71,10 @@ void test_engine(void) {
       tests_passed += 1;
       printf("ATE - %s - passed\r\n", test->name);
     }
-    // create a thread for the next test and go on
   }
 
   // all registered tests have been runned
-  if (test_error) {
+  if (tests_failed) {
     printf("ATE - FAILED - %d passed - %d failed\r\n", tests_passed,
            tests_failed);
   } else {
