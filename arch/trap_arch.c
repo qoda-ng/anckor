@@ -17,13 +17,16 @@
 #include "common.h"
 #include "panic.h"
 #include "printk.h"
+#include "registers.h"
 
 /******************************************************************************
  * @brief handle unknown exceptions
  * @return none
  ******************************************************************************/
 void handle_unknown_exception() {
-  printk("exception not handled\n");
+  uint64_t cause = csr_read(CSR_MCAUSE) & CSR_MCAUSE_INTERRUPT_MASK;
+  // get the cause of the exception
+  printk("exception not handled / mcause : %d\r\n", cause);
 
   hang_processor();
 }
