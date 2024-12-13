@@ -49,8 +49,6 @@ def convert_config_to_make():
                 line = line.replace("_", "/")
 
                 module_list = module_list + line + ' '
-        elif "config" in line:
-            output_file.write(line)
     
     output_file.write(module_list)
 
@@ -101,40 +99,32 @@ def clean(args):
 # @return None
 # *******************************************************************************
 def build(args):
+    # add debug flag in debug.mk if needed
+    if not os.path.isdir("tools/generated"):
+        os.mkdir("tools/generated")
+
+    # open in append mode to not overwrite content
+    output_file = open("tools/generated/debug.mk", "w+")
     
     if args.debug:
         print("[BUILD] --debug")
         os.system('make -f tools/make/build.mk build DEBUG_FLAG=true')
+
+        output_file.write("DEBUG_FLAG=true")
     else:
         print("[BUILD] --release")
         os.system('make -f tools/make/build.mk build')
 
+        output_file.write("DEBUG_FLAG=false")
+        
+    output_file.close()
 # *******************************************************************************
 # @brief run the kernel on the configured target
 # @param None
 # @return None
 # *******************************************************************************
 def run(args):
-    print("[RUN]")
-
-    # get the build argument
-    root_dir = get_root_dir()
-    config_file_name = os.path.join(root_dir, '.config')
-    config_file = open(config_file_name)
-
-    for line in config_file:
-        line = line.lower()
-        if "config_build_debug" in line:
-            if "=y" in line:
-                run_debug_build = True
-            else:
-                run_debug_build = False
-
-    # call the right make target
-    if run_debug_build:
-        os.system('make -f tools/make/run.mk debug')
-    else:
-        os.system('make -f tools/make/run.mk run')
+    os.system('make -f tools/make/run.mk run')
 
 # *******************************************************************************
 # @brief find the root directory absolute path
