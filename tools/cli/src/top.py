@@ -101,9 +101,13 @@ def clean(args):
 # @return None
 # *******************************************************************************
 def build(args):
-    print("[BUILD]")
-
-    os.system('make -f tools/make/build.mk build')
+    
+    if args.debug:
+        print("[BUILD] --debug")
+        os.system('make -f tools/make/build.mk build DEBUG_FLAG=true')
+    else:
+        print("[BUILD] --release")
+        os.system('make -f tools/make/build.mk build')
 
 # *******************************************************************************
 # @brief run the kernel on the configured target
@@ -221,6 +225,7 @@ def options():
     # declare "build" subcommand
     build_parser = subparsers.add_parser('build',
                                          help='compile and link the kernel')
+    build_parser.add_argument('--debug', action='store_true', help='Build kernel in debug mode.')
     build_parser.set_defaults(func=build)
 
     # declare "run" subcommand

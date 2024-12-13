@@ -22,8 +22,9 @@ include tools/generated/config.mk
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
 GLOBAL_LDFLAGS += -nostdlib -Map build/output.map -T tools/linker/virt.ld 
+DEBUG_FLAG ?= false
 
-ifeq ($(config_build_debug),y)
+ifeq ($(DEBUG_FLAG), true)
 	GLOBAL_LDFLAGS += -g
 endif
 
