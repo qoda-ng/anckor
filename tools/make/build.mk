@@ -71,11 +71,3 @@ build: setup_build_dir $(MODULE_TARGET_LIST)
 	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
 	$(info generate kernel image)
 	@$(OBJCPY) -O binary build/kernel.elf build/kernel.img
-
-run:
-	$(info run [release] build)
-	@qemu-system-riscv64 -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.img
-
-debug:
-	$(info run [debug] build)
-	@qemu-system-riscv64 -s -S -machine virt -cpu rv64 -smp 4 -m 512M -nographic -serial mon:stdio -bios none -kernel build/kernel.img

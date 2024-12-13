@@ -132,9 +132,9 @@ def run(args):
 
     # call the right make target
     if run_debug_build:
-        os.system('make -f tools/make/build.mk debug')
+        os.system('make -f tools/make/run.mk debug')
     else:
-        os.system('make -f tools/make/build.mk run')
+        os.system('make -f tools/make/run.mk run')
 
 # *******************************************************************************
 # @brief find the root directory absolute path
