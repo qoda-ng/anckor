@@ -17,19 +17,19 @@ For the initial release, focus is made on **core kernel services**. **kernel deb
 - [x] exception management
 - [x] syscalls
 
-### r-0.0.2 / Interrupts and IPC
+### r-0.0.3 / Interrupts and IPC
 
 - [x] Interrupt management
 - [x] synchronous message-based IPC
 
-### r-0.0.3 / Interrupts and IPC
+### r-0.0.4 / Memory protection
 
 - [ ] independant module compilation
 - [ ] User / Kernel stacks
 - [ ] User / Kernel modes protection
 - [ ] Memory protection between modules
 
-### r-0.0.4 / Scheduling
+### r-0.0.5 / Scheduling
 
 - [ ] cooperative scheduling with min heap priority queue
 
