@@ -37,8 +37,26 @@ def convert_config_to_make():
     input_file = open(".config", "r")
     output_file = open("tools/generated/config.mk", "w+")
 
-    module_list = "GLOBAL_MODULE_LIST := "
+    # create a list with targets included in the kernel
+    part_list = "GLOBAL_PART_LIST := "
+    for line in input_file:
+        line = line.lower()
+        if "partition" in line:
+            if "=y" in line:
+                line = line.replace("config_partition_", '')
+                index = line.rfind("=y")
+                line = line[:index]
+                line = line.replace("_", "/")
 
+                part_list = part_list + line + ' '
+    part_list = part_list + '\r\n'
+    output_file.write(part_list)
+
+    # reset the cursor atht he beginning of the file
+    input_file.seek(0)
+
+    # create a list with modules compiled independently
+    module_list = "GLOBAL_MODULE_LIST := "
     for line in input_file:
         line = line.lower()
         if "module" in line:
@@ -49,15 +67,16 @@ def convert_config_to_make():
                 line = line.replace("_", "/")
 
                 module_list = module_list + line + ' '
-    
+    module_list = module_list + '\r\n'
     output_file.write(module_list)
 
+    # close generated files
     input_file.close()
     output_file.close()
     print("generate config.mk file")
 
 # *******************************************************************************
-# @brief create a config.mk file from a _defconfig file
+# @brief create a config.mk file from a _defconfig filye
 # @param None
 # @return None
 # *******************************************************************************
@@ -108,14 +127,26 @@ def build(args):
     
     if args.debug:
         print("[BUILD] --debug")
-        os.system('make -f tools/make/build.mk build DEBUG_FLAG=true')
+
+        os.system('make -f tools/make/build.mk setup_build_dir')
+
+        os.system('make -f tools/make/build.mk build BUILD_CORE=true DEBUG_FLAG=true')
+
+        os.system('make -f tools/make/build.mk build BUILD_PARTITION=true DEBUG_FLAG=true')
 
         output_file.write("DEBUG_FLAG=true")
     else:
         print("[BUILD] --release")
-        os.system('make -f tools/make/build.mk build')
+
+        os.system('make -f tools/make/build.mk setup_build_dir')
+
+        os.system('make -f tools/make/build.mk build BUILD_CORE=true')
+
+        os.system('make -f tools/make/build.mk build BUILD_PARTITION=true')
 
         output_file.write("DEBUG_FLAG=false")
+
+    os.system('make -f tools/make/build.mk generate_kernel_img')
         
     output_file.close()
 # *******************************************************************************

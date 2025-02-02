@@ -13,13 +13,13 @@
 # the GNU Lesser General Public License along with this program.  If
 # not, see https://www.gnu.org/licenses/
 
-# iterate until GLOBAL_MODULE_LIST is empty
-ifneq ($(GLOBAL_MODULE_LIST),)
+# iterate until GLOBAL_LIST is empty
+ifneq ($(GLOBAL_LIST),)
 
 # get the last element of the list
-MODULE := $(word $(words $(GLOBAL_MODULE_LIST)),$(GLOBAL_MODULE_LIST))
+MODULE := $(word $(words $(GLOBAL_LIST)),$(GLOBAL_LIST))
 # delete the module we just included from the global list
-GLOBAL_MODULE_LIST := $(filter-out $(MODULE),$(GLOBAL_MODULE_LIST))
+GLOBAL_LIST := $(filter-out $(MODULE),$(GLOBAL_LIST))
 # include the module specific makefile
 include $(addsuffix /module.mk,$(MODULE))
 MODULE :=

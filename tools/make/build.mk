@@ -21,8 +21,26 @@ include tools/generated/config.mk
 
 OBJCPY := riscv64-unknown-elf-objcopy
 LD := riscv64-unknown-elf-ld
-GLOBAL_LDFLAGS += -nostdlib -Map build/output.map -T tools/linker/virt.ld 
+GLOBAL_LDFLAGS := -nostdlib -Map build/output.map
+
 DEBUG_FLAG ?= false
+
+BUILD_CORE ?= false
+BUILD_PARTITION ?= false
+
+BUILD_TARGET :=
+
+ifeq ($(BUILD_CORE), true)
+	GLOBAL_LDFLAGS += -T tools/linker/virt.ld 
+	GLOBAL_LIST := $(GLOBAL_MODULE_LIST)
+	BUILD_TARGET += kernel.elf
+endif
+
+ifeq ($(BUILD_PARTITION), true)
+	GLOBAL_LDFLAGS += -T tools/linker/part.ld 
+	GLOBAL_LIST := $(GLOBAL_PART_LIST)
+	BUILD_TARGET += part.elf
+endif
 
 ifeq ($(DEBUG_FLAG), true)
 	GLOBAL_LDFLAGS += -g
@@ -65,9 +83,11 @@ GLOBAL_OBJECTS_LIST :=
 include tools/make/collect.mk
 
 # MODULE_TARGET_LIST contains all modules to build before linking
-build: setup_build_dir $(MODULE_TARGET_LIST)
+build: $(MODULE_TARGET_LIST)
 # link all components
 	$(info link all objects files)
-	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/kernel.elf
+	@$(LD) $(GLOBAL_LDFLAGS) $(GLOBAL_OBJECTS_LIST) -o build/$(BUILD_TARGET)
+
+generate_kernel_img:
 	$(info generate kernel image)
-	@$(OBJCPY) -O binary build/kernel.elf build/kernel.img
+	@$(OBJCPY) -O binary build/kernel.elf build/anckor.img

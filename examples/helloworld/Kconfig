@@ -1,4 +1,4 @@
-config module_examples_helloworld
+config partition_examples_helloworld
 	bool "helloworld app"
 	depends on !module_tests
 	default y

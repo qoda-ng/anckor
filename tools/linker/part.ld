@@ -22,16 +22,15 @@ OUTPUT_ARCH( "riscv" )
 /*
 we tell the link which procedure is the program entry point
 */
-ENTRY( _start )
+ENTRY( helloworld_thread )
 
 /*
-we declare one memory region of 8MBytes to store our program.
-This sections starts at address 0x8000_0000 as specified in 
-Qemu for riscv virt machine.
+Each partition uses 32kbyte of memory. 
+It starts at offset 0x100000 as 1MByte is reserved for the kernel.
 */
 MEMORY
 {
-  ram (wxa) : ORIGIN = 0x80000000, LENGTH = 1M
+  ram (wxa) : ORIGIN = 0x80100000, LENGTH = 32K
 }
 
 /*
@@ -75,31 +74,6 @@ SECTIONS
   */
   .data : {
     PROVIDE(_data_start = .);
-
-    /* 
-    idle stack section
-    */
-    . = ALIGN(4K);
-    _idle_stack_start = .;
-    PROVIDE(idle_stack = .);
-    KEEP(*(.data.idle_task));
-    . = _idle_stack_start + 4K;
-    _idle_stack_end = .;
-
-    /* 
-    Apps section
-    */
-    PROVIDE(_apps_start = .);
-    KEEP(*(.data.apps));
-    PROVIDE(_apps_end = .);
-
-    /* 
-    tests section
-    */
-    PROVIDE(_tests_start = .);
-    KEEP(*(.data.tests));
-    PROVIDE(_tests_end = .);
-
     *(.sdata .sdata.*)
     *(.gnu.linkonce.s.*)
 	  *(.data .data.*)
