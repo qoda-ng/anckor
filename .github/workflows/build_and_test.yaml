@@ -8,6 +8,11 @@ jobs:
       - name: install code
         uses: actions/checkout@v4
 
+      - name: install python
+        run: |
+          sudo apt-get update
+          sudo apt install python3.12-venv
+
       - name: install qemu
         run: |
           sudo apt-get update
